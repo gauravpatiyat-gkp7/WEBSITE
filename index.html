@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <!-- SECURITY: Content-Security-Policy — only these specific sources may load code, styles, fonts or be contacted. Blocks injected/3rd-party scripts. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'sha256-QnN9Jb66LVkmApZwzSpkcv0LUGPCQ/FEXJ/zdCmyhIs='; connect-src 'self' https://api.web3forms.com; form-action 'self' https://api.web3forms.com; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'sha256-UpdfZWnCxCjEclPluIGbaC3GVTuXMUg2xGDkBuBn5P8='; connect-src 'self' https://api.web3forms.com; form-action 'self' https://api.web3forms.com; upgrade-insecure-requests">
 <!-- SECURITY: don't leak the full URL to other sites when a visitor clicks an outbound link -->
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>CA Gaurav K Patiyat — Finance, Fintech &amp; AI | Bengaluru</title>
@@ -743,7 +743,7 @@
   var _labelOf={vibe:'Vibe Coding',business:'Business Solutions',investing:'Investing'};
   var _prefix={vibe:'Blog',investing:'Post',business:'Brief'};
   (function(){var c={};for(var i=0;i<BDATA.length;i++){var cat=BDATA[i].category;c[cat]=(c[cat]||0)+1;BDATA[i]._num=(_prefix[cat]||'Post')+' #'+c[cat];}})();
-  function _card(p){return '<a class="bcard" href="#blog/'+p.slug+'"><div class="pc-top"><span class="pc-badge">'+p._num+'</span><span class="pc-tag">'+p.tag+'</span></div><h3>'+p.title+'</h3><p>'+p.dek+'</p><span class="pc-cta">Read post \u2192</span></a>';}
+  function _card(p){return '<a class="bcard" href="/posts/'+p.slug+'/"><div class="pc-top"><span class="pc-badge">'+p._num+'</span><span class="pc-tag">'+p.tag+'</span></div><h3>'+p.title+'</h3><p>'+p.dek+'</p><span class="pc-cta">Read post \u2192</span></a>';}
   function _soon(){return '<div class="bcard soon"><span class="s-eye">Coming soon</span><h3>More on the way</h3><p>New posts drop here as I publish them \u2014 check back shortly.</p></div>';}
   function _fillRow(id,cat){var el=document.getElementById(id);if(!el)return;var items=BDATA.filter(function(p){return p.category===cat;});el.innerHTML=items.map(_card).join('')+_soon();}
   function _find(s){for(var i=0;i<BDATA.length;i++){if(BDATA[i].slug===s)return BDATA[i];}return null;}
