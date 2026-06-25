@@ -1,4 +1,4 @@
-## Hi there 👋
+## Hi there 👋 I am a Finance Professional building tools with AI
 
 <!--
 **gauravpatiyat-gkp7/gauravpatiyat-gkp7** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
