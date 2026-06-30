@@ -346,12 +346,19 @@
   .postnav{margin:44px 0 0;padding-top:30px;border-top:1px solid var(--line)}
   .postnav .pn-label{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:14px}
   .postnav .bcard{flex:initial;width:100%;box-sizing:border-box}
+
+/* {CODE.NULL} terminal type-on reveal (pure CSS; runs on every page load) */
+@keyframes cnType{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 -2px 0 0)}}
+@keyframes cnPrime{0%,100%{opacity:1}50%{opacity:.2}}
+.monogram .brandtext{display:inline-block;white-space:nowrap;clip-path:inset(0 100% 0 0);animation:cnType .7s steps(12,end) .4s both}
+.monogram .dot{animation:cnPrime .22s ease 2 both}
+@media (prefers-reduced-motion:reduce){.monogram .brandtext{animation:none;clip-path:none}.monogram .dot{animation:none}}
 </style>
 </head>
 <body>
 <nav>
   <div class="nav-inner">
-    <a class="monogram" href="https://codenull.in/"><span class="dot"></span>{CODE.NULL}</a>
+    <a class="monogram" href="https://codenull.in/"><span class="dot"></span><span class="brandtext">{CODE.NULL}</span></a>
     <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
     <div class="nav-links" id="navlinks">
       <a href="https://codenull.in/#series">Vibe Coding</a>
