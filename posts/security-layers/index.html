@@ -167,6 +167,9 @@
   .term-body .wait{color:#FFBD2E}
   .term-body .key{color:#fff;font-weight:500}
   .term-body .soon{color:var(--teal-bright);font-weight:600;letter-spacing:.08em}
+  .term-body .build{color:#FFBD2E;font-weight:600;letter-spacing:.06em}
+  .term-body .fill{color:var(--teal-bright);letter-spacing:1px}
+  .term-body .dim{color:#34547A;letter-spacing:1px}
   .cursor{display:inline-block;width:9px;height:1.05em;background:var(--teal-bright);vertical-align:-2px;margin-left:4px;animation:blink 1.1s steps(1) infinite}
   @keyframes blink{50%{opacity:0}}
 
@@ -314,6 +317,11 @@
   .bcard.soon .s-eye{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:10px;display:block}
   .bcard.soon h3{color:var(--ink)}
   .bcard.soon p{color:var(--muted)}
+  .bcard.building .pc-badge{background:var(--teal)}
+  .bcard .build-row{display:flex;align-items:center;gap:10px;margin-top:4px}
+  .bcard .build-bar{flex:1;height:6px;border-radius:99px;background:var(--line);overflow:hidden}
+  .bcard .build-bar span{display:block;height:100%;background:var(--teal);border-radius:99px}
+  .bcard .build-pct{font-family:var(--mono);font-size:.74rem;color:var(--teal);font-weight:500;letter-spacing:.04em;white-space:nowrap}
   .rail-nav{position:absolute;top:42%;transform:translateY(-50%);z-index:2;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--ink);font-size:1.2rem;line-height:1;cursor:pointer;box-shadow:0 8px 22px -12px rgba(11,31,56,.5);transition:all .18s}
   .rail-nav:hover{border-color:var(--teal);color:var(--teal)}
   .rail-nav.prev{left:-6px}
@@ -338,12 +346,19 @@
   .postnav{margin:44px 0 0;padding-top:30px;border-top:1px solid var(--line)}
   .postnav .pn-label{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:14px}
   .postnav .bcard{flex:initial;width:100%;box-sizing:border-box}
+
+/* {CODE.NULL} terminal type-on reveal (pure CSS; runs on every page load) */
+@keyframes cnType{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 -2px 0 0)}}
+@keyframes cnPrime{0%,100%{opacity:1}50%{opacity:.2}}
+.monogram .brandtext{display:inline-block;white-space:nowrap;clip-path:inset(0 100% 0 0);animation:cnType .7s steps(12,end) .4s both}
+.monogram .dot{animation:cnPrime .22s ease 2 both}
+@media (prefers-reduced-motion:reduce){.monogram .brandtext{animation:none;clip-path:none}.monogram .dot{animation:none}}
 </style>
 </head>
 <body>
 <nav>
   <div class="nav-inner">
-    <a class="monogram" href="https://codenull.in/"><span class="dot"></span>CA Gaurav K Patiyat</a>
+    <a class="monogram" href="https://codenull.in/"><span class="dot"></span><span class="brandtext">{CODE.NULL}</span></a>
     <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
     <div class="nav-links" id="navlinks">
       <a href="https://codenull.in/#series">Vibe Coding</a>
@@ -413,7 +428,7 @@ RULES: don't change how the site looks or behaves. Separate the changes you make
 </div>
 
 <div class="cta"><a class="btn btn-solid" href="https://codenull.in/#contact">Get in touch &rarr;</a><span class="ghost">&nbsp; or <a href="https://codenull.in/#series">browse more posts</a>.</span></div></article>
-    <nav class="postnav" aria-label="Series navigation"><span class="pn-label">Up next</span><a class="bcard" href="/posts/performance-layers/"><div class="pc-top"><span class="pc-badge">Blog #2</span><span class="pc-tag">Performance</span></div><h3>Core Web Vitals</h3><p>A lot of website speed comes from ordinary clean-up an AI can do for you. The steps I followed to make a vibe-coded site faster &mdash; in plain English.</p><span class="pc-cta">Read post →</span></a></nav>
+    <nav class="postnav" aria-label="Series navigation"><span class="pn-label">Up next</span><a class="bcard" href="/posts/performance-layers/"><div class="pc-top"><span class="pc-badge">Blog #2</span><span class="pc-tag">Performance</span></div><h3>Core Web Vitals</h3><p>A faster website mostly comes down to ordinary clean-up an AI can do for you &mdash; the page-speed fixes I used on a vibe-coded site, in plain English.</p><span class="pc-cta">Read post &rarr;</span></a></nav>
   </div>
 </main>
 <footer><div class="wrap"><p class="mono">// built from scratch &mdash; without writing a single line of code</p><p style="margin-top:6px">&copy; 2026 CA Gaurav K Patiyat</p></div></footer>
