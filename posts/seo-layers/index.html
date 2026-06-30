@@ -346,12 +346,19 @@
   .postnav{margin:44px 0 0;padding-top:30px;border-top:1px solid var(--line)}
   .postnav .pn-label{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:14px}
   .postnav .bcard{flex:initial;width:100%;box-sizing:border-box}
+
+/* {CODE.NULL} terminal type-on reveal (pure CSS; runs on every page load) */
+@keyframes cnType{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 -2px 0 0)}}
+@keyframes cnPrime{0%,100%{opacity:1}50%{opacity:.2}}
+.monogram .brandtext{display:inline-block;white-space:nowrap;clip-path:inset(0 100% 0 0);animation:cnType .7s steps(12,end) .4s both}
+.monogram .dot{animation:cnPrime .22s ease 2 both}
+@media (prefers-reduced-motion:reduce){.monogram .brandtext{animation:none;clip-path:none}.monogram .dot{animation:none}}
 </style>
 </head>
 <body>
 <nav>
   <div class="nav-inner">
-    <a class="monogram" href="https://codenull.in/"><span class="dot"></span>CA Gaurav K Patiyat</a>
+    <a class="monogram" href="https://codenull.in/"><span class="dot"></span><span class="brandtext">{CODE.NULL}</span></a>
     <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
     <div class="nav-links" id="navlinks">
       <a href="https://codenull.in/#series">Vibe Coding</a>
@@ -422,7 +429,7 @@ RULES: don't break the design. Confirm each change as you make it. At the end, g
 </div>
 
 <div class="cta"><a class="btn btn-solid" href="https://codenull.in/#contact">Get in touch &rarr;</a><span class="ghost">&nbsp; or <a href="https://codenull.in/#series">browse more posts</a>.</span></div></article>
-    <nav class="postnav" aria-label="Series navigation"><span class="pn-label">Up next</span><a class="bcard" href="/posts/uiux-layers/"><div class="pc-top"><span class="pc-badge">Blog #4</span><span class="pc-tag">UI/UX</span></div><h3>Cognitive Load</h3><p>A lot of good UI/UX is structure, not art &mdash; the steps I followed to make a vibe-coded site easier to understand and act on, in plain English.</p><span class="pc-cta">Read post →</span></a></nav>
+    <nav class="postnav" aria-label="Series navigation"><span class="pn-label">Up next</span><a class="bcard" href="/posts/uiux-layers/"><div class="pc-top"><span class="pc-badge">Blog #4</span><span class="pc-tag">UI/UX</span></div><h3>Cognitive Load</h3><p>A lot of good UI/UX is structure, not art &mdash; the steps I followed to make a vibe-coded site easier to understand and act on, in plain English.</p><span class="pc-cta">Read post &rarr;</span></a></nav>
   </div>
 </main>
 <footer><div class="wrap"><p class="mono">// built from scratch &mdash; without writing a single line of code</p><p style="margin-top:6px">&copy; 2026 CA Gaurav K Patiyat</p></div></footer>
