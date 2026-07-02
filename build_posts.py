@@ -14,7 +14,13 @@ import re, json, html, hashlib, base64, os
 ROOT = "/mnt/user-data/outputs"
 SITE = "https://codenull.in"
 BRAND = "CA Gaurav K Patiyat"   # top-bar brand (update here after the {CODE.NULL} rebrand)
-TODAY = "2026-06-25"
+TODAY = "2026-07-02"
+
+# Hand-maintained standalone pages (NOT generated here) that must still appear in the sitemap.
+# Each: (path relative to SITE, changefreq, priority). Add future tools/landing pages here.
+TOOLS = [
+    ("tools/rx/", "monthly", "0.8"),   # Rx — PTR/PTS & margin calculator (folded in from the old Rx repo)
+]
 
 src = open(f"{ROOT}/index.html", encoding="utf-8").read()
 
@@ -152,6 +158,8 @@ for p in posts:
 urls = [(f"{SITE}/", "weekly", "1.0")]
 for p in posts:
     urls.append((f"{SITE}/posts/{p['slug']}/", "monthly", "0.8"))
+for path, cf, pr in TOOLS:
+    urls.append((f"{SITE}/{path}", cf, pr))
 sm = ['<?xml version="1.0" encoding="UTF-8"?>',
       '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
 for loc, cf, pr in urls:
@@ -161,22 +169,25 @@ sm.append("</urlset>")
 open(f"{ROOT}/sitemap.xml", "w", encoding="utf-8").write("\n".join(sm) + "\n")
 
 # --- rewire homepage cards: #blog/{slug} -> /posts/{slug}/ , then recompute CSP hash ---
+# One-time migration: self-skips once the cards already point at /posts/{slug}/ (idempotent),
+# so re-running the build never crashes and never needlessly rewrites the homepage / its CSP hash.
 old_card = "href=\"#blog/'+p.slug+'\""
 new_card = "href=\"/posts/'+p.slug+'/\""
-assert src.count(old_card) == 1, f"expected 1 card link, found {src.count(old_card)}"
-src2 = src.replace(old_card, new_card)
-
-exec_script = re.findall(r"<script>(.*?)</script>", src2, re.S)[-1]
-new_hash = "sha256-" + base64.b64encode(hashlib.sha256(exec_script.encode()).digest()).decode()
-old_hash = re.search(r"script-src '(sha256-[^']+)'", src2).group(1)
-src2 = src2.replace(old_hash, new_hash)
-open(f"{ROOT}/index.html", "w", encoding="utf-8").write(src2)
+n_old = src.count(old_card)
+if n_old:
+    src2 = src.replace(old_card, new_card)
+    exec_script = re.findall(r"<script>(.*?)</script>", src2, re.S)[-1]
+    new_hash = "sha256-" + base64.b64encode(hashlib.sha256(exec_script.encode()).digest()).decode()
+    old_hash = re.search(r"script-src '(sha256-[^']+)'", src2).group(1)
+    src2 = src2.replace(old_hash, new_hash)
+    open(f"{ROOT}/index.html", "w", encoding="utf-8").write(src2)
+    _card_status = f"{n_old} card link(s) migrated -> /posts/{{slug}}/ ; CSP hash recomputed"
+else:
+    _card_status = "cards already at /posts/{slug}/ — homepage left untouched (CSP hash preserved)"
 
 print("=== post pages ===")
 for s, n in written:
     print(f"  /posts/{s}/index.html  ({n//1024} KB)")
 print("copy-script hash:", COPY_HASH)
-print("homepage card link -> /posts/{slug}/  (1 replaced)")
-print("old CSP hash:", old_hash)
-print("new CSP hash:", new_hash)
-print("sitemap urls:", len(urls))
+print("homepage:", _card_status)
+print("sitemap urls:", len(urls), "(incl.", len(TOOLS), "tool page(s))")
