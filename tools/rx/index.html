@@ -10,7 +10,7 @@
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<meta name="theme-color" content="#0A1712">
+<meta name="theme-color" content="#FF6A2C">
 <meta name="author" content="CA Gaurav K Patiyat">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="https://codenull.in/tools/rx/">
@@ -58,416 +58,439 @@
   "isPartOf": {
     "@type": "WebSite",
     "@id": "https://codenull.in/#website"
+  },
+  "featureList": [
+    "Calculate PTR (Price to Retailer) from MRP",
+    "Calculate PTS (Price to Stockist) from MRP",
+    "Retailer and stockist margin calculation",
+    "GST split across the pharma supply chain",
+    "Reverse margin calculation"
+  ],
+  "keywords": "PTR calculator, PTS calculator, PTR PTS calculator, pharma margin calculator, MRP to PTR, GST calculator pharma, PCD distributor margin, stockist rate calculator",
+  "about": [
+    {
+      "@type": "Thing",
+      "name": "Price to Retailer (PTR)"
+    },
+    {
+      "@type": "Thing",
+      "name": "Price to Stockist (PTS)"
+    },
+    {
+      "@type": "Thing",
+      "name": "Pharmaceutical trade margin"
+    }
+  ],
+  "audience": {
+    "@type": "Audience",
+    "audienceType": "Pharma stockists and PCD distributors"
   }
 }
 </script>
 <title>Rx by {CODE.NULL} — Free PTR, PTS &amp; Margin Calculator for Pharma Stockists</title>
 <meta name="description" content="A free, precise PTR, PTS, margin and GST calculator for pharma stockists and PCD distributors. See where every rupee of the MRP goes. No sign-up, no ads.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the difference between PTR and PTS?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "PTR (Price to Retailer) is the rate a retailer pays the stockist. PTS (Price to Stockist) is the rate the stockist pays the company or C&F agent. Both are usually quoted as net rates, before GST is added on the invoice."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do you calculate PTR and PTS from the MRP?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "First remove GST from the MRP to get the net rate (MRP divided by 1 plus the GST rate). Take the retailer margin off the net rate to get the PTR, then take the stockist margin off the PTR to get the PTS. The calculator on this page does each step and shows the full breakdown."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is GST included in PTR and PTS?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Usually no. PTR and PTS are quoted as net rates that exclude GST, and GST is added separately on the invoice. The MRP printed on the pack is the figure that already includes GST, which is why the calculation starts by stripping GST out of the MRP."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What GST rate should I use for medicines?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Medicines fall under different GST slabs depending on the product, most commonly 5% or 12%, with a few items at 18%. These rates are revised from time to time, so it is best to set the current rate for your product in the calculator rather than assume one."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between margin and markup?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Margin is profit measured as a share of the selling price. Markup is the same profit measured as a share of the cost, so it always looks larger. Pharma rate-lists are quoted on margin, which is what this calculator uses."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is this PTR PTS calculator free, and is my data safe?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, it is free to use with no sign-up and no ads. The calculator runs entirely in your browser, so the numbers you enter are not sent anywhere or stored."
+      }
+    }
+  ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --forest:#0A1712; --forest-2:#102A20; --forest-3:#173A2C;
-    --jade:#33C88C; --jade-bright:#5FE3AD; --jade-soft:#E5F6EF;
-    --brass:#D9B481; --brass-bright:#EBCB9C; --brass-soft:#F7EEDF;
-    --ivory:#EDF0EA; --card:#FFFFFF;
-    --ink:#0B1611; --ink-soft:#465349; --ink-faint:#8B978E;
-    --line:#E2E7DE; --line-soft:#EEF1EB;
-    --gst-seg:#C6CEC4;
-    --radius:20px; --radius-sm:12px;
-    --disp:'Fraunces',Georgia,serif;
-    --body:'Inter',system-ui,sans-serif;
-    --mono:'IBM Plex Mono',ui-monospace,monospace;
-    --lift:0 1px 2px rgba(10,23,18,.04), 0 18px 50px -12px rgba(10,23,18,.14);
-    --lift-lg:0 2px 4px rgba(10,23,18,.05), 0 40px 90px -20px rgba(10,23,18,.30);
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{background:var(--ivory);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;
-    -webkit-font-smoothing:antialiased;overflow-x:hidden}
-  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
-  ::selection{background:var(--jade);color:var(--forest)}
+:root{
+  --paper:#F5F6F8; --card:#FFFFFF; --ink:#16181D; --ink2:#4A5160; --ink3:#8A909C;
+  --cobalt:#164EC4; --cobalt-d:#0E2E73; --cobalt-soft:#E7EDFB;
+  --coral:#FF6A2C; --coral-soft:#FFF0E7;
+  --sun:#4C82F0; --graphite:#3A414E;
+  --line:#DCE0E7; --line2:#EAEDF2;
+  --r:24px; --r-sm:14px; --pill:999px;
+  --disp:'Bricolage Grotesque',system-ui,sans-serif;
+  --body:'Hanken Grotesk',system-ui,sans-serif;
+  --mono:'Space Mono',ui-monospace,monospace;
+  --sh:0 1px 0 rgba(21,23,28,.03), 0 24px 48px -24px rgba(21,23,28,.30);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--body);color:var(--ink);background:var(--paper);line-height:1.55;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--cobalt);color:#fff}
+.wrap{max-width:1000px;margin:0 auto;padding:0 22px}
+:focus-visible{outline:3px solid var(--cobalt);outline-offset:2px;border-radius:6px}
 
-  /* ============ HERO (dark) ============ */
-  .hero{position:relative;background:var(--forest);color:#EAF2ED;padding-bottom:150px;overflow:hidden}
-  .hero::before{content:"";position:absolute;inset:0;
-    background:
-      radial-gradient(680px 460px at 82% -6%, rgba(51,200,140,.20), transparent 60%),
-      radial-gradient(560px 420px at 8% 8%, rgba(217,180,129,.10), transparent 60%);
-    pointer-events:none}
-  .hero::after{content:"";position:absolute;inset:0;opacity:.5;pointer-events:none;
-    background-image:radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px);
-    background-size:26px 26px;
-    -webkit-mask-image:linear-gradient(to bottom, black, transparent 78%);
-            mask-image:linear-gradient(to bottom, black, transparent 78%)}
+/* ---------- top bar ---------- */
+.top{padding:22px 0}
+.top .row{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.brand{display:flex;align-items:center;gap:12px}
+.rx{width:50px;height:50px;flex:none;border-radius:15px;background:var(--coral);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:800;
+  font-size:30px;line-height:1;box-shadow:0 8px 20px -8px rgba(255,106,44,.65);transform:rotate(-3deg)}
+.brand .wm{display:flex;flex-direction:column;line-height:1.05}
+.brand .wm b{font-family:var(--disp);font-weight:700;font-size:20px;letter-spacing:-.01em}
+.brand .wm a{font-family:var(--mono);font-size:11px;color:var(--ink3);margin-top:2px}
+.brand .wm a:hover{color:var(--cobalt)}
+.tag{font-family:var(--mono);font-size:12px;color:var(--cobalt);background:var(--cobalt-soft);
+  border-radius:var(--pill);padding:8px 15px;white-space:nowrap}
+@media(max-width:560px){.tag{display:none}}
 
-  nav{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;
-    gap:16px;padding:24px 0}
-  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:#fff}
-  .mark{width:56px;height:56px;flex:none;border-radius:16px;background:var(--forest-2);
-    border:1px solid rgba(51,200,140,.42);display:flex;align-items:center;justify-content:center}
-  .mark.sm{width:34px;height:34px;border-radius:10px}
-  .mark .rx{font-family:var(--disp);font-style:italic;font-weight:600;font-size:31px;color:var(--jade);
-    line-height:1;letter-spacing:-.01em}
-  .mark.sm .rx{font-size:18px}
-  .wm{display:flex;flex-direction:column;line-height:1.02}
-  .wm b{font-family:var(--disp);font-weight:600;font-size:22px;letter-spacing:-.01em;color:#fff}
-  .wm .by{font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;color:#7E9689;
-    text-decoration:none;margin-top:3px;transition:color .16s}
-  .wm .by:hover{color:var(--jade)}
-  .wm.dark b{color:var(--ink)} .wm.dark .by{color:var(--ink-faint)}
-  .wm.dark .by:hover{color:#1E9E6E}
-  .pill{font-size:13px;color:#BFD6CA;border:1px solid rgba(255,255,255,.16);
-    background:rgba(255,255,255,.04);padding:7px 14px;border-radius:100px;white-space:nowrap;
-    backdrop-filter:blur(4px)}
-  .pill b{color:var(--jade-bright);font-weight:600}
+/* ---------- hero ---------- */
+.hero{padding:26px 0 34px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--coral);margin-bottom:16px}
+h1{font-family:var(--disp);font-weight:800;letter-spacing:-.03em;line-height:1.0;
+  font-size:clamp(30px,4.7vw,50px);max-width:16ch}
+h1 em{font-style:normal;color:var(--cobalt)}
+.hero p.sub{margin-top:18px;font-size:clamp(15px,1.8vw,17px);color:var(--ink2);max-width:52ch}
 
-  .herocopy{position:relative;z-index:2;max-width:760px;padding:46px 0 8px}
-  .eyebrow{font-family:var(--mono);font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;
-    color:var(--jade);margin-bottom:22px}
-  .hero h1{font-family:var(--disp);font-weight:500;font-size:clamp(38px,6.4vw,72px);line-height:1.02;
-    letter-spacing:-.032em;font-optical-sizing:auto}
-  .hero h1 em{font-style:italic;color:var(--jade);font-weight:500}
-  .hero p.sub{margin-top:24px;font-size:clamp(16px,2.2vw,19px);color:#B9CDC1;max-width:600px;line-height:1.6}
-  .metrics{display:flex;gap:34px;margin-top:34px;flex-wrap:wrap}
-  .metric .n{font-family:var(--disp);font-weight:500;font-size:26px;color:#fff}
-  .metric .l{font-size:12.5px;color:#8FA89A;letter-spacing:.02em;margin-top:2px}
+/* ---------- tool card ---------- */
+.tool{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;
+  border:1px solid var(--line2)}
+.toolhead{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:var(--cobalt);padding:10px 12px}
+.tabs{display:flex;gap:6px}
+.tab{font-family:var(--body);font-weight:600;font-size:14px;color:#AEB4C2;background:transparent;
+  border:none;cursor:pointer;padding:10px 16px;border-radius:11px;transition:.16s}
+.tab:hover{color:#fff}
+.tab[aria-selected="true"]{color:#fff;background:var(--coral)}
+.toolhead .free{font-family:var(--mono);font-size:11px;color:#8891A3;padding-right:8px}
+@media(max-width:460px){.toolhead .free{display:none}}
 
-  /* ============ STAGE / tool card ============ */
-  .stage{position:relative;z-index:3;margin-top:-104px;padding-bottom:20px}
-  .tool{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
-    box-shadow:var(--lift-lg);overflow:hidden}
-  .toolhead{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;
-    padding:22px 26px 0}
-  .tabs{display:flex;gap:2px}
-  .tab{font-family:var(--body);font-weight:600;font-size:14px;color:var(--ink-faint);background:none;
-    border:none;cursor:pointer;padding:12px 16px;border-bottom:2px solid transparent;margin-bottom:-1px;
-    transition:color .15s;border-radius:8px 8px 0 0}
-  .tab:hover{color:var(--ink-soft)}
-  .tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--jade)}
-  .toolhead .free{font-family:var(--mono);font-size:12px;color:var(--ink-faint);letter-spacing:.04em;
-    padding-bottom:12px}
-  .divider{height:1px;background:var(--line);margin:0 0 0}
+.grid{display:grid;grid-template-columns:0.92fr 1.08fr}
+@media(max-width:820px){.grid{grid-template-columns:1fr}}
+.col{padding:26px 26px}
+.col.inputs{background:linear-gradient(180deg,#FBFBFD,#fff);border-right:1px solid var(--line2)}
+@media(max-width:820px){.col.inputs{border-right:none;border-bottom:1px solid var(--line2)}}
+.col h2{font-family:var(--mono);font-size:11px;font-weight:400;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--ink3);margin-bottom:20px}
 
-  .panel{display:none}
-  .panel.on{display:block}
-  .grid{display:grid;grid-template-columns:0.86fr 1.14fr}
-  @media(max-width:860px){.grid{grid-template-columns:1fr}}
-  .col{padding:30px 32px}
-  .col.inputs{border-right:1px solid var(--line);background:linear-gradient(180deg,#FCFDFC,#FFFFFF)}
-  @media(max-width:860px){.col.inputs{border-right:none;border-bottom:1px solid var(--line)}}
-  .col h2{font-family:var(--mono);font-size:11.5px;font-weight:500;letter-spacing:.18em;
-    text-transform:uppercase;color:var(--ink-faint);margin-bottom:22px}
+.modeswitch{display:flex;background:var(--paper);border-radius:13px;padding:4px;margin-bottom:22px}
+.modeswitch button{flex:1;border:none;background:transparent;cursor:pointer;font-family:var(--body);
+  font-size:13px;font-weight:600;color:var(--ink2);padding:9px 6px;border-radius:10px;transition:.16s}
+.modeswitch button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 4px rgba(21,23,28,.14)}
 
-  .modeswitch{display:flex;background:var(--line-soft);border-radius:11px;padding:4px;margin-bottom:24px}
-  .modeswitch button{flex:1;border:none;background:none;cursor:pointer;font-family:var(--body);
-    font-size:13.5px;font-weight:600;color:var(--ink-soft);padding:9px;border-radius:8px;transition:.18s}
-  .modeswitch button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(10,23,18,.12)}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:8px}
+.field .hint{font-weight:400;color:var(--ink3)}
+.inbox{display:flex;align-items:stretch;border:2px solid var(--line);border-radius:13px;
+  background:var(--card);overflow:hidden;transition:border-color .16s,box-shadow .16s}
+.inbox:focus-within{border-color:var(--cobalt);box-shadow:0 0 0 4px var(--cobalt-soft)}
+.inbox .unit{padding:0 14px;color:var(--ink3);font-family:var(--mono);font-size:15px;
+  background:var(--line2);display:flex;align-items:center}
+.inbox input{flex:1;border:none;outline:none;background:none;padding:13px 14px;font-family:var(--mono);
+  font-size:17px;font-weight:700;color:var(--ink);width:100%}
+.inbox input::-webkit-outer-spin-button,.inbox input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.inbox input[type=number]{-moz-appearance:textfield}
 
-  .field{margin-bottom:18px}
-  .field label{display:block;font-size:13.5px;font-weight:600;color:var(--ink-soft);margin-bottom:8px}
-  .field .hint{font-weight:400;color:var(--ink-faint)}
-  .inbox{display:flex;align-items:stretch;border:1.5px solid var(--line);border-radius:var(--radius-sm);
-    background:var(--card);overflow:hidden;transition:border-color .16s,box-shadow .16s}
-  .inbox:focus-within{border-color:var(--jade);box-shadow:0 0 0 4px var(--jade-soft)}
-  .inbox .unit{padding:0 14px;color:var(--ink-faint);font-family:var(--mono);font-size:15px;
-    background:var(--line-soft);display:flex;align-items:center}
-  .inbox input{flex:1;border:none;outline:none;background:none;padding:13px 14px;font-family:var(--mono);
-    font-size:17px;font-weight:500;color:var(--ink);width:100%}
-  .inbox input::-webkit-outer-spin-button,.inbox input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-  .inbox input[type=number]{-moz-appearance:textfield}
+.gstrow{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.chip{font-family:var(--mono);font-size:13px;border:2px solid var(--line);background:var(--card);
+  color:var(--ink2);border-radius:var(--pill);padding:7px 15px;cursor:pointer;transition:.14s;font-weight:700}
+.chip:hover{border-color:var(--cobalt);color:var(--cobalt)}
+.chip.on{background:var(--cobalt);color:#fff;border-color:var(--cobalt)}
+.reset{margin-top:6px;background:none;border:none;color:var(--ink3);font-size:13px;font-weight:600;
+  cursor:pointer;padding:6px 0;text-decoration:underline;text-underline-offset:3px}
+.reset:hover{color:var(--coral)}
 
-  .gstrow{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
-  .chip{font-family:var(--mono);font-size:13px;border:1.5px solid var(--line);background:var(--card);
-    color:var(--ink-soft);border-radius:100px;padding:7px 15px;cursor:pointer;transition:.16s}
-  .chip:hover{border-color:var(--jade);color:var(--ink)}
-  .chip.on{background:var(--forest);color:#fff;border-color:var(--forest)}
-  .reset{margin-top:8px;background:none;border:none;color:var(--ink-faint);font-size:13px;font-weight:500;
-    cursor:pointer;padding:4px 0;text-decoration:underline;text-underline-offset:3px}
-  .reset:hover{color:var(--brass)}
+/* ---- results: two big capsule outputs ---- */
+.heads{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:26px}
+@media(max-width:440px){.heads{grid-template-columns:1fr}}
+.head{position:relative;padding:18px 20px;border-radius:18px;overflow:hidden;color:#fff}
+.head.ptr{background:var(--cobalt)}
+.head.pts{background:var(--coral)}
+.head .k{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.85}
+.head .k b{font-weight:700;opacity:.9}
+.head .v{font-family:var(--mono);font-weight:700;font-size:34px;letter-spacing:-.01em;margin-top:6px;
+  font-variant-numeric:tabular-nums;line-height:1}
+.head .s{font-size:12px;margin-top:8px;opacity:.9}
 
-  /* results */
-  .heads{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:30px}
-  @media(max-width:440px){.heads{grid-template-columns:1fr}}
-  .head{position:relative;padding:20px 22px;border-radius:var(--radius-sm);border:1px solid var(--line);
-    background:linear-gradient(180deg,#FCFDFC,#FBFCFA);overflow:hidden}
-  .head::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px}
-  .head.ptr::before{background:var(--jade)}
-  .head.pts::before{background:var(--brass)}
-  .head .k{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
-    color:var(--ink-faint)}
-  .head .k b{color:var(--ink-soft);font-weight:500}
-  .head .v{font-family:var(--disp);font-weight:500;font-size:42px;letter-spacing:-.02em;margin-top:6px;
-    font-variant-numeric:tabular-nums;line-height:1}
-  .head.ptr .v{color:var(--jade)} .head.pts .v{color:#B98A3E}
-  .head .s{font-size:12.5px;color:var(--ink-faint);margin-top:8px}
+/* ---- signature: the blister strip ---- */
+.flow-lbl{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:11px}
+.flow-lbl .t{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+.flow-lbl .mrp{font-family:var(--disp);font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
+.ladder{display:flex;height:44px;width:100%;border-radius:12px;overflow:hidden;background:var(--line2);
+  box-shadow:inset 0 0 0 1px rgba(21,23,28,.05)}
+.seg{height:100%;transition:width .55s cubic-bezier(.22,1,.36,1);min-width:0;
+  box-shadow:inset -2px 0 0 var(--card)}
+.seg.pts{background:var(--cobalt)} .seg.sm{background:var(--coral)}
+.seg.rm{background:var(--sun)} .seg.gst{background:var(--graphite)}
+.flow-nodes{display:flex;margin-top:8px;width:100%}
+.flow-nodes span{font-size:10.5px;color:var(--ink3);font-family:var(--mono);text-align:center;
+  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;padding:0 2px}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;margin:20px 0 24px}
+.leg{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--ink2)}
+.leg .dot{width:11px;height:11px;border-radius:4px;flex:none}
+.leg .dot.pts{background:var(--cobalt)} .leg .dot.sm{background:var(--coral)}
+.leg .dot.rm{background:var(--sun)} .leg .dot.gst{background:var(--graphite)}
+.leg .nm{flex:1} .leg .amt{font-family:var(--mono);font-weight:700;font-variant-numeric:tabular-nums}
 
-  /* signature flow */
-  .flow-lbl{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:11px}
-  .flow-lbl .t{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--ink-faint)}
-  .flow-lbl .mrp{font-family:var(--disp);font-size:18px;font-weight:600;font-variant-numeric:tabular-nums}
-  .ladder{display:flex;height:46px;width:100%;border-radius:11px;overflow:hidden;
-    box-shadow:inset 0 0 0 1px rgba(10,23,18,.05);background:var(--line-soft)}
-  .seg{height:100%;transition:width .6s cubic-bezier(.22,1,.36,1);min-width:0;position:relative}
-  .seg.pts{background:var(--forest)} .seg.sm{background:var(--brass)}
-  .seg.rm{background:var(--jade)} .seg.gst{background:var(--gst-seg)}
-  .flow-nodes{display:flex;margin-top:9px;width:100%}
-  .flow-nodes span{font-size:11px;color:var(--ink-faint);font-family:var(--mono);letter-spacing:.02em;
-    text-align:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;padding:0 3px;
-    transition:width .6s cubic-bezier(.22,1,.36,1);box-sizing:border-box}
-  .legend{display:grid;grid-template-columns:1fr 1fr;gap:11px 22px;margin-top:18px}
-  @media(max-width:420px){.legend{grid-template-columns:1fr}}
-  .leg{display:flex;align-items:center;gap:9px;font-size:13.5px}
-  .dot{width:11px;height:11px;border-radius:4px;flex:none}
-  .dot.pts{background:var(--forest)} .dot.sm{background:var(--brass)}
-  .dot.rm{background:var(--jade)} .dot.gst{background:var(--gst-seg)}
-  .leg .nm{color:var(--ink-soft)}
-  .leg .amt{margin-left:auto;font-family:var(--mono);font-weight:500;font-variant-numeric:tabular-nums}
+.brk{border-top:1px solid var(--line2);padding-top:4px}
+.row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;
+  border-bottom:1px solid var(--line2);font-size:14px}
+.row:last-child{border-bottom:none}
+.row .lab{color:var(--ink2)} .row .lab small{color:var(--ink3)}
+.row .num{font-family:var(--mono);font-weight:700;font-variant-numeric:tabular-nums}
+.row.strong .lab{font-weight:700;color:var(--ink)}
+.row.split{padding-left:14px;font-size:12.5px}
 
-  .brk{border-top:1px solid var(--line);margin-top:26px}
-  .row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;
-    border-bottom:1px solid var(--line-soft);font-size:14.5px}
-  .row:last-child{border-bottom:none}
-  .row .lab{color:var(--ink-soft)} .row .lab small{color:var(--ink-faint)}
-  .row .num{font-family:var(--mono);font-weight:500;font-variant-numeric:tabular-nums}
-  .row.strong .lab{font-weight:600;color:var(--ink)} .row.strong .num{font-weight:500}
-  .row.split{padding-left:16px;font-size:13px} .row.split .lab{color:var(--ink-faint)}
+/* margin tab */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.big-out{background:var(--paper);border-radius:16px;padding:18px 20px}
+.big-out .k{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+.big-out .v{font-family:var(--mono);font-weight:700;font-size:30px;margin-top:6px;color:var(--cobalt);
+  font-variant-numeric:tabular-nums;line-height:1}
+.note{font-size:13px;color:var(--ink2);background:var(--cobalt-soft);border-radius:var(--r-sm);
+  padding:14px 16px;line-height:1.55}
+.note b{color:var(--ink)}
 
-  .note{font-size:13.5px;color:var(--ink-soft);background:var(--jade-soft);border-radius:var(--radius-sm);
-    padding:14px 16px;line-height:1.55;border:1px solid #D3EEE1}
-  .note b{color:var(--ink)}
-  .big-out{border:1px solid var(--line);border-radius:var(--radius-sm);padding:20px;text-align:center;
-    background:linear-gradient(180deg,#FCFDFC,#FBFCFA)}
-  .big-out .k{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint)}
-  .big-out .v{font-family:var(--disp);font-weight:500;font-size:38px;margin-top:6px;color:var(--jade);
-    font-variant-numeric:tabular-nums;line-height:1}
-  .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  @media(max-width:480px){.two{grid-template-columns:1fr}}
+/* ---------- generic sections ---------- */
+.section{margin-top:66px}
+.sec-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--coral);margin-bottom:12px}
+.section h3{font-family:var(--disp);font-weight:800;letter-spacing:-.02em;
+  font-size:clamp(23px,3.4vw,32px)}
+.section .lead{color:var(--ink2);margin-top:10px;max-width:60ch;font-size:16px}
 
-  /* ============ ROADMAP ============ */
-  .section{margin-top:88px}
-  .sec-eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;
-    color:var(--brass);margin-bottom:14px}
-  .section h3{font-family:var(--disp);font-weight:500;font-size:clamp(26px,4vw,38px);letter-spacing:-.025em}
-  .section .lead{color:var(--ink-soft);margin-top:12px;max-width:600px;font-size:16.5px}
-  .tools{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px}
-  @media(max-width:820px){.tools{grid-template-columns:repeat(2,1fr)}}
-  @media(max-width:520px){.tools{grid-template-columns:1fr}}
-  .tcard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px;
-    position:relative;transition:transform .25s cubic-bezier(.22,1,.36,1),box-shadow .25s}
-  .tcard:hover{transform:translateY(-4px);box-shadow:var(--lift)}
-  .tcard .ic{width:34px;height:34px;color:var(--jade);margin-bottom:16px}
-  .tcard.soon .ic{color:var(--ink-faint)}
-  .tcard h4{font-family:var(--disp);font-size:19px;font-weight:600;margin-bottom:7px;letter-spacing:-.01em}
-  .tcard p{font-size:14px;color:var(--ink-soft);line-height:1.55}
-  .tcard .tag{position:absolute;top:20px;right:20px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;
-    text-transform:uppercase;color:var(--ink-faint);border:1px solid var(--line);border-radius:100px;padding:4px 10px}
-  .tcard.live .tag{color:#1E9E6E;border-color:#BFE7D4;background:var(--jade-soft)}
+/* explainer */
+.explain{margin-top:66px;background:var(--cobalt-d);color:#D7DCE6;border-radius:var(--r);
+  padding:clamp(26px,5vw,48px)}
+.explain .sec-eyebrow{color:var(--sun)}
+.explain h3{font-family:var(--disp);font-weight:800;font-size:clamp(22px,3.4vw,32px);color:#fff;
+  letter-spacing:-.02em;margin-bottom:24px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:24px 36px}
+@media(max-width:640px){.fgrid{grid-template-columns:1fr}}
+.fitem h5{font-family:var(--disp);font-size:16px;font-weight:700;color:#fff;margin-bottom:7px}
+.fitem p{font-size:13.5px;color:#9AA3B4;margin-bottom:11px;line-height:1.55}
+.formula{font-family:var(--mono);font-size:12.5px;background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:11px 13px;color:var(--sun);
+  overflow-x:auto;white-space:nowrap}
 
-  /* ============ EXPLAINER ============ */
-  .explain{margin-top:88px;background:var(--forest);color:#DCE9E2;border-radius:var(--radius);
-    padding:clamp(28px,5vw,52px);position:relative;overflow:hidden}
-  .explain::before{content:"";position:absolute;inset:0;pointer-events:none;
-    background:radial-gradient(500px 340px at 90% 0%, rgba(51,200,140,.16), transparent 62%)}
-  .explain .sec-eyebrow{color:var(--jade);position:relative}
-  .explain h3{font-family:var(--disp);font-weight:500;font-size:clamp(24px,3.6vw,34px);letter-spacing:-.02em;
-    color:#fff;margin-bottom:26px;position:relative}
-  .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:26px 40px;position:relative}
-  @media(max-width:640px){.fgrid{grid-template-columns:1fr}}
-  .fitem h5{font-family:var(--disp);font-size:17px;font-weight:600;color:#fff;margin-bottom:7px}
-  .fitem p{font-size:14px;color:#A9C1B4;margin-bottom:12px;line-height:1.55}
-  .formula{font-family:var(--mono);font-size:13px;background:rgba(255,255,255,.05);
-    border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:12px 14px;color:var(--jade-bright);
-    overflow-x:auto;white-space:nowrap}
+/* worked example */
+.wex{max-width:640px}
+/* roadmap */
+.tools{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:26px}
+@media(max-width:760px){.tools{grid-template-columns:1fr 1fr}}
+@media(max-width:460px){.tools{grid-template-columns:1fr}}
+.tcard{background:var(--card);border:1px solid var(--line2);border-radius:16px;padding:20px;position:relative}
+.tcard.live{border-color:var(--cobalt);box-shadow:0 10px 26px -18px rgba(39,67,230,.6)}
+.tcard .t-tag{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 9px;border-radius:var(--pill);display:inline-block;margin-bottom:12px}
+.tcard.live .t-tag{background:var(--coral);color:#fff}
+.tcard.soon .t-tag{background:var(--line2);color:var(--ink3)}
+.tcard h4{font-family:var(--disp);font-size:16px;font-weight:700;margin-bottom:6px}
+.tcard p{font-size:13px;color:var(--ink2);line-height:1.5}
 
-  footer{margin:60px 0 26px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
-  footer .fl{display:flex;align-items:center;gap:11px}
-  footer .fl b{font-family:var(--disp);font-weight:600;font-size:17px}
-  footer .fl b span{color:var(--jade)}
-  footer p{font-size:12.5px;color:var(--ink-faint);max-width:560px;line-height:1.5}
+/* faq */
+.faq{margin-top:24px;max-width:760px}
+.faq-item{padding:20px 0;border-bottom:1px solid var(--line)}
+.faq-item:last-child{border-bottom:none}
+.faq-item h4{font-family:var(--disp);font-size:17px;font-weight:700;color:var(--ink);margin-bottom:7px}
+.faq-item p{font-size:14.5px;color:var(--ink2);line-height:1.6}
 
-  .credit{border-top:1px solid var(--line);padding:22px 0 40px;display:flex;flex-direction:column;
-    align-items:center;gap:12px;text-align:center;font-family:var(--mono);font-size:12.5px;
-    color:var(--ink-faint);letter-spacing:.02em}
-  .credit span{opacity:.85}
-  .credit a{color:var(--ink);text-decoration:none;font-weight:500;padding:3px 9px;border-radius:7px;
-    border:1px solid var(--line);background:var(--card);transition:.18s;white-space:nowrap}
-  .credit a:hover{color:var(--jade);border-color:var(--jade);box-shadow:0 0 0 3px var(--jade-soft)}
+/* footer */
+footer{margin-top:70px;border-top:1px solid var(--line);padding:34px 0 60px}
+footer .fl{display:flex;align-items:center;gap:11px;margin-bottom:12px}
+footer .fl .rx{width:34px;height:34px;border-radius:10px;font-size:20px}
+footer .fl b{font-family:var(--disp);font-weight:700}
+footer p{font-size:12.5px;color:var(--ink3);max-width:70ch;line-height:1.55}
 
-  @media (prefers-reduced-motion: reduce){
-    *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
-  }
-  .rise{opacity:0;transform:translateY(16px);animation:rise .7s cubic-bezier(.22,1,.36,1) forwards}
-  .rise.d1{animation-delay:.06s}.rise.d2{animation-delay:.12s}.rise.d3{animation-delay:.18s}.rise.d4{animation-delay:.24s}
-  @keyframes rise{to{opacity:1;transform:none}}
-  /* ===== intro splash (pure CSS, auto-dismiss) ===== */
-  @keyframes rxType{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 -2px 0 0)}}
-  @keyframes rxPrime{0%,100%{opacity:1}50%{opacity:.22}}
-  @keyframes rxSplashOut{0%,70%{opacity:1;visibility:visible}96%{opacity:0;visibility:visible}
-    100%{opacity:0;visibility:hidden;pointer-events:none}}
-  #splash{position:fixed;inset:0;z-index:9999;background:var(--forest);display:flex;align-items:center;
-    justify-content:center;overflow:hidden;animation:rxSplashOut 2.6s ease forwards}
-  #splash::before{content:"";position:absolute;inset:0;pointer-events:none;
-    background:radial-gradient(600px 420px at 50% 42%, rgba(51,200,140,.20), transparent 62%)}
-  #splash .slogo{position:relative;display:flex;align-items:center;gap:15px;font-family:var(--mono);
-    font-weight:500;font-size:clamp(1.7rem,6vw,3rem);color:#EAF2ED;letter-spacing:-.01em}
-  #splash .slogo .dot{width:15px;height:15px;border-radius:4px;background:var(--jade);
-    box-shadow:0 0 0 5px rgba(51,200,140,.18);animation:rxPrime .26s ease 2 both}
-  #splash .slogo .brandtext{display:inline-block;white-space:nowrap;clip-path:inset(0 100% 0 0);
-    animation:rxType .85s steps(11,end) .45s both}
-  #splash .slogo .brandtext em{font-style:normal;color:var(--jade)}
-  @media (prefers-reduced-motion:reduce){#splash{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 
-<div id="splash" aria-hidden="true"><div class="slogo"><span class="dot"></span><span class="brandtext">{CODE<em>.NULL</em>}</span></div></div>
+<header class="top"><div class="wrap"><div class="row">
+  <a class="brand" href="/">
+    <span class="rx">&#8478;</span>
+    <span class="wm"><b>Rx</b><a href="/">by {CODE.NULL} &#8599;</a></span>
+  </a>
+  <span class="tag">Free &middot; no sign-up, no ads</span>
+</div></div></header>
 
-<div class="hero">
-  <div class="wrap">
-    <nav>
-      <div class="brand">
-        <span class="mark"><span class="rx">Rx</span></span>
+<section class="hero"><div class="wrap">
+  <div class="eyebrow">For stockists &amp; PCD distributors</div>
+  <h1>Know your margin <em>before you place the order.</em></h1>
+  <p class="sub">Enter an MRP and your margins &mdash; Rx returns PTR, PTS and the full GST split, and shows exactly where every rupee of the MRP goes.</p>
+</div></section>
+
+<div class="wrap">
+  <div class="tool">
+    <div class="toolhead">
+      <div class="tabs" role="tablist">
+        <button class="tab" role="tab" aria-selected="true" data-tab="calc">PTR / PTS</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="margin">Margin</button>
       </div>
-      <div class="pill">Free forever · <b>No sign-up, no ads</b></div>
-    </nav>
-
-    <div class="herocopy">
-      <div class="eyebrow rise">For stockists &amp; PCD distributors</div>
-      <h1 class="rise d1">Know your margin<br><em>before you place the order.</em></h1>
-      <p class="sub rise d2">Enter an MRP and your margins. Rx returns PTR, PTS, the GST split, and a clear picture of where the money goes across the supply chain — instantly, and free.</p>
+      <span class="free">no sign-up required</span>
     </div>
+
+    <!-- TAB 1 -->
+    <div class="panel on" id="calc">
+      <div class="grid">
+        <div class="col inputs">
+          <h2>Inputs</h2>
+          <div class="modeswitch" id="mode">
+            <button class="on" data-mode="fwd">MRP &rarr; PTR / PTS</button>
+            <button data-mode="rev">PTS &rarr; MRP</button>
+          </div>
+          <div class="field">
+            <label id="primaryLabel">Maximum Retail Price (MRP) <span class="hint">&mdash; incl. GST</span></label>
+            <div class="inbox"><span class="unit">&#8377;</span>
+              <input type="number" id="primary" inputmode="decimal" value="100" min="0" step="0.01" placeholder="100.00"></div>
+          </div>
+          <div class="field">
+            <label>GST rate</label>
+            <div class="gstrow" id="gstChips">
+              <button class="chip" data-gst="0">0%</button>
+              <button class="chip on" data-gst="5">5%</button>
+              <button class="chip" data-gst="12">12%</button>
+              <button class="chip" data-gst="18">18%</button>
+              <button class="chip" data-gst="28">28%</button>
+            </div>
+            <div class="inbox"><input type="number" id="gst" inputmode="decimal" value="5" min="0" step="0.01"><span class="unit">%</span></div>
+          </div>
+          <div class="field">
+            <label>Retailer margin</label>
+            <div class="inbox"><input type="number" id="rm" inputmode="decimal" value="20" min="0" step="0.01"><span class="unit">%</span></div>
+          </div>
+          <div class="field">
+            <label>Stockist margin</label>
+            <div class="inbox"><input type="number" id="sm" inputmode="decimal" value="10" min="0" step="0.01"><span class="unit">%</span></div>
+          </div>
+          <button class="reset" id="reset">Reset to defaults</button>
+        </div>
+
+        <div class="col">
+          <h2>Results</h2>
+          <div class="heads">
+            <div class="head ptr">
+              <div class="k">PTR <b>&middot; to retailer</b></div>
+              <div class="v" id="o_ptr">&#8377;0.00</div>
+              <div class="s">what the retailer pays</div>
+            </div>
+            <div class="head pts">
+              <div class="k">PTS <b>&middot; to stockist</b></div>
+              <div class="v" id="o_pts">&#8377;0.00</div>
+              <div class="s">what the stockist pays</div>
+            </div>
+          </div>
+
+          <div class="flow-lbl">
+            <span class="t">Where the MRP goes</span>
+            <span class="mrp" id="o_mrp_top">MRP &#8377;0.00</span>
+          </div>
+          <div class="ladder">
+            <div class="seg pts" id="seg_pts"></div>
+            <div class="seg sm"  id="seg_sm"></div>
+            <div class="seg rm"  id="seg_rm"></div>
+            <div class="seg gst" id="seg_gst"></div>
+          </div>
+          <div class="flow-nodes" id="flowNodes"><span id="n_pts">Company</span><span id="n_sm">Stockist</span><span id="n_rm">Retailer</span><span id="n_gst">GST</span></div>
+
+          <div class="legend">
+            <div class="leg"><span class="dot pts"></span><span class="nm">Stockist cost (PTS)</span><span class="amt" id="l_pts">&#8377;0</span></div>
+            <div class="leg"><span class="dot sm"></span><span class="nm">Stockist margin</span><span class="amt" id="l_sm">&#8377;0</span></div>
+            <div class="leg"><span class="dot rm"></span><span class="nm">Retailer margin</span><span class="amt" id="l_rm">&#8377;0</span></div>
+            <div class="leg"><span class="dot gst"></span><span class="nm">GST</span><span class="amt" id="l_gst">&#8377;0</span></div>
+          </div>
+
+          <div class="brk">
+            <div class="row"><span class="lab">MRP (incl. GST)</span><span class="num" id="b_mrp">&#8377;0.00</span></div>
+            <div class="row"><span class="lab">GST amount</span><span class="num" id="b_gst">&#8377;0.00</span></div>
+            <div class="row split"><span class="lab">CGST + SGST (&frac12; each)</span><span class="num" id="b_cgst">&#8377;0.00</span></div>
+            <div class="row strong"><span class="lab">Net rate <small>(excl. GST)</small></span><span class="num" id="b_net">&#8377;0.00</span></div>
+            <div class="row"><span class="lab">Retailer profit / unit</span><span class="num" id="b_rprofit">&#8377;0.00</span></div>
+            <div class="row"><span class="lab">Stockist profit / unit</span><span class="num" id="b_sprofit">&#8377;0.00</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2 -->
+    <div class="panel" id="margin">
+      <div class="grid">
+        <div class="col inputs">
+          <h2>Margin between two rates</h2>
+          <div class="field">
+            <label>Selling price <span class="hint">&mdash; higher rate</span></label>
+            <div class="inbox"><span class="unit">&#8377;</span>
+              <input type="number" id="mg_sell" inputmode="decimal" value="100" min="0" step="0.01"></div>
+          </div>
+          <div class="field">
+            <label>Cost / buying price <span class="hint">&mdash; lower rate</span></label>
+            <div class="inbox"><span class="unit">&#8377;</span>
+              <input type="number" id="mg_cost" inputmode="decimal" value="80" min="0" step="0.01"></div>
+          </div>
+          <div class="note" style="margin-top:18px"><b>Margin</b> is profit as a share of the selling price. <b>Markup</b> is profit as a share of the cost. Pharma rate-lists use margin.</div>
+        </div>
+        <div class="col">
+          <h2>Result</h2>
+          <div class="two" style="margin-bottom:16px">
+            <div class="big-out"><div class="k">Margin</div><div class="v" id="mg_margin">0.0%</div></div>
+            <div class="big-out"><div class="k">Markup</div><div class="v" id="mg_markup">0.0%</div></div>
+          </div>
+          <div class="brk" style="border-top:none">
+            <div class="row strong"><span class="lab">Profit per unit</span><span class="num" id="mg_profit">&#8377;0.00</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
 <div class="wrap">
-  <div class="stage rise d3">
-    <div class="tool">
-      <div class="toolhead">
-        <div class="tabs" role="tablist">
-          <button class="tab" role="tab" aria-selected="true" data-tab="calc">PTR / PTS Calculator</button>
-          <button class="tab" role="tab" aria-selected="false" data-tab="margin">Margin</button>
-        </div>
-        <span class="free">no sign-up required</span>
-      </div>
-      <div class="divider"></div>
-
-      <!-- TAB 1 -->
-      <div class="panel on" id="calc">
-        <div class="grid">
-          <div class="col inputs">
-            <h2>Inputs</h2>
-            <div class="modeswitch" id="mode">
-              <button class="on" data-mode="fwd">MRP &rarr; PTR / PTS</button>
-              <button data-mode="rev">PTS &rarr; MRP</button>
-            </div>
-            <div class="field">
-              <label id="primaryLabel">Maximum Retail Price (MRP) <span class="hint">— incl. GST</span></label>
-              <div class="inbox"><span class="unit">₹</span>
-                <input type="number" id="primary" inputmode="decimal" value="100" min="0" step="0.01" placeholder="100.00"></div>
-            </div>
-            <div class="field">
-              <label>GST rate</label>
-              <div class="gstrow" id="gstChips">
-                <button class="chip" data-gst="0">0%</button>
-                <button class="chip on" data-gst="5">5%</button>
-                <button class="chip" data-gst="12">12%</button>
-                <button class="chip" data-gst="18">18%</button>
-                <button class="chip" data-gst="28">28%</button>
-              </div>
-              <div class="inbox"><input type="number" id="gst" inputmode="decimal" value="5" min="0" step="0.01"><span class="unit">%</span></div>
-            </div>
-            <div class="field">
-              <label>Retailer margin</label>
-              <div class="inbox"><input type="number" id="rm" inputmode="decimal" value="20" min="0" step="0.01"><span class="unit">%</span></div>
-            </div>
-            <div class="field">
-              <label>Stockist margin</label>
-              <div class="inbox"><input type="number" id="sm" inputmode="decimal" value="10" min="0" step="0.01"><span class="unit">%</span></div>
-            </div>
-            <button class="reset" id="reset">Reset to defaults</button>
-          </div>
-
-          <div class="col">
-            <h2>Results</h2>
-            <div class="heads">
-              <div class="head ptr">
-                <div class="k">PTR <b>· to retailer</b></div>
-                <div class="v" id="o_ptr">₹0.00</div>
-                <div class="s">what the retailer pays</div>
-              </div>
-              <div class="head pts">
-                <div class="k">PTS <b>· to stockist</b></div>
-                <div class="v" id="o_pts">₹0.00</div>
-                <div class="s">what the stockist pays</div>
-              </div>
-            </div>
-
-            <div class="flow-lbl">
-              <span class="t">Where the MRP goes</span>
-              <span class="mrp" id="o_mrp_top">MRP ₹0.00</span>
-            </div>
-            <div class="ladder">
-              <div class="seg pts" id="seg_pts"></div>
-              <div class="seg sm"  id="seg_sm"></div>
-              <div class="seg rm"  id="seg_rm"></div>
-              <div class="seg gst" id="seg_gst"></div>
-            </div>
-            <div class="flow-nodes" id="flowNodes"><span id="n_pts">Company</span><span id="n_sm">Stockist</span><span id="n_rm">Retailer</span><span id="n_gst">GST</span></div>
-
-            <div class="legend">
-              <div class="leg"><span class="dot pts"></span><span class="nm">Stockist cost (PTS)</span><span class="amt" id="l_pts">₹0</span></div>
-              <div class="leg"><span class="dot sm"></span><span class="nm">Stockist margin</span><span class="amt" id="l_sm">₹0</span></div>
-              <div class="leg"><span class="dot rm"></span><span class="nm">Retailer margin</span><span class="amt" id="l_rm">₹0</span></div>
-              <div class="leg"><span class="dot gst"></span><span class="nm">GST</span><span class="amt" id="l_gst">₹0</span></div>
-            </div>
-
-            <div class="brk">
-              <div class="row"><span class="lab">MRP (incl. GST)</span><span class="num" id="b_mrp">₹0.00</span></div>
-              <div class="row"><span class="lab">GST amount</span><span class="num" id="b_gst">₹0.00</span></div>
-              <div class="row split"><span class="lab">CGST + SGST (½ each)</span><span class="num" id="b_cgst">₹0.00</span></div>
-              <div class="row strong"><span class="lab">Net rate <small>(excl. GST)</small></span><span class="num" id="b_net">₹0.00</span></div>
-              <div class="row"><span class="lab">Retailer profit / unit</span><span class="num" id="b_rprofit">₹0.00</span></div>
-              <div class="row"><span class="lab">Stockist profit / unit</span><span class="num" id="b_sprofit">₹0.00</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 2 -->
-      <div class="panel" id="margin">
-        <div class="grid">
-          <div class="col inputs">
-            <h2>Margin between two rates</h2>
-            <div class="field">
-              <label>Selling price <span class="hint">— higher rate</span></label>
-              <div class="inbox"><span class="unit">₹</span>
-                <input type="number" id="mg_sell" inputmode="decimal" value="100" min="0" step="0.01"></div>
-            </div>
-            <div class="field">
-              <label>Cost / buying price <span class="hint">— lower rate</span></label>
-              <div class="inbox"><span class="unit">₹</span>
-                <input type="number" id="mg_cost" inputmode="decimal" value="80" min="0" step="0.01"></div>
-            </div>
-            <div class="note" style="margin-top:18px"><b>Margin</b> is profit as a share of the selling price. <b>Markup</b> is profit as a share of the cost. Pharma rate-lists use margin.</div>
-          </div>
-          <div class="col">
-            <h2>Result</h2>
-            <div class="two" style="margin-bottom:16px">
-              <div class="big-out"><div class="k">Margin</div><div class="v" id="mg_margin">0.0%</div></div>
-              <div class="big-out"><div class="k">Markup</div><div class="v" id="mg_markup">0.0%</div></div>
-            </div>
-            <div class="brk" style="border-top:none;margin-top:0">
-              <div class="row strong"><span class="lab">Profit per unit</span><span class="num" id="mg_profit">₹0.00</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
 
   <!-- EXPLAINER -->
   <div class="explain">
@@ -477,23 +500,40 @@
       <div class="fitem">
         <h5>Net rate (base price)</h5>
         <p>The MRP on the pack includes GST, so first strip GST to reach the taxable base.</p>
-        <div class="formula">Net rate = MRP ÷ (1 + GST%)</div>
+        <div class="formula">Net rate = MRP &divide; (1 + GST%)</div>
       </div>
       <div class="fitem">
-        <h5>PTR — Price to Retailer</h5>
+        <h5>PTR &mdash; Price to Retailer</h5>
         <p>The rate a retailer pays the stockist, after the retailer margin comes off the net rate.</p>
-        <div class="formula">PTR = Net rate × (1 − Retailer margin%)</div>
+        <div class="formula">PTR = Net rate &times; (1 &minus; Retailer margin%)</div>
       </div>
       <div class="fitem">
-        <h5>PTS — Price to Stockist</h5>
+        <h5>PTS &mdash; Price to Stockist</h5>
         <p>The rate a stockist pays the company, after the stockist margin comes off the PTR.</p>
-        <div class="formula">PTS = PTR × (1 − Stockist margin%)</div>
+        <div class="formula">PTS = PTR &times; (1 &minus; Stockist margin%)</div>
       </div>
       <div class="fitem">
         <h5>Reading a margin back</h5>
         <p>Given two rates, margin is profit as a share of the higher (selling) price.</p>
-        <div class="formula">Margin% = (Sell − Cost) ÷ Sell × 100</div>
+        <div class="formula">Margin% = (Sell &minus; Cost) &divide; Sell &times; 100</div>
       </div>
+    </div>
+  </div>
+
+  <!-- WORKED EXAMPLE -->
+  <div class="section">
+    <div class="sec-eyebrow">Worked example</div>
+    <h3>Where &#8377;100 of MRP goes</h3>
+    <p class="lead">Using the calculator&rsquo;s defaults &mdash; MRP &#8377;100.00, GST 5%, retailer margin 20%, stockist margin 10%.</p>
+    <div class="wex">
+      <div class="brk" style="border-top:none;margin-top:22px">
+        <div class="row"><span class="lab">MRP (printed on pack, incl. GST)</span><span class="num">&#8377;100.00</span></div>
+        <div class="row"><span class="lab">Net rate = 100 &divide; 1.05 (strip 5% GST)</span><span class="num">&#8377;95.24</span></div>
+        <div class="row"><span class="lab">PTR = 95.24 &times; 0.80 (less 20% retailer margin)</span><span class="num">&#8377;76.19</span></div>
+        <div class="row strong"><span class="lab">PTS = 76.19 &times; 0.90 (less 10% stockist margin)</span><span class="num">&#8377;68.57</span></div>
+        <div class="row"><span class="lab">GST collected (CGST &#8377;2.38 + SGST &#8377;2.38)</span><span class="num">&#8377;4.76</span></div>
+      </div>
+      <p class="note" style="margin-top:18px">On a &#8377;100 pack the stockist buys at <b>&#8377;68.57</b> and earns <b>&#8377;7.62</b>; the retailer buys at <b>&#8377;76.19</b> and earns <b>&#8377;19.05</b>; and <b>&#8377;4.76</b> is GST. Change any input above to see your own split.</p>
     </div>
   </div>
 
@@ -503,57 +543,34 @@
     <h3>More stockist tools, on the way</h3>
     <p class="lead">The calculator is step one. Rx is growing into a free toolkit for the everyday maths and paperwork a distributor deals with.</p>
     <div class="tools">
-      <div class="tcard live">
-        <span class="tag">Live</span>
-        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M10 4v16"/></svg>
-        <h4>PTR / PTS calculator</h4>
-        <p>MRP, GST and margins in — retailer &amp; stockist prices out, with a full breakdown.</p>
-      </div>
-      <div class="tcard live">
-        <span class="tag">Live</span>
-        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 20L20 4M9 6a3 3 0 11-6 0 3 3 0 016 0zM21 18a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-        <h4>Margin calculator</h4>
-        <p>Read the margin and markup between any two rates in an instant.</p>
-      </div>
-      <div class="tcard soon">
-        <span class="tag">Planned</span>
-        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v16"/></svg>
-        <h4>Rate-list maker</h4>
-        <p>Paste products, set margins once, export a clean party-wise rate list.</p>
-      </div>
-      <div class="tcard soon">
-        <span class="tag">Planned</span>
-        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h5"/></svg>
-        <h4>GST invoice / bill</h4>
-        <p>Quick tax invoices with CGST / SGST / IGST split and batch &amp; expiry fields.</p>
-      </div>
-      <div class="tcard soon">
-        <span class="tag">Planned</span>
-        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-        <h4>Expiry tracker</h4>
-        <p>Flag near-expiry stock so you can return or push it before it becomes a loss.</p>
-      </div>
-      <div class="tcard soon">
-        <span class="tag">Planned</span>
-        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 4-6"/></svg>
-        <h4>Outstanding tracker</h4>
-        <p>Keep tabs on party-wise dues and days outstanding without a spreadsheet.</p>
-      </div>
+      <div class="tcard live"><span class="t-tag">Live</span><h4>PTR / PTS calculator</h4><p>MRP, GST and margins in &mdash; retailer &amp; stockist prices out, with a full breakdown.</p></div>
+      <div class="tcard live"><span class="t-tag">Live</span><h4>Margin calculator</h4><p>Read the margin and markup between any two rates in an instant.</p></div>
+      <div class="tcard soon"><span class="t-tag">Planned</span><h4>Rate-list maker</h4><p>Paste products, set margins once, export a clean party-wise rate list.</p></div>
+      <div class="tcard soon"><span class="t-tag">Planned</span><h4>GST invoice / bill</h4><p>Quick tax invoices with CGST / SGST / IGST split and batch &amp; expiry fields.</p></div>
+      <div class="tcard soon"><span class="t-tag">Planned</span><h4>Expiry tracker</h4><p>Flag near-expiry stock so you can return or push it before it becomes a loss.</p></div>
+      <div class="tcard soon"><span class="t-tag">Planned</span><h4>Outstanding tracker</h4><p>Keep tabs on party-wise dues and days outstanding without a spreadsheet.</p></div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="section">
+    <div class="sec-eyebrow">FAQ</div>
+    <h3>Common questions</h3>
+    <div class="faq">
+      <div class="faq-item"><h4>What is the difference between PTR and PTS?</h4><p>PTR (Price to Retailer) is the rate a retailer pays the stockist. PTS (Price to Stockist) is the rate the stockist pays the company or C&amp;F agent. Both are usually quoted as net rates, before GST is added on the invoice.</p></div>
+      <div class="faq-item"><h4>How do you calculate PTR and PTS from the MRP?</h4><p>First remove GST from the MRP to get the net rate (MRP divided by 1 plus the GST rate). Take the retailer margin off the net rate to get the PTR, then take the stockist margin off the PTR to get the PTS. The calculator on this page does each step and shows the full breakdown.</p></div>
+      <div class="faq-item"><h4>Is GST included in PTR and PTS?</h4><p>Usually no. PTR and PTS are quoted as net rates that exclude GST, and GST is added separately on the invoice. The MRP printed on the pack is the figure that already includes GST, which is why the calculation starts by stripping GST out of the MRP.</p></div>
+      <div class="faq-item"><h4>What GST rate should I use for medicines?</h4><p>Medicines fall under different GST slabs depending on the product, most commonly 5% or 12%, with a few items at 18%. These rates are revised from time to time, so it is best to set the current rate for your product in the calculator rather than assume one.</p></div>
+      <div class="faq-item"><h4>What is the difference between margin and markup?</h4><p>Margin is profit measured as a share of the selling price. Markup is the same profit measured as a share of the cost, so it always looks larger. Pharma rate-lists are quoted on margin, which is what this calculator uses.</p></div>
+      <div class="faq-item"><h4>Is this PTR PTS calculator free, and is my data safe?</h4><p>Yes, it is free to use with no sign-up and no ads. The calculator runs entirely in your browser, so the numbers you enter are not sent anywhere or stored.</p></div>
     </div>
   </div>
 
   <footer>
-    <div class="fl">
-      <span class="mark sm"><span class="rx">Rx</span></span>
-      <span class="wm dark"><b>Rx</b><a class="by" href="/">by {CODE.NULL}</a></span>
-    </div>
-    <p>A free calculator for reference only. Results are estimates — actual PTR / PTS depend on your company’s scheme, GST slab and trade terms. Not tax or financial advice.</p>
+    <div class="fl"><span class="rx">&#8478;</span><b>Rx</b> <span style="color:var(--ink3);font-family:var(--mono);font-size:12px">by {CODE.NULL}</span></div>
+    <p>A free calculator for reference only. Results are estimates &mdash; actual PTR / PTS depend on your company&rsquo;s scheme, GST slab and trade terms. Not tax or financial advice.</p>
   </footer>
 
-  <div class="credit">
-    <span>// built from scratch — without writing a single line of code</span>
-    <a href="/">{CODE.NULL}</a>
-  </div>
 </div>
 
 <script>
