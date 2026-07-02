@@ -347,6 +347,25 @@ footer .fl b{font-family:var(--disp);font-weight:700}
 footer p{font-size:12.5px;color:var(--ink3);max-width:70ch;line-height:1.55}
 
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  .sclabel{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin:22px 0 11px}
+  .schemes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:760px}
+  @media(max-width:620px){.schemes{grid-template-columns:1fr 1fr}}
+  @media(max-width:420px){.schemes{grid-template-columns:1fr}}
+  .scard{background:var(--card);border:1px solid var(--line2);border-radius:13px;padding:15px 16px}
+  .scard b{display:block;font-family:var(--disp);font-size:15px;font-weight:700;color:var(--ink)}
+  .scard .st{display:block;font-family:var(--mono);font-size:12px;color:var(--coral);margin-top:5px}
+  .scard.gen{border-color:var(--cobalt-soft)} .scard.gen .st{color:var(--cobalt)}
+  .sfoot{font-size:15px;color:var(--ink2);margin-top:20px;max-width:820px;line-height:1.7}
+  .sfoot a{color:var(--cobalt);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+  .sfoot a:hover{color:var(--coral)}
+  .reggrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:900px}
+  @media(max-width:720px){.reggrid{grid-template-columns:1fr 1fr}}
+  @media(max-width:440px){.reggrid{grid-template-columns:1fr}}
+  .rcard{background:var(--card);border:1px solid var(--line2);border-radius:13px;padding:14px 16px}
+  .rcard a,.rcard b{font-family:var(--disp);font-size:14.5px;font-weight:700;color:var(--ink);text-decoration:none}
+  .rcard a:hover{color:var(--cobalt);text-decoration:underline;text-underline-offset:3px}
+  .rcard .rd{display:block;font-size:12.5px;color:var(--ink2);margin-top:5px;line-height:1.45}
+  .rcard .ru{display:block;font-family:var(--mono);font-size:11px;color:var(--ink3);margin-top:7px}
 </style>
 </head>
 <body>
@@ -549,6 +568,54 @@ footer p{font-size:12.5px;color:var(--ink3);max-width:70ch;line-height:1.55}
       <div class="tcard soon"><span class="t-tag">Planned</span><h4>GST invoice / bill</h4><p>Quick tax invoices with CGST / SGST / IGST split and batch &amp; expiry fields.</p></div>
       <div class="tcard soon"><span class="t-tag">Planned</span><h4>Expiry tracker</h4><p>Flag near-expiry stock so you can return or push it before it becomes a loss.</p></div>
       <div class="tcard soon"><span class="t-tag">Planned</span><h4>Outstanding tracker</h4><p>Keep tabs on party-wise dues and days outstanding without a spreadsheet.</p></div>
+    </div>
+  </div>
+
+  <!-- SCHEMES -->
+  <div class="section">
+    <div class="sec-eyebrow">For distributors</div>
+    <h3>Funding &amp; government schemes</h3>
+    <p class="lead">Working-capital and credit support a stockist or distributor can tap.</p>
+    <div class="sclabel">Credit &amp; working capital</div>
+    <div class="schemes">
+      <div class="scard"><b>Udyam / MSME</b><span class="st">Priority-sector loans</span></div>
+      <div class="scard"><b>CGTMSE</b><span class="st">Collateral-free guarantee</span></div>
+      <div class="scard"><b>MUDRA (PMMY)</b><span class="st">Up to &#8377;20 lakh</span></div>
+    </div>
+    <div class="sclabel">Generic-medicine tie-up</div>
+    <div class="schemes">
+      <div class="scard gen"><b>Jan Aushadhi (PMBJP)</b><span class="st">Distribute generics</span></div>
+    </div>
+    <p class="sfoot">Schemes &amp; limits change &mdash; verify on the official portals: <a href="https://udyamregistration.gov.in" target="_blank" rel="noopener noreferrer">udyamregistration.gov.in</a> &middot; <a href="https://www.mudra.org.in" target="_blank" rel="noopener noreferrer">mudra.org.in</a> &middot; <a href="https://www.cgtmse.in" target="_blank" rel="noopener noreferrer">cgtmse.in</a> &middot; <a href="https://janaushadhi.gov.in" target="_blank" rel="noopener noreferrer">janaushadhi.gov.in</a></p>
+  </div>
+
+  <!-- REGULATORS -->
+  <div class="section">
+    <div class="sec-eyebrow">Reference</div>
+    <h3>Official sources &amp; regulators</h3>
+    <p class="lead">The government and global bodies behind pharma pricing, quality and licensing.</p>
+    <div class="sclabel">India</div>
+    <div class="reggrid">
+      <div class="rcard"><a href="https://nppa.gov.in" target="_blank" rel="noopener noreferrer">NPPA</a><span class="rd">Drug price control (DPCO) &amp; ceiling prices</span><span class="ru">nppa.gov.in</span></div>
+      <div class="rcard"><a href="https://cdsco.gov.in" target="_blank" rel="noopener noreferrer">CDSCO</a><span class="rd">National drug regulator; new-drug approvals</span><span class="ru">cdsco.gov.in</span></div>
+      <div class="rcard"><a href="https://pharma-dept.gov.in" target="_blank" rel="noopener noreferrer">Dept. of Pharmaceuticals</a><span class="rd">Pharma policy &amp; government schemes</span><span class="ru">pharma-dept.gov.in</span></div>
+      <div class="rcard"><a href="https://ipc.gov.in" target="_blank" rel="noopener noreferrer">IPC</a><span class="rd">Drug quality standards (Indian Pharmacopoeia)</span><span class="ru">ipc.gov.in</span></div>
+      <div class="rcard"><a href="https://pci.gov.in" target="_blank" rel="noopener noreferrer">PCI</a><span class="rd">Pharmacy education; registers pharmacists</span><span class="ru">pci.gov.in</span></div>
+      <div class="rcard"><a href="https://janaushadhi.gov.in" target="_blank" rel="noopener noreferrer">Jan Aushadhi (PMBJP)</a><span class="rd">Affordable generic medicines</span><span class="ru">janaushadhi.gov.in</span></div>
+      <div class="rcard"><b>State Drugs Control</b><span class="rd">State drug licences &amp; inspections</span><span class="ru">e.g. Karnataka DCD</span></div>
+    </div>
+    <div class="sclabel">Global / international</div>
+    <div class="reggrid">
+      <div class="rcard"><a href="https://www.who.int" target="_blank" rel="noopener noreferrer">WHO</a><span class="rd">Global standards; essential medicines list</span><span class="ru">who.int</span></div>
+      <div class="rcard"><a href="https://www.fda.gov" target="_blank" rel="noopener noreferrer">US FDA</a><span class="rd">US drug &amp; device regulator</span><span class="ru">fda.gov</span></div>
+      <div class="rcard"><a href="https://www.ema.europa.eu" target="_blank" rel="noopener noreferrer">EMA</a><span class="rd">EU medicines authorisation</span><span class="ru">ema.europa.eu</span></div>
+      <div class="rcard"><a href="https://www.gov.uk/government/organisations/medicines-and-healthcare-products-regulatory-agency" target="_blank" rel="noopener noreferrer">MHRA</a><span class="rd">UK medicines &amp; devices regulator</span><span class="ru">gov.uk</span></div>
+      <div class="rcard"><a href="https://www.tga.gov.au" target="_blank" rel="noopener noreferrer">TGA</a><span class="rd">Australia therapeutic goods (ARTG)</span><span class="ru">tga.gov.au</span></div>
+      <div class="rcard"><a href="https://www.canada.ca/en/health-canada.html" target="_blank" rel="noopener noreferrer">Health Canada</a><span class="rd">Canada drug &amp; health-product regulator</span><span class="ru">canada.ca</span></div>
+      <div class="rcard"><a href="https://www.pmda.go.jp/english/" target="_blank" rel="noopener noreferrer">PMDA</a><span class="rd">Japan drug &amp; device review</span><span class="ru">pmda.go.jp</span></div>
+      <div class="rcard"><a href="https://www.gov.br/anvisa" target="_blank" rel="noopener noreferrer">ANVISA</a><span class="rd">Brazil health regulator</span><span class="ru">gov.br/anvisa</span></div>
+      <div class="rcard"><a href="https://www.icmra.info" target="_blank" rel="noopener noreferrer">ICMRA</a><span class="rd">Global regulators&#x27; coalition</span><span class="ru">icmra.info</span></div>
+      <div class="rcard"><a href="https://www.ich.org" target="_blank" rel="noopener noreferrer">ICH</a><span class="rd">Harmonises drug-regulation standards</span><span class="ru">ich.org</span></div>
     </div>
   </div>
 
