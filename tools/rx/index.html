@@ -122,10 +122,10 @@
     },
     {
       "@type": "Question",
-      "name": "What GST rate should I use for medicines?",
+      "name": "What GST rate applies to medicines?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Medicines fall under different GST slabs depending on the product, most commonly 5% or 12%, with a few items at 18%. These rates are revised from time to time, so it is best to set the current rate for your product in the calculator rather than assume one."
+        "text": "Since the GST 2.0 reform of September 2025, the 12% and 28% slabs were removed. Most medicines are now taxed at 5%, several life-saving drugs are nil-rated, and a few items sit at 18%. Rates are revised from time to time, so set the current rate for your product in the calculator."
       }
     },
     {
@@ -142,6 +142,38 @@
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Yes, it is free to use with no sign-up and no ads. The calculator runs entirely in your browser, so the numbers you enter are not sent anywhere or stored."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can this calculator work backwards from PTS to MRP?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Switch to the PTS to MRP tab, enter the stockist's buying price, and the calculator works back up to the PTR and the MRP for your chosen GST rate and margins."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I start a pharma stockist or wholesale business in India?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Register the business and take GST, arrange premises of at least 10 square metres with cold storage, appoint a competent person, then apply for a wholesale drug licence (Form 20B and 21B) with your State Drug Control authority. A Drug Inspector inspects the premises before the licence is granted. The full steps are in the registration section above."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What do I need to export medicines from India?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Alongside a drug licence you need an Import Export Code from the DGFT, an RCMC from Pharmexcil, and usually a COPP from the CDSCO, with products sourced from a WHO-GMP certified manufacturer. Each destination country may also require its own product registration."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are there government schemes or loans for pharma distributors?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. A distributor can register on Udyam for priority-sector loans, use the CGTMSE guarantee for collateral-free credit, or take a MUDRA loan of up to ₹20 lakh. Distributors can also supply the Jan Aushadhi (PMBJP) network of generic-medicine stores."
       }
     }
   ]
@@ -181,8 +213,8 @@ a{color:inherit;text-decoration:none}
   font-size:30px;line-height:1;box-shadow:0 8px 20px -8px rgba(255,106,44,.65);transform:rotate(-3deg)}
 .brand .wm{display:flex;flex-direction:column;line-height:1.05}
 .brand .wm b{font-family:var(--disp);font-weight:700;font-size:20px;letter-spacing:-.01em}
-.brand .wm a{font-family:var(--mono);font-size:11px;color:var(--ink3);margin-top:2px}
-.brand .wm a:hover{color:var(--cobalt)}
+.brand .wm .by{font-size:11.5px;color:var(--ink3);margin-top:1px;font-weight:500}
+.brand:hover .wm b{color:var(--cobalt)}
 .tag{font-family:var(--mono);font-size:12px;color:var(--cobalt);background:var(--cobalt-soft);
   border-radius:var(--pill);padding:8px 15px;white-space:nowrap}
 @media(max-width:560px){.tag{display:none}}
@@ -336,10 +368,14 @@ h1 em{font-style:normal;color:var(--cobalt)}
 
 /* faq */
 .faq{margin-top:24px;max-width:760px}
-.faq-item{padding:20px 0;border-bottom:1px solid var(--line)}
-.faq-item:last-child{border-bottom:none}
-.faq-item h4{font-family:var(--disp);font-size:17px;font-weight:700;color:var(--ink);margin-bottom:7px}
-.faq-item p{font-size:14.5px;color:var(--ink2);line-height:1.6}
+.faq-item{border-bottom:1px solid var(--line)}
+.faq-item summary{display:block;list-style:none;cursor:pointer;position:relative;padding:18px 42px 18px 0;font-family:var(--disp);font-size:16px;font-weight:700;color:var(--ink)}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary:hover{color:var(--cobalt)}
+.faq-item summary::after{content:"";position:absolute;right:8px;top:23px;width:9px;height:9px;border-right:2.5px solid var(--ink3);border-bottom:2.5px solid var(--ink3);transform:rotate(45deg);transition:transform .2s}
+.faq-item[open] summary{color:var(--cobalt)}
+.faq-item[open] summary::after{transform:rotate(-135deg);border-color:var(--cobalt)}
+.faq-item p{font-size:14.5px;color:var(--ink2);line-height:1.62;padding:0 0 18px;margin:0}
 
 /* footer */
 footer{margin-top:70px;border-top:1px solid var(--line);padding:34px 0 60px}
@@ -388,7 +424,7 @@ footer p{font-size:12.5px;color:var(--ink3);max-width:70ch;line-height:1.55}
 <header class="top"><div class="wrap"><div class="row">
   <a class="brand" href="/">
     <span class="rx">&#8478;</span>
-    <span class="wm"><b>Rx</b><a href="/">by {CODE.NULL} &#8599;</a></span>
+    <span class="wm"><b>Rx</b><span class="by">by {CODE.NULL}</span></span>
   </a>
   <span class="tag">Free &middot; no sign-up, no ads</span>
 </div></div></header>
@@ -662,12 +698,16 @@ footer p{font-size:12.5px;color:var(--ink3);max-width:70ch;line-height:1.55}
     <div class="sec-eyebrow">FAQ</div>
     <h3>Common questions</h3>
     <div class="faq">
-      <div class="faq-item"><h4>What is the difference between PTR and PTS?</h4><p>PTR (Price to Retailer) is the rate a retailer pays the stockist. PTS (Price to Stockist) is the rate the stockist pays the company or C&amp;F agent. Both are usually quoted as net rates, before GST is added on the invoice.</p></div>
-      <div class="faq-item"><h4>How do you calculate PTR and PTS from the MRP?</h4><p>First remove GST from the MRP to get the net rate (MRP divided by 1 plus the GST rate). Take the retailer margin off the net rate to get the PTR, then take the stockist margin off the PTR to get the PTS. The calculator on this page does each step and shows the full breakdown.</p></div>
-      <div class="faq-item"><h4>Is GST included in PTR and PTS?</h4><p>Usually no. PTR and PTS are quoted as net rates that exclude GST, and GST is added separately on the invoice. The MRP printed on the pack is the figure that already includes GST, which is why the calculation starts by stripping GST out of the MRP.</p></div>
-      <div class="faq-item"><h4>What GST rate should I use for medicines?</h4><p>Medicines fall under different GST slabs depending on the product, most commonly 5% or 12%, with a few items at 18%. These rates are revised from time to time, so it is best to set the current rate for your product in the calculator rather than assume one.</p></div>
-      <div class="faq-item"><h4>What is the difference between margin and markup?</h4><p>Margin is profit measured as a share of the selling price. Markup is the same profit measured as a share of the cost, so it always looks larger. Pharma rate-lists are quoted on margin, which is what this calculator uses.</p></div>
-      <div class="faq-item"><h4>Is this PTR PTS calculator free, and is my data safe?</h4><p>Yes, it is free to use with no sign-up and no ads. The calculator runs entirely in your browser, so the numbers you enter are not sent anywhere or stored.</p></div>
+      <details class="faq-item"><summary>What is the difference between PTR and PTS?</summary><p>PTR (Price to Retailer) is the rate a retailer pays the stockist. PTS (Price to Stockist) is the rate the stockist pays the company or C&amp;F agent. Both are usually quoted as net rates, before GST is added on the invoice.</p></details>
+      <details class="faq-item"><summary>How do you calculate PTR and PTS from the MRP?</summary><p>First remove GST from the MRP to get the net rate (MRP divided by 1 plus the GST rate). Take the retailer margin off the net rate to get the PTR, then take the stockist margin off the PTR to get the PTS. The calculator on this page does each step and shows the full breakdown.</p></details>
+      <details class="faq-item"><summary>Is GST included in PTR and PTS?</summary><p>Usually no. PTR and PTS are quoted as net rates that exclude GST, and GST is added separately on the invoice. The MRP printed on the pack is the figure that already includes GST, which is why the calculation starts by stripping GST out of the MRP.</p></details>
+      <details class="faq-item"><summary>What GST rate applies to medicines?</summary><p>Since the GST 2.0 reform of September 2025, the 12% and 28% slabs were removed. Most medicines are now taxed at 5%, several life-saving drugs are nil-rated, and a few items sit at 18%. Rates are revised from time to time, so set the current rate for your product in the calculator.</p></details>
+      <details class="faq-item"><summary>What is the difference between margin and markup?</summary><p>Margin is profit measured as a share of the selling price. Markup is the same profit measured as a share of the cost, so it always looks larger. Pharma rate-lists are quoted on margin, which is what this calculator uses.</p></details>
+      <details class="faq-item"><summary>Is this PTR PTS calculator free, and is my data safe?</summary><p>Yes, it is free to use with no sign-up and no ads. The calculator runs entirely in your browser, so the numbers you enter are not sent anywhere or stored.</p></details>
+      <details class="faq-item"><summary>Can this calculator work backwards from PTS to MRP?</summary><p>Yes. Switch to the PTS to MRP tab, enter the stockist&#x27;s buying price, and the calculator works back up to the PTR and the MRP for your chosen GST rate and margins.</p></details>
+      <details class="faq-item"><summary>How do I start a pharma stockist or wholesale business in India?</summary><p>Register the business and take GST, arrange premises of at least 10 square metres with cold storage, appoint a competent person, then apply for a wholesale drug licence (Form 20B and 21B) with your State Drug Control authority. A Drug Inspector inspects the premises before the licence is granted. The full steps are in the registration section above.</p></details>
+      <details class="faq-item"><summary>What do I need to export medicines from India?</summary><p>Alongside a drug licence you need an Import Export Code from the DGFT, an RCMC from Pharmexcil, and usually a COPP from the CDSCO, with products sourced from a WHO-GMP certified manufacturer. Each destination country may also require its own product registration.</p></details>
+      <details class="faq-item"><summary>Are there government schemes or loans for pharma distributors?</summary><p>Yes. A distributor can register on Udyam for priority-sector loans, use the CGTMSE guarantee for collateral-free credit, or take a MUDRA loan of up to ₹20 lakh. Distributors can also supply the Jan Aushadhi (PMBJP) network of generic-medicine stores.</p></details>
     </div>
   </div>
 
