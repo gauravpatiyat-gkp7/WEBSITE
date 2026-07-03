@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- SECURITY: Content-Security-Policy — only these sources may load code/styles/fonts. The one inline script is whitelisted by its SHA-256 hash; edit that script and this hash must be recomputed. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'sha256-/yUVeS8GxQ149W6a6ul0Jh6IPQ9kXRtJ82XFzsDzpY0='; connect-src 'self'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'sha256-GzSiUqwFsi0s40lRTVsYSZQzJzIHI33Ve31qi3qxt/I='; connect-src 'self'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -157,7 +157,7 @@
       "name": "How do I start a pharma stockist or wholesale business in India?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Register the business and take GST, arrange premises of at least 10 square metres with cold storage, appoint a competent person, then apply for a wholesale drug licence (Form 20B and 21B) with your State Drug Control authority. A Drug Inspector inspects the premises before the licence is granted. The full steps are in the registration section above."
+        "text": "Register the business and take GST, arrange premises meeting the state minimum (commonly 10 to 15 square metres) with cold storage, appoint a competent person, then apply for a wholesale drug licence (Form 20B and 21B) with your State Drug Control authority. A Drug Inspector inspects the premises before the licence is granted. The full steps are in the registration section above."
       }
     },
     {
@@ -417,6 +417,31 @@ footer p{font-size:12.5px;color:var(--ink3);max-width:70ch;line-height:1.55}
   .madeby a:hover{color:var(--coral);text-decoration:underline;text-underline-offset:3px}
   .panel{display:none}
   .panel.on{display:block}
+.share{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:20px;padding-top:16px;border-top:1px solid var(--line2)}
+  .share-lbl{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-right:auto}
+  .sbtn{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;font-weight:600;border-radius:11px;padding:9px 15px;cursor:pointer;border:none;text-decoration:none;transition:.15s;font-family:var(--body)}
+  .sbtn.copy{background:var(--card);border:2px solid var(--line);color:var(--ink)}
+  .sbtn.copy:hover{border-color:var(--cobalt);color:var(--cobalt)}
+  .sbtn.copy.done{border-color:#16a34a;color:#16a34a}
+  .sbtn.wa{background:#25D366;color:#fff}
+  .sbtn.wa:hover{background:#20bd5a}
+  .sbtn.wa svg{width:16px;height:16px;fill:currentColor}
+  .pc2{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:840px;margin-top:22px}
+  @media(max-width:640px){.pc2{grid-template-columns:1fr}}
+  .pcard{background:var(--card);border:1px solid var(--line2);border-radius:16px;padding:20px 22px}
+  .pcard.sch{border-top:3px solid var(--cobalt)}
+  .pcard.non{border-top:3px solid var(--coral)}
+  .pc-tag{display:inline-block;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;padding:4px 10px;border-radius:999px;margin-bottom:11px}
+  .pc-tag.sch{background:var(--cobalt-soft);color:var(--cobalt)}
+  .pc-tag.non{background:var(--coral-soft);color:var(--coral)}
+  .pcard h4{font-family:var(--disp);font-size:17px;font-weight:700;color:var(--ink);margin-bottom:12px}
+  .pcard ul{list-style:none;display:grid;gap:9px}
+  .pcard li{position:relative;padding-left:16px;font-size:13.5px;color:var(--ink2);line-height:1.5}
+  .pcard li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:2px;background:var(--ink3)}
+  .pcard.sch li::before{background:var(--cobalt)}
+  .pcard.non li::before{background:var(--coral)}
+  .pcard li b{color:var(--ink);font-weight:700}
+  .reviewed{display:inline-block;font-size:12px;color:var(--ink3);margin-top:14px;padding:5px 12px;border:1px solid var(--line);border-radius:999px}
 </style>
 </head>
 <body>
@@ -507,6 +532,11 @@ footer p{font-size:12.5px;color:var(--ink3);max-width:70ch;line-height:1.55}
             <div class="row strong"><span class="lab">Net rate <small>(excl. GST)</small></span><span class="num" id="b_net">&#8377;0.00</span></div>
             <div class="row"><span class="lab">Retailer profit / unit</span><span class="num" id="b_rprofit">&#8377;0.00</span></div>
             <div class="row"><span class="lab">Stockist profit / unit</span><span class="num" id="b_sprofit">&#8377;0.00</span></div>
+          </div>
+          <div class="share">
+            <span class="share-lbl">Share this rate</span>
+            <button type="button" class="sbtn copy" id="copyShare">Copy</button>
+            <a class="sbtn wa" id="waShare" href="https://wa.me/?text=" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 2.1.55 4.15 1.6 5.96L2 22l4.25-1.68c1.75.96 3.72 1.47 5.79 1.47h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm0 18.15h-.01c-1.83 0-3.62-.49-5.19-1.42l-.37-.22-2.52 1 .67-2.46-.24-.38a8.2 8.2 0 0 1-1.26-4.35c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.24-8.24 8.24zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.12-.16.25-.64.81-.79.98-.14.16-.29.18-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.16.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43-.14 0-.31-.01-.48-.01-.16 0-.43.06-.66.31-.23.25-.87.85-.87 2.07 0 1.22.89 2.4 1.01 2.57.12.16 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.28z"/></svg>WhatsApp</a>
           </div>
         </div>
       </div>
@@ -604,6 +634,36 @@ footer p{font-size:12.5px;color:var(--ink3);max-width:70ch;line-height:1.55}
     </div>
   </div>
 
+  <!-- PRICE CONTROL -->
+  <div class="section">
+    <div class="sec-eyebrow">Price control</div>
+    <h3>Are the margins fixed? DPCO &amp; NPPA</h3>
+    <p class="lead">India regulates medicine prices through the Drugs (Prices Control) Order, 2013, enforced by the NPPA. Whether you can set your own margins comes down to one thing &mdash; is the drug in the National List of Essential Medicines (NLEM)?</p>
+    <div class="pc2">
+      <div class="pcard sch">
+        <span class="pc-tag sch">Scheduled &middot; NLEM</span>
+        <h4>Price-capped by NPPA</h4>
+        <ul>
+          <li>NPPA fixes a <b>ceiling price</b> (the maximum MRP), revised each year by the Wholesale Price Index on 1 April.</li>
+          <li>The DPCO fixes the retailer margin at <b>16%</b> inside the ceiling; the stockist margin isn&rsquo;t separately capped there (around <b>8%</b> by trade practice).</li>
+          <li>MRP = ceiling price + GST. Selling above it is an offence under the Essential Commodities Act.</li>
+          <li>Over <b>900 formulations</b> currently carry a notified ceiling price.</li>
+        </ul>
+      </div>
+      <div class="pcard non">
+        <span class="pc-tag non">Non-scheduled</span>
+        <h4>Set by the market</h4>
+        <ul>
+          <li>The company decides the price and the trade margins.</li>
+          <li>Usual norms are <b>20%</b> to the retailer and <b>10%</b> to the stockist &mdash; this tool&rsquo;s defaults.</li>
+          <li>The one hard rule: MRP can&rsquo;t rise more than <b>10%</b> in any 12 months.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="sfoot">A separate rule (Trade Margin Rationalisation) caps the trade margin at <b>30%</b> on 42 select anti-cancer drugs. This is a general reference, not legal advice &mdash; the NLEM and ceiling prices change, so confirm the current position and any specific ceiling price at <a href="https://nppa.gov.in" target="_blank" rel="noopener noreferrer">nppa.gov.in</a>.</p>
+    <p class="reviewed">Regulatory &amp; pricing figures last reviewed: 3 July 2026.</p>
+  </div>
+
   <!-- ROADMAP -->
   <div class="section">
     <div class="sec-eyebrow">The toolkit</div>
@@ -626,7 +686,7 @@ footer p{font-size:12.5px;color:var(--ink3);max-width:70ch;line-height:1.55}
     <p class="lead">The core steps to set up a licensed wholesale / distribution business.</p>
     <ol class="steps">
       <li><b>Register the business</b><span class="sd">Proprietorship, LLP or company &mdash; plus GST registration.</span></li>
-      <li><b>Set up the premises</b><span class="sd">Min. 10 sq.m (15 if combined with retail), with proper storage and a refrigerator for cold-chain drugs.</span></li>
+      <li><b>Set up the premises</b><span class="sd">Adequate premises &mdash; a minimum of 10&ndash;15 sq.m depending on your state (15 if combined with retail) &mdash; with storage and a refrigerator for cold-chain drugs.</span></li>
       <li><b>Appoint a competent person</b><span class="sd">Science graduate with 1 year&rsquo;s drug experience, or 4 years&rsquo; experience without a degree. A registered pharmacist is needed only for retail.</span></li>
       <li><b>Apply for the wholesale drug licence</b><span class="sd">Form 20B (general) + 21B (Schedule C/C1), filed as Form 19 on your State Drug Control portal.</span></li>
       <li><b>Premises inspection</b><span class="sd">A Drug Inspector verifies the site; the licence is usually issued in about 15&ndash;30 working days.</span></li>
@@ -705,7 +765,7 @@ footer p{font-size:12.5px;color:var(--ink3);max-width:70ch;line-height:1.55}
       <details class="faq-item"><summary>What is the difference between margin and markup?</summary><p>Margin is profit measured as a share of the selling price. Markup is the same profit measured as a share of the cost, so it always looks larger. Pharma rate-lists are quoted on margin, which is what this calculator uses.</p></details>
       <details class="faq-item"><summary>Is this PTR PTS calculator free, and is my data safe?</summary><p>Yes, it is free to use with no sign-up and no ads. The calculator runs entirely in your browser, so the numbers you enter are not sent anywhere or stored.</p></details>
       <details class="faq-item"><summary>Can this calculator work backwards from PTS to MRP?</summary><p>Yes. Switch to the PTS to MRP tab, enter the stockist&#x27;s buying price, and the calculator works back up to the PTR and the MRP for your chosen GST rate and margins.</p></details>
-      <details class="faq-item"><summary>How do I start a pharma stockist or wholesale business in India?</summary><p>Register the business and take GST, arrange premises of at least 10 square metres with cold storage, appoint a competent person, then apply for a wholesale drug licence (Form 20B and 21B) with your State Drug Control authority. A Drug Inspector inspects the premises before the licence is granted. The full steps are in the registration section above.</p></details>
+      <details class="faq-item"><summary>How do I start a pharma stockist or wholesale business in India?</summary><p>Register the business and take GST, arrange premises meeting the state minimum (commonly 10 to 15 square metres) with cold storage, appoint a competent person, then apply for a wholesale drug licence (Form 20B and 21B) with your State Drug Control authority. A Drug Inspector inspects the premises before the licence is granted. The full steps are in the registration section above.</p></details>
       <details class="faq-item"><summary>What do I need to export medicines from India?</summary><p>Alongside a drug licence you need an Import Export Code from the DGFT, an RCMC from Pharmexcil, and usually a COPP from the CDSCO, with products sourced from a WHO-GMP certified manufacturer. Each destination country may also require its own product registration.</p></details>
       <details class="faq-item"><summary>Are there government schemes or loans for pharma distributors?</summary><p>Yes. A distributor can register on Udyam for priority-sector loans, use the CGTMSE guarantee for collateral-free credit, or take a MUDRA loan of up to ₹20 lakh. Distributors can also supply the Jan Aushadhi (PMBJP) network of generic-medicine stores.</p></details>
     </div>
@@ -754,6 +814,7 @@ footer p{font-size:12.5px;color:var(--ink3);max-width:70ch;line-height:1.55}
 
   /* Calculator */
   let mode='fwd';
+  let shareTxt='';
   function applyMode(m){
     mode=m;
     if(m==='fwd'){
@@ -777,6 +838,14 @@ footer p{font-size:12.5px;color:var(--ink3);max-width:70ch;line-height:1.55}
     applyMode(mode);
     $('gst').value='5'; $('rm').value='20'; $('sm').value='10';
     syncChips(); calc();
+  });
+
+  $('copyShare').addEventListener('click',function(){
+    var bn=this;
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(shareTxt).then(function(){ bn.textContent='Copied'; bn.classList.add('done');
+        setTimeout(function(){ bn.textContent='Copy'; bn.classList.remove('done'); },1600); }).catch(function(){});
+    }
   });
 
   function calc(){
@@ -814,6 +883,9 @@ footer p{font-size:12.5px;color:var(--ink3);max-width:70ch;line-height:1.55}
     $('l_rm').textContent =INR(rProfit);
     $('l_gst').textContent=INR(gstAmt);
     [['seg_pts','l_pts'],['seg_sm','l_sm'],['seg_rm','l_rm'],['seg_gst','l_gst']].forEach(function(a){ $(a[1]).style.visibility=$(a[0]).offsetWidth>=38?'visible':'hidden'; });
+    var _st='Rx — PTR / PTS\nMRP '+INR(mrp)+'  (GST '+g+'%)\nPTR '+INR(ptr)+'  ·  PTS '+INR(pts)+'\nRetailer '+rm+'% · Stockist '+sm+'%\nNet '+INR(net)+' · GST '+INR(gstAmt)+'\n— via codenull.in/tools/rx/';
+    shareTxt=_st;
+    $('waShare').href='https://wa.me/?text='+encodeURIComponent(_st);
   }
   ['primary','gst','rm','sm'].forEach(id=>$(id).addEventListener('input',()=>{ syncChips(); calc(); }));
 
