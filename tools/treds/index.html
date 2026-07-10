@@ -1,0 +1,1801 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  TReDS Calculator  —  {CODE.NULL} · codenull.in
+  ----------------------------------------------------------------------------
+  This is a SINGLE, SELF-CONTAINED, FULLY-EDITABLE HTML file.
+  Nothing here is minified, locked, or obfuscated — edit it freely and re-deploy.
+
+  QUICK EDIT GUIDE
+  • COLOURS  — all defined once in the CSS ":root{ }" block (search ":root").
+       --navy  = bottle green  (dark surfaces, headings, buttons)
+       --blue  = teal          (accent: eyebrows, links, icons, highlights)
+       --body/--muted/--line/--fill = greys ;  #2DD4BF = bright teal on dark
+     Change a variable and the whole site updates.
+  • FONTS    — Inter Tight (site) + Space Grotesk (splash) via Google Fonts <link>.
+  • CALCULATOR — default values are the input "value=" attributes:
+       #invoice 10,00,000 · #rate 8.5 · #credit 60 · #days 60 · #fee 0.10
+     The maths is in the <script> at the very bottom (see function "calc").
+  • TEXT     — plain HTML inside each <section>; on-page order = document order.
+  • LOGO / FAVICON / SPLASH — embedded as base64 data-URIs (the few long lines);
+     swap the data-URI to change an asset. Favicon <link>s are in <head>.
+  • LANDING  — page opens on the calculator (script "land()"): scroll up = intro,
+     scroll down = the rest of the content.
+
+  DEPLOY: upload this one file to any static host (Vercel / Netlify / any server).
+  No build step, no dependencies to install.
+  ============================================================================
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ===================== SECURITY HARDENING ===================== -->
+<!-- (1) Content-Security-Policy — allowlist is exactly what this page loads (see audit).
+     • Google Fonts (googleapis + gstatic) are REQUIRED here or every font silently breaks.
+     • script/style 'unsafe-inline' is required because all CSS & JS live inline in this single file.
+     • HEADER-ONLY protections (frame-ancestors, X-Frame-Options, HSTS, X-Content-Type-Options)
+       are IGNORED inside a meta tag — set those at your host / Cloudflare (see the checklist).
+       Clickjacking is covered below by the JS frame-guard until that header is in place. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; form-action 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests">
+<!-- (4) Strict referrer policy — never leak your full URL/path to sites you link out to. -->
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<!-- (3) Clickjacking guard — if this page is embedded in another site's <iframe>, break out of it;
+     if a cross-origin embedder blocks the break-out, hide the page instead. Does nothing when not framed. -->
+<script>(function(){try{if(window.top!==window.self){window.top.location=window.self.location;}}catch(e){document.documentElement.style.display="none";if(window.stop){window.stop();}}})();</script>
+<!-- Reliability: tiny centralized logger + global error nets (no dependencies, no backend) -->
+<script>
+(function(){
+  window.TReDS = window.TReDS || {};
+  function ctx(){ return { page: location.pathname + location.hash, viewport: window.innerWidth + 'x' + window.innerHeight, at: new Date().toISOString() }; }
+  TReDS.log  = function(msg, data){ try{ console.log ('[TReDS] ' + msg, data !== undefined ? data : '', ctx()); }catch(e){} };
+  TReDS.warn = function(msg, data){ try{ console.warn('[TReDS] ' + msg, data !== undefined ? data : '', ctx()); }catch(e){} };
+  TReDS.error = function(msg, err, extra){ try{
+    console.error('[TReDS] ' + msg, { message: (err && (err.message || err)) || msg, stack: err && err.stack, extra: extra || null, context: ctx() });
+  }catch(e){} };
+  // Global safety nets — catch anything an individual try/catch missed, so failures are never silent:
+  window.addEventListener('error', function(e){
+    TReDS.error('Uncaught script error', e.error || e.message, { source: (e.filename || '') + ':' + (e.lineno || '?') + ':' + (e.colno || '?') });
+  });
+  window.addEventListener('unhandledrejection', function(e){
+    TReDS.error('Unhandled promise rejection', e.reason);
+  });
+  TReDS.log('logger initialized');
+})();
+</script>
+<!-- =============================================================== -->
+<meta name="theme-color" content="#0F9E8C">
+<title>TReDS Calculator — get paid today, not in 60 days | {CODE.NULL}</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJ7Q09ERS5OVUxMfSI+CiAgPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9IiMwQjFGMzgiLz4KICA8cmVjdCB4PSI0IiB5PSI0IiB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIHJ4PSIxMyIgZmlsbD0iIzJERDRCRiIgb3BhY2l0eT0iMC4xOCIvPgogIDxyZWN0IHg9IjE2IiB5PSIxNiIgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iOC41IiBmaWxsPSIjMkRENEJGIi8+Cjwvc3ZnPg==">
+<link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="description" content="Free TReDS calculator and guide for Indian MSMEs — turn a buyer-approved invoice into cash in a day or two. See your day-one payout and true annualised cost.">
+<meta name="keywords" content="TReDS calculator, TReDS cost calculator, Invoice discounting calculator, Bill discounting cost calculator, Trade receivables discounting calculator, MSME invoice financing calculator">
+<meta name="author" content="{CODE.NULL}">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{CODE.NULL}">
+<meta property="og:title" content="TReDS Calculator — invoice & bill discounting cost for MSMEs">
+<meta property="og:description" content="Work out what an unpaid, buyer-approved invoice is really worth on TReDS — your day-one payout and true effective annualised cost. A free calculator for Indian MSME sellers.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TReDS Calculator — invoice & bill discounting cost for MSMEs">
+<meta name="twitter:description" content="Work out what an unpaid, buyer-approved invoice is really worth on TReDS — day-one payout and effective annualised cost. Free, for Indian MSMEs.">
+
+<!-- ===================== SEO: canonical + social share ===================== -->
+<!-- Canonical / social / JSON-LD URLs point at the live deployment: https://codenull.in/tools/treds/ -->
+<link rel="canonical" href="https://codenull.in/tools/treds/">
+<meta property="og:url" content="https://codenull.in/tools/treds/">
+<meta property="og:locale" content="en_IN">
+<meta property="og:image" content="https://codenull.in/og-cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="TReDS Calculator by {CODE.NULL} — turn a buyer-approved invoice into cash in a day or two.">
+<meta name="twitter:image" content="https://codenull.in/og-cover.jpg">
+<meta name="twitter:image:alt" content="TReDS Calculator by {CODE.NULL} — turn a buyer-approved invoice into cash in a day or two.">
+<!-- ======================================================================== -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#0F9E8C; --blue-2:#0C8072; --blue-soft:#DDF3EE; --blue-tint:#EDFAF6;
+    --navy:#0B3D2E; --navy-2:#08301F; --body:#5A606A; --muted:#706F7E;
+    --line:#D9DADE; --line-2:#ECEDEF; --fill:#F3F3F3; --fill-2:#F7F8FA; --paper:#FFFFFF;
+    --font:"Inter Tight","Segoe UI",system-ui,sans-serif;
+    --r:22px; --r-sm:12px; --r-lg:28px;
+    --shadow:0 26px 54px -28px rgba(11,61,46,.22), 0 8px 22px -14px rgba(11,61,46,.12);
+    --shadow-sm:0 12px 28px -18px rgba(11,61,46,.20);
+    --maxw:1160px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--body);font-family:var(--font);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  ::selection{background:var(--blue);color:#fff}
+  a{color:inherit;text-decoration:none}
+  h1,h2,h3,h4,h5{margin:0;color:var(--navy);font-weight:600;line-height:1.1;letter-spacing:-.02em}
+  .num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+  input,button{font-family:inherit}
+  button{cursor:pointer}
+  input:focus-visible,button:focus-visible,.tgl button:focus-visible,.faq-q:focus-visible{outline:2.5px solid var(--blue);outline-offset:2px}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--blue);font-weight:700;font-size:14px;letter-spacing:.08em;text-transform:uppercase}
+  .eyebrow svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .eyebrow.center{justify-content:center}
+
+  .btn{display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:16px;border-radius:var(--r-sm);padding:14px 24px;border:1.5px solid transparent;transition:transform .12s ease, background .15s, box-shadow .15s;white-space:nowrap}
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{background:var(--navy);color:#fff;box-shadow:0 14px 28px -16px rgba(11,61,46,.5)}
+  .btn-primary:hover{background:#1d3661}
+  .btn-ghost{background:#fff;color:var(--navy);border-color:var(--line)}
+  .btn-ghost:hover{border-color:var(--navy)}
+  .btn .arw{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+  .nav{background:#fff;border-bottom:1px solid var(--line-2);position:sticky;top:0;z-index:50}
+  .nav .wrap{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:18px;height:60px;position:relative}
+  .navtoggle{display:none;grid-column:3;width:44px;height:44px;flex-direction:column;justify-content:center;align-items:center;gap:5px;background:transparent;border:0;padding:10px;border-radius:10px;margin-right:-8px}
+  .navtoggle span{display:block;width:22px;height:2px;background:var(--navy);border-radius:2px;transition:transform .2s ease, opacity .2s ease}
+  .nav.open .navtoggle span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  .nav.open .navtoggle span:nth-child(2){opacity:0}
+  .nav.open .navtoggle span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+  .logo{display:flex;align-items:center;gap:11px}
+  .logo .mk{width:32px;height:32px;border-radius:9px;background:var(--navy);position:relative;flex:none}
+  .logo .mk::before{content:"";position:absolute;inset:8px;border:2.5px solid #fff;border-radius:4px}
+  .logo .mk::after{content:"";position:absolute;left:14px;top:14px;width:4px;height:4px;background:#fff;border-radius:1px}
+  .logo .cn{font-weight:700;font-size:15px;color:var(--muted)}
+  .logo .cn b{color:var(--navy);font-weight:800}
+  .logo .sep{width:1px;height:20px;background:var(--line)}
+  .logo .tool{font-weight:700;font-size:20px;color:var(--navy);letter-spacing:-.02em}
+  .nav .links{display:flex;gap:30px;justify-content:flex-end}
+  .nav .links a{font-weight:500;font-size:15.5px;color:var(--navy);transition:color .15s}
+  .nav .links a.active{color:var(--blue);font-weight:600}
+  .nav .links a:hover{color:var(--blue)}
+  .nav .sp{flex:1}
+  @media (max-width:860px){
+    .navtoggle{display:flex}
+    .nav .links{position:absolute;top:60px;left:0;right:0;flex-direction:column;gap:0;justify-content:flex-start;background:#fff;border-bottom:1px solid var(--line-2);box-shadow:0 18px 30px -20px rgba(11,61,46,.35);padding:6px 0;opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .18s ease, transform .18s ease, visibility .18s;z-index:49}
+    .nav.open .links{opacity:1;visibility:visible;transform:none}
+    .nav .links a{display:block;padding:14px 26px;font-size:16.5px}
+    .nav .links a.active{background:var(--blue-tint)}
+  }
+  @media (max-width:600px){ .nav .btn-primary{display:none} }
+
+  .hero{padding:56px 0 34px}
+  .hero .wrap{display:grid;grid-template-columns:1.02fr 1fr;gap:52px;align-items:center}
+  .hero > .wrap > div{min-width:0}
+  @media (max-width:940px){ .hero .wrap{grid-template-columns:1fr;gap:40px} }
+  .hero h1{font-size:clamp(40px,6.2vw,64px);font-weight:700;margin:20px 0 0;color:var(--navy)}
+  .hero h1 .u{color:var(--blue)}
+  .hero .lede{font-size:19px;color:var(--body);margin:22px 0 0;max-width:52ch}
+  .hero .cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:30px}
+  .hero .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+  .hero .chip{font-size:14px;font-weight:600;color:var(--navy);background:var(--fill);border-radius:999px;padding:8px 15px}
+  .hero .chip b{color:var(--navy)}
+
+  .mock{background:#fff;border:1px solid var(--line-2);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:22px;position:relative;max-width:100%;overflow:hidden}
+  .mock .mrow{display:flex;align-items:center;justify-content:space-between}
+  .mock .brand{display:flex;align-items:center;gap:9px;font-weight:700;color:var(--navy)}
+  .mock .brand .d{width:26px;height:26px;border-radius:8px;background:var(--navy)}
+  .mock .live{font-size:12px;font-weight:600;color:var(--muted);background:var(--fill);border-radius:999px;padding:4px 11px;white-space:nowrap}
+  .mock .balance{margin-top:18px;background:var(--blue-tint);border:1px solid var(--blue-soft);border-radius:18px;padding:18px 20px}
+  .mock .balance .k{font-size:13px;font-weight:600;color:var(--muted)}
+  .mock .balance .v{font-size:clamp(30px,5vw,40px);font-weight:700;color:var(--navy);margin-top:6px;letter-spacing:-.02em}
+  .mock .balance .sub{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:13px;font-weight:600;color:var(--navy);flex-wrap:wrap}
+  .mock .balance .sub .pill{background:#fff;border:1px solid var(--blue-soft);border-radius:999px;padding:2px 9px}
+  .mock .spark{margin-top:14px}
+  .mock .list{margin-top:14px;display:grid;gap:10px}
+  .mock .li{display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--line-2);border-radius:14px;padding:11px 14px;min-width:0;gap:10px}
+  .mock .li .lft{display:flex;align-items:center;gap:11px;min-width:0;overflow:hidden}
+  .mock .li .ic{width:30px;height:30px;border-radius:9px;background:var(--fill);display:flex;align-items:center;justify-content:center;color:var(--navy);font-weight:700;font-size:13px;flex:none}
+  .mock .li .nm{font-size:14px;font-weight:600;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+  .mock .li .amt{font-weight:700;color:var(--navy);font-size:14px;white-space:nowrap;flex:none}
+  .mock .li .amt.neg{color:#C0492C}
+
+  section{padding:70px 0;scroll-margin-top:68px}
+  .band{background:var(--fill)}
+  .band-navy{background:var(--navy);color:rgba(255,255,255,.82)}
+  .band-navy h2,.band-navy h3,.band-navy h4{color:#fff}
+  .sechead{max-width:62ch;margin:0 auto 44px;text-align:center}
+  .sechead h2{font-size:clamp(30px,4.4vw,52px);font-weight:600;margin:14px 0 0}
+  .sechead p{font-size:18px;color:var(--body);margin:16px auto 0;max-width:60ch}
+  .band-navy .sechead p{color:rgba(255,255,255,.72)}
+
+  .card{background:#fff;border:1px solid var(--line-2);border-radius:var(--r);box-shadow:var(--shadow-sm)}
+
+  .calc{display:grid;grid-template-columns:0.92fr 1.08fr;gap:26px;align-items:center}
+  .calc > div{min-width:0}
+  @media (max-width:920px){ .calc{grid-template-columns:1fr} }
+  .panel{background:#fff;border:1px solid var(--line-2);border-radius:var(--r);box-shadow:var(--shadow-sm);padding:14px 26px 16px}
+  .panel .ph{font-weight:700;color:var(--navy);font-size:19px;padding:10px 0 2px}
+  .field{padding:8px 0;border-top:1px solid var(--line-2)}
+  .field .flabel{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:9px;flex-wrap:wrap}
+  .field label{font-weight:600;font-size:15.5px;color:var(--navy)}
+  .field .hint{font-size:12.5px;color:var(--muted)}
+  .inbox{display:flex;align-items:stretch;background:var(--fill-2);border:1.5px solid var(--line);border-radius:var(--r-sm);overflow:hidden;transition:border-color .15s, box-shadow .15s, background .15s}
+  .inbox:focus-within{border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(15,158,140,.12)}
+  .inbox .pfx{display:flex;align-items:center;justify-content:center;padding:0 14px;font-weight:700;color:var(--navy);background:var(--fill);border-right:1px solid var(--line)}
+  .inbox input{border:0;background:transparent;flex:1;min-width:0;text-align:right;padding:11px 14px;font-size:17px;font-weight:600;color:var(--navy);font-variant-numeric:tabular-nums}
+  .inbox input:focus{outline:none}
+  .inbox .sfx{display:flex;align-items:center;padding:0 14px;font-size:13px;color:var(--muted);border-left:1px solid var(--line-2);white-space:nowrap;background:#fff}
+
+  .sliderfield{padding:12px 0 4px;border-top:1px solid var(--line-2)}
+  .slider-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+  .slider-head label{font-weight:600;font-size:15.5px;color:var(--navy)}
+  .slider-val{color:var(--muted);font-weight:500}
+  .slider-val b{font-size:20px;color:var(--navy);font-weight:700}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:99px;background:var(--line);cursor:pointer;margin:8px 0}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:26px;height:26px;border-radius:50%;background:var(--navy);border:4px solid #fff;box-shadow:0 0 0 1.5px var(--navy),0 4px 10px -3px rgba(11,61,46,.5);cursor:pointer}
+  input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:var(--navy);border:4px solid #fff;box-shadow:0 0 0 1.5px var(--navy);cursor:pointer}
+  .slider-ends{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:2px}
+
+  .result{background:var(--navy);color:#fff;border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+  .result .rhead{display:flex;justify-content:flex-end;align-items:center;padding:13px 24px;border-bottom:1px solid rgba(255,255,255,.12);gap:10px}
+  .result .rhead .t{font-weight:700;font-size:15px;color:#fff}
+  .result .rhead .badge{font-size:12px;font-weight:600;color:var(--navy);background:#fff;border-radius:999px;padding:5px 12px;white-space:nowrap}
+  .payout{padding:18px 24px 4px}
+  .payout .k{font-size:14px;color:rgba(255,255,255,.66);font-weight:600}
+  .payout .v{font-size:clamp(32px,4.6vw,44px);font-weight:700;letter-spacing:-.02em;margin-top:4px;color:#fff;font-variant-numeric:tabular-nums}
+  .payout .v .cur{font-size:.5em;vertical-align:.16em;margin-right:.06em;color:rgba(255,255,255,.8)}
+  .payout .sub{color:rgba(255,255,255,.76);font-size:14px;margin-top:8px;line-height:1.45}
+  .payout .sub b{color:#fff}
+  .payout .sub .em{color:#2DD4BF;font-weight:600}
+  .receipt{padding:4px 24px 16px}
+  .rrow{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:7px 0;border-top:1px solid rgba(255,255,255,.1)}
+  .rrow:first-child{border-top:0}
+  .rrow .rk{color:rgba(255,255,255,.72);font-size:14.5px}
+  .rrow .rv{font-weight:600;font-size:15.5px;font-variant-numeric:tabular-nums;color:#fff}
+  .rrow.crux{margin-top:4px;padding-top:11px;border-top:1.5px solid rgba(255,255,255,.2)}
+  .rrow.crux .rk{color:#fff;font-weight:700;font-size:16px}
+  .rrow.crux .rv{color:#2DD4BF;font-weight:700;font-size:24px}
+  .formula{margin-top:16px;background:var(--navy);color:rgba(255,255,255,.92);border-radius:var(--r);padding:20px 22px;font-size:13.5px;line-height:1.9;white-space:pre;overflow-x:auto;font-variant-numeric:tabular-nums}
+  .formula .fh{color:#2DD4BF;font-size:12px;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:10px;white-space:normal;font-weight:700}
+  .limits{margin-top:16px;background:var(--fill);border-radius:var(--r);padding:18px 22px;font-size:14.5px;line-height:1.55;color:var(--body)}
+  .limits .lh{font-weight:700;color:var(--navy);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:6px}
+
+  .ticker{text-align:center}
+  .ticker .lead{font-size:15px;color:var(--muted);font-weight:600}
+  .ticker .plats{margin-top:22px;display:flex;flex-wrap:wrap;justify-content:center;gap:14px 26px}
+  .ticker .plat{font-weight:700;color:var(--navy);font-size:19px;letter-spacing:-.02em;opacity:.72}
+  .ticker .plat .dot{color:var(--navy)}
+
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  @media (max-width:860px){ .grid3{grid-template-columns:1fr 1fr} }
+  @media (max-width:560px){ .grid3{grid-template-columns:1fr} }
+  .feat{padding:26px}
+  .feat .fi{width:52px;height:52px;border-radius:15px;background:var(--fill);display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+  .feat .fi svg{width:26px;height:26px;stroke:var(--navy);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .feat h3{font-size:22px;font-weight:600}
+  .feat p{margin:9px 0 0;font-size:15.5px;color:var(--body)}
+  .band-navy .feat{background:var(--navy-2);border-color:rgba(255,255,255,.08)}
+  .band-navy .feat p{color:rgba(255,255,255,.72)}
+
+  .problem{display:grid;grid-template-columns:1.1fr .9fr;gap:44px;align-items:center}
+  @media (max-width:860px){ .problem{grid-template-columns:1fr;gap:30px} }
+  .problem .body p{font-size:18px;margin:0 0 14px;color:var(--body)}
+  .problem .body p b{color:var(--navy)}
+  .statpair{display:grid;gap:18px}
+  .statcard{border-radius:var(--r);padding:28px}
+  .statcard.wait{background:var(--fill);border:1px solid var(--line-2)}
+  .statcard.now{background:var(--navy);color:#fff}
+  .statcard .sn{font-size:clamp(38px,5vw,52px);font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+  .statcard.wait .sn{color:var(--navy)}
+  .statcard.now .sn{color:#fff}
+  .statcard .sl{font-size:14px;margin-top:12px;font-weight:600}
+  .statcard.wait .sl{color:var(--muted)}
+  .statcard.now .sl{color:rgba(255,255,255,.85)}
+
+  .part{padding:26px;position:relative}
+  .part.me{border-color:var(--navy);box-shadow:0 0 0 1px var(--navy), var(--shadow-sm)}
+  .part .role{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:8px}
+  .part h3{font-size:23px;font-weight:600}
+  .part .who{font-size:14.5px;color:var(--muted);margin:4px 0 14px}
+  .part p{font-size:15px;margin:0;color:var(--body)}
+  .part .tag{position:absolute;top:20px;right:20px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:var(--blue);color:#fff;padding:4px 10px;border-radius:999px}
+  .parts-note{margin-top:22px;text-align:center;font-size:16px;color:var(--body)}
+  .parts-note b{color:var(--navy)}
+
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  @media (max-width:860px){ .steps{grid-template-columns:1fr 1fr} }
+  @media (max-width:520px){ .steps{grid-template-columns:1fr} }
+  .step{padding:24px}
+  .numbox{width:46px;height:46px;border-radius:14px;border:1.5px solid rgba(255,255,255,.24);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px;color:#2DD4BF;margin-bottom:16px}
+  .step h4{font-size:19px;font-weight:600}
+  .step p{margin:8px 0 0;font-size:15px}
+  .loop{margin-top:22px;background:var(--navy-2);border:1px solid rgba(255,255,255,.1);color:#fff;border-radius:var(--r);padding:18px 22px;text-align:center;font-size:16px;font-weight:500}
+  .loop b{color:#2DD4BF;font-weight:700}
+
+  .why{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  @media (max-width:760px){ .why{grid-template-columns:1fr} }
+  .whycard{padding:28px}
+  .whycard h3{font-size:22px;font-weight:600;margin-bottom:12px}
+  .whycard h3 span{color:var(--blue)}
+  .whycard p{margin:0;font-size:16px;color:var(--body)}
+  .whycard p b{color:var(--navy)}
+  .whycard ul{margin:0;padding:0;list-style:none}
+  .whycard li{position:relative;padding:8px 0 8px 28px;font-size:15.5px;border-top:1px solid var(--line-2);color:var(--body)}
+  .whycard li:first-child{border-top:0}
+  .whycard li::before{content:"";position:absolute;left:0;top:15px;width:15px;height:15px;border-radius:5px;background:#fff;box-shadow:inset 0 0 0 3px #fff,0 0 0 1px var(--navy)}
+  .goodtoknow{margin-top:22px;display:flex;gap:16px;align-items:flex-start;background:var(--fill);border:1px solid var(--line-2);border-radius:var(--r);padding:18px 22px}
+  .goodtoknow .k{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);font-weight:700;white-space:nowrap;padding-top:3px}
+  .goodtoknow p{margin:0;font-size:15px;color:var(--navy)}
+
+  .gains{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  @media (max-width:860px){ .gains{grid-template-columns:1fr 1fr} }
+  @media (max-width:520px){ .gains{grid-template-columns:1fr} }
+  .gain{padding:22px}
+  .gain .gk{font-size:18px;font-weight:600;color:var(--navy);margin-bottom:7px;display:flex;align-items:center;gap:10px}
+  .gain .gk::before{content:"";width:10px;height:10px;border-radius:3px;background:var(--navy);flex:none}
+  .gain p{margin:0;font-size:14.5px;color:var(--body)}
+
+  .buyerbox{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:start}
+  @media (max-width:860px){ .buyerbox{grid-template-columns:1fr;gap:26px} }
+  .psu{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+  .psu span{font-size:13.5px;font-weight:600;color:#fff;background:var(--navy-2);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:7px 12px}
+  .psu-note{text-align:center;font-size:12.5px;color:var(--muted);margin:28px auto 0;max-width:74ch}
+  /* ===== Quick fit check — eligibility checker ===== */
+  .elig{background:#fff;border-radius:20px;overflow:hidden;box-shadow:var(--shadow);counter-reset:eq}
+  .q{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:19px 24px;border-top:1px solid var(--line-2);flex-wrap:wrap}
+  .q:first-of-type{border-top:0}
+  .qt{counter-increment:eq;display:flex;align-items:center;gap:13px;flex:1 1 auto;min-width:190px;font-weight:600;font-size:15px;color:var(--navy);line-height:1.4;margin:0}
+  .qt::before{content:counter(eq);flex:none;width:27px;height:27px;border-radius:9px;background:var(--blue-tint);color:var(--blue);font-weight:700;font-size:13px;display:inline-flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+  .tgl{display:inline-flex;flex:none;background:var(--fill);border:1px solid var(--line-2);border-radius:12px;padding:3px;gap:3px}
+  .tgl button{border:0;background:transparent;color:var(--body);font-weight:600;font-size:14px;padding:12px 20px;min-height:44px;box-sizing:border-box;border-radius:9px;transition:background .15s,color .15s,box-shadow .15s;white-space:nowrap}
+  .tgl button:hover{color:var(--navy)}
+  .tgl button.on{background:#fff;color:var(--navy);box-shadow:0 2px 7px -2px rgba(11,61,46,.28)}
+  .tgl button.on[data-v="1"]{background:var(--blue);color:#fff;box-shadow:0 5px 12px -4px rgba(15,158,140,.5)}
+  .eout{padding:18px 22px;border-top:1px solid var(--line-2);border-left:4px solid var(--line);background:var(--fill-2);font-size:15px;line-height:1.55;color:var(--navy);transition:background .2s,border-color .2s}
+  .eout b{font-weight:700;color:var(--navy)}
+  .eout.good{background:var(--blue-tint);border-left-color:var(--blue)}
+  .eout.good b{color:var(--blue-2)}
+  .eout.warn{background:#FFF8EC;border-left-color:#E3A53C}
+  .eout.warn b{color:#B5791A}
+  @media (max-width:560px){
+    .q{padding:18px}
+    .qt{flex-basis:100%;min-width:0}
+    .tgl{width:100%}
+    .tgl button{flex:1;padding:0}
+  }
+
+  .start{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  @media (max-width:760px){ .start{grid-template-columns:1fr} }
+  .startcard{padding:26px}
+  .startcard h3{font-size:20px;font-weight:600;margin-bottom:14px}
+  .checklist{list-style:none;margin:0;padding:0}
+  .checklist li{position:relative;padding:9px 0 9px 30px;font-size:15.5px;border-top:1px solid var(--line-2);color:var(--body)}
+  .checklist li:first-child{border-top:0}
+  .checklist li::before{content:"";position:absolute;left:0;top:14px;width:16px;height:16px;border-radius:5px;background:var(--navy);box-shadow:inset 0 0 0 3px #fff,0 0 0 1px var(--navy)}
+  .newnote{margin-top:22px;background:var(--navy);color:#fff;border-radius:var(--r);padding:24px 26px;display:flex;gap:18px;align-items:flex-start}
+  @media (max-width:560px){ .newnote{flex-direction:column;gap:12px} }
+  .newnote .badge{font-size:11px;letter-spacing:.06em;text-transform:uppercase;background:var(--blue);color:#fff;padding:6px 12px;border-radius:999px;font-weight:700;white-space:nowrap}
+  .newnote p{margin:0;font-size:15.5px;color:rgba(255,255,255,.86);line-height:1.55}
+  .newnote p b{color:#2DD4BF}
+  .newnote-body{display:flex;flex-direction:column;gap:14px;min-width:0}
+  .newnote p a{color:#2DD4BF;font-weight:700;text-decoration:underline;text-underline-offset:2px}
+  .newnote p a b{color:#2DD4BF}
+  .mdlinks{display:flex;flex-wrap:wrap;gap:10px}
+  .mdlink{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14px;color:#fff;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);border-radius:10px;padding:9px 15px;transition:background .15s,border-color .15s,transform .12s}
+  .mdlink:hover{background:rgba(255,255,255,.17);border-color:rgba(255,255,255,.42)}
+  .mdlink:active{transform:translateY(1px)}
+  .mdlink svg{width:16px;height:16px;fill:none;stroke:#2DD4BF;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+  @media (max-width:560px){ .mdlink{flex:1;justify-content:center} }
+
+  /* ===== Where the policy is heading — flagship section ===== */
+  .policy{display:grid;grid-template-columns:1.02fr .98fr;gap:24px;align-items:stretch}
+  @media (max-width:900px){ .policy{grid-template-columns:1fr;gap:18px} }
+  .policy-lead{position:relative;display:flex;flex-direction:column;background:linear-gradient(158deg,#0d422f,#082a1b);border:1px solid rgba(45,212,191,.30);border-radius:22px;padding:30px 30px 28px;overflow:hidden;box-shadow:0 34px 66px -34px rgba(0,0,0,.65)}
+  .policy-lead::before{content:"";position:absolute;top:-38%;right:-22%;width:360px;height:360px;background:radial-gradient(circle,rgba(45,212,191,.20),transparent 68%);pointer-events:none}
+  .pl-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;position:relative}
+  .pl-badge{font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--navy);background:#2DD4BF;padding:6px 12px;border-radius:999px}
+  .pl-eff{font-size:12.5px;font-weight:600;color:rgba(255,255,255,.72);display:inline-flex;align-items:center;gap:8px}
+  .pl-eff::before{content:"";width:7px;height:7px;border-radius:50%;background:#2DD4BF;box-shadow:0 0 0 4px rgba(45,212,191,.18)}
+  .policy-lead h3{font-size:clamp(22px,2.9vw,29px);font-weight:700;color:#fff;line-height:1.14;letter-spacing:-.01em;margin:0 0 14px;position:relative}
+  .policy-lead > p{font-size:15.5px;line-height:1.62;color:rgba(255,255,255,.82);margin:0 0 22px;position:relative}
+  .pl-actions{display:flex;flex-wrap:wrap;gap:11px;margin-top:auto;position:relative}
+  .pl-btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14px;padding:11px 17px;border-radius:11px;border:1px solid rgba(255,255,255,.22);color:#fff;background:rgba(255,255,255,.06);transition:background .15s,border-color .15s,transform .12s}
+  .pl-btn:hover{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.42)}
+  .pl-btn:active{transform:translateY(1px)}
+  .pl-btn svg{width:16px;height:16px;fill:none;stroke:#2DD4BF;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+  .pl-btn.primary{background:#2DD4BF;color:var(--navy);border-color:#2DD4BF;box-shadow:0 12px 24px -12px rgba(45,212,191,.6)}
+  .pl-btn.primary:hover{background:#41e2d0}
+  .pl-btn.primary svg{stroke:var(--navy)}
+  .policy-points{list-style:none;margin:0;padding:0;display:grid;gap:12px;align-content:stretch}
+  .ppoint{display:flex;gap:15px;align-items:flex-start;background:var(--navy-2);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:18px 20px;transition:border-color .15s,transform .15s}
+  .ppoint:hover{border-color:rgba(45,212,191,.42);transform:translateX(3px)}
+  .pp-ic{flex:none;width:42px;height:42px;border-radius:12px;background:rgba(45,212,191,.12);display:flex;align-items:center;justify-content:center}
+  .pp-ic svg{width:21px;height:21px;fill:none;stroke:#2DD4BF;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .pp-tx{min-width:0}
+  .pp-tx b{display:block;color:#fff;font-weight:700;font-size:16px;margin-bottom:3px}
+  .pp-tx span{display:block;color:rgba(255,255,255,.68);font-size:14px;line-height:1.5}
+  @media (max-width:560px){
+    .policy-lead{padding:24px 20px 22px}
+    .pl-btn{flex:1;justify-content:center}
+    .ppoint{padding:16px 16px}
+  }
+
+  .platwrap{border:1px solid var(--line-2);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow-sm);background:#fff}
+  .platscroll{overflow-x:auto}
+  table{border-collapse:collapse;width:100%;min-width:680px}
+  thead th{background:var(--navy);color:#fff;font-size:12px;letter-spacing:.05em;text-transform:uppercase;text-align:left;padding:15px 18px;font-weight:600}
+  tbody td{border-top:1px solid var(--line-2);padding:16px 18px;font-size:14.5px;vertical-align:top;color:var(--body)}
+  tbody th{border-top:1px solid var(--line-2);padding:16px 18px;text-align:left;font-weight:700;font-size:16px;color:var(--navy);white-space:nowrap}
+  tbody tr:hover td,tbody tr:hover th{background:var(--blue-tint)}
+  .badge2{font-size:11px;font-weight:700;background:var(--blue-soft);color:var(--blue);padding:2px 8px;border-radius:999px;white-space:nowrap}
+  .plat-note{margin-top:18px;text-align:center;font-size:15.5px;color:var(--body)}
+  .plat-note b{color:var(--navy)}
+
+  /* ===== Government resources — swipeable slider ===== */
+  .gov{position:relative}
+  .gov-track{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:6px 2px 18px;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 2.5%,#000 96%,transparent);mask-image:linear-gradient(90deg,transparent,#000 2.5%,#000 96%,transparent)}
+  .gov-track::-webkit-scrollbar{display:none}
+  .gov-card{scroll-snap-align:start;flex:0 0 320px;max-width:82vw;display:flex;flex-direction:column;background:#fff;border:1px solid var(--line-2);border-radius:var(--r);box-shadow:var(--shadow-sm);padding:24px;text-decoration:none;transition:transform .15s ease,box-shadow .15s ease,border-color .15s}
+  .gov-card:hover{transform:translateY(-3px);box-shadow:0 22px 42px -22px rgba(11,61,46,.32);border-color:var(--line)}
+  .gov-ic{width:48px;height:48px;border-radius:14px;background:var(--blue-tint);display:flex;align-items:center;justify-content:center;flex:none;margin-bottom:16px}
+  .gov-ic svg{width:24px;height:24px;fill:none;stroke:var(--blue);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .gov-tag{font-size:12px;font-weight:600;color:var(--blue);letter-spacing:.01em}
+  .gov-card h3{font-size:18px;font-weight:600;color:var(--navy);margin:6px 0 7px;line-height:1.25}
+  .gov-card p{margin:0;font-size:14.5px;color:var(--body);line-height:1.5;flex:1}
+  .gov-go{display:inline-flex;align-items:center;gap:7px;margin-top:16px;font-weight:600;font-size:14px;color:var(--navy)}
+  .gov-go svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s}
+  .gov-card:hover .gov-go{color:var(--blue)}
+  .gov-card:hover .gov-go svg{transform:translateX(3px)}
+  .gov-nav{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:2px}
+  .gov-hint{font-size:13px;color:var(--muted);font-weight:500;display:inline-flex;align-items:center;gap:7px}
+  .gov-hint svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .gov-arrows{display:flex;gap:10px}
+  .gov-arrow{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line);background:#fff;color:var(--navy);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .15s,background .15s,transform .12s}
+  .gov-arrow:hover{border-color:var(--navy);background:var(--fill-2)}
+  .gov-arrow:active{transform:scale(.94)}
+  .gov-arrow:disabled{opacity:.35;cursor:default;transform:none}
+  .gov-arrow svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  @media (max-width:560px){ .gov-card{flex-basis:284px;padding:22px} .gov-arrows{display:none} }
+
+  .faq{max-width:820px;margin:0 auto;display:grid;gap:14px}
+  .faq-item{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  .faq-q{width:100%;text-align:left;background:none;border:0;padding:20px 22px;display:flex;justify-content:space-between;align-items:center;gap:16px;font-weight:600;font-size:17px;color:var(--navy)}
+  .faq-q .ic{width:26px;height:26px;flex:none;border-radius:8px;background:var(--blue-soft);position:relative;transition:background .15s}
+  .faq-q .ic::before,.faq-q .ic::after{content:"";position:absolute;background:var(--blue);border-radius:2px;left:50%;top:50%;transform:translate(-50%,-50%)}
+  .faq-q .ic::before{width:12px;height:2px}
+  .faq-q .ic::after{width:2px;height:12px;transition:transform .2s}
+  .faq-item.open .faq-q .ic{background:var(--blue)}
+  .faq-item.open .faq-q .ic::before,.faq-item.open .faq-q .ic::after{background:#fff}
+  .faq-item.open .faq-q .ic::after{transform:translate(-50%,-50%) scaleY(0)}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .28s ease}
+  .faq-a p{margin:0;padding:0 22px 22px;font-size:15.5px;color:var(--body);line-height:1.6}
+  .faq-a p a{color:var(--blue);font-weight:600;text-decoration:underline;text-underline-offset:2px}
+  .faq-a p a b{color:var(--blue)}
+  .faq-a p b{color:var(--navy)}
+
+  .cta{background:var(--navy)}
+  .cta .wrap{padding:70px 26px}
+  .cta .sechead h2{color:#fff}
+  .cta .sechead p{color:rgba(255,255,255,.72)}
+  .ctalist{margin-top:34px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  @media (max-width:860px){ .ctalist{grid-template-columns:1fr 1fr} }
+  @media (max-width:520px){ .ctalist{grid-template-columns:1fr} }
+  .ctastep{background:var(--navy-2);border:1px solid rgba(255,255,255,.08);border-radius:var(--r);padding:26px 24px;display:flex;flex-direction:column;gap:18px;align-items:flex-start}
+  .ctastep .n{width:46px;height:46px;border-radius:50%;background:#2DD4BF;color:var(--navy);font-weight:700;font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;flex:none;font-variant-numeric:tabular-nums}
+  .ctastep p{margin:0;color:rgba(255,255,255,.86);font-size:15.5px;line-height:1.55}
+  .ctastep p b{color:#fff}
+  .cta .ctabtns{margin-top:32px;display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+  .cta .btn-ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.28)}
+  .cta .btn-ghost:hover{border-color:#fff}
+  .cta .btn-primary{background:#fff;color:var(--navy);box-shadow:none}
+  .cta .btn-primary:hover{background:#EAF0FE}
+
+  footer{background:#fff;border-top:1px solid var(--line-2)}
+  footer .wrap{padding:40px 26px}
+  .fgrid{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+  .flinks{display:flex;gap:26px;flex-wrap:wrap}
+  .flinks a{font-weight:500;font-size:15px;color:var(--navy)}
+  .flinks a:hover{color:var(--blue)}
+  .fbot{margin-top:26px;padding-top:22px;border-top:1px solid var(--line-2);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+  .fbot .cp{font-size:13px;color:var(--muted)}
+  .fbot .cp a{color:var(--blue);font-weight:600}
+  .disclaimer{margin-top:14px;font-size:12.5px;line-height:1.55;color:var(--muted)}
+
+  @media (prefers-reduced-motion:no-preference){
+  }
+
+  /* lead intro (calculator-first) */
+  .leadhead{text-align:left;max-width:none;margin:0 0 34px}
+  .leadhead .eyebrow{margin-bottom:14px}
+  .leadh1{font-size:clamp(34px,5.2vw,56px);font-weight:700;color:var(--navy);letter-spacing:-.02em;line-height:1.07;max-width:20ch}
+  .leadh1 .u{color:var(--blue)}
+  .lede{font-size:18px;color:var(--body);margin:20px 0 0;max-width:62ch}
+  .chips{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+  .chip{display:inline-flex;align-items:center;gap:9px;font-size:14.5px;font-weight:600;color:var(--navy);background:#fff;border:1px solid var(--line-2);border-radius:13px;padding:10px 16px;box-shadow:0 5px 16px -11px rgba(11,61,46,.25);transition:transform .15s ease,box-shadow .15s ease,border-color .15s}
+  .chip:hover{transform:translateY(-2px);box-shadow:0 12px 24px -13px rgba(11,61,46,.32);border-color:var(--line)}
+  .chip svg{width:18px;height:18px;flex:none;fill:none;stroke:var(--blue);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .chip b{color:var(--navy);font-weight:700}
+  /* intro feature chips → uniform 2×2 button grid on mobile */
+  @media (max-width:640px){
+    .leadhead .chips{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;gap:12px;margin-top:22px}
+    .leadhead .chip{flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:10px;padding:18px 12px;min-height:96px;font-size:15px;border-radius:16px;box-shadow:0 10px 24px -16px rgba(11,61,46,.28)}
+    .leadhead .chip svg{width:24px;height:24px}
+    .leadhead .chip .ct{line-height:1.3}
+    .leadhead .chip:hover{transform:none}
+  }
+
+  /* TReDS logo image */
+  .logo .tredslogo{height:34px;width:auto;display:block}
+  .logo .wordmark{font-weight:800;font-size:32px;color:#0B3D2E;letter-spacing:-.02em;line-height:1}
+  .logo .wordmark .e{color:#808080}
+  /* ===== {CODE.NULL} intro splash (used as provided — no colour change) ===== */
+  @keyframes cnType{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 -2px 0 0)}}
+  @keyframes cnPrime{0%,100%{opacity:1}50%{opacity:.2}}
+  @keyframes cnSplashOut{0%,72%{opacity:1;visibility:visible}96%{opacity:0;visibility:visible}100%{opacity:0;visibility:hidden;pointer-events:none}}
+  #splash{position:fixed;inset:0;z-index:9999;background:#fff;display:flex;align-items:center;justify-content:center;animation:cnSplashOut 2.6s ease forwards}
+  #splash .splash-logo{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:700;color:#0B1F38;letter-spacing:-.01em;display:flex;align-items:center;gap:16px;font-size:clamp(2rem,6vw,3.2rem)}
+  #splash .splash-logo .dot{width:18px;height:18px;border-radius:4px;background:#2DD4BF;box-shadow:0 0 0 5px rgba(45,212,191,.18);animation:cnPrime .24s ease 2 both}
+  #splash .splash-logo .brandtext{display:inline-block;white-space:nowrap;clip-path:inset(0 100% 0 0);animation:cnType .8s steps(12,end) .45s both}
+  @media (prefers-reduced-motion:reduce){#splash{display:none}}
+  html.cn-skip-splash #splash{display:none!important}
+
+  /* PSU logo cloud (Finexo-style) */
+  .logocloud{max-width:1000px;margin:0 auto}
+  .lc-title{text-align:center;font-weight:700;color:var(--navy);font-size:19px;margin-bottom:32px}
+  .lc-title span{color:var(--muted);font-weight:600}
+  .lc-grid{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:24px 44px}
+  .lc-item{display:flex;align-items:center;gap:10px}
+  .lc-item img{height:28px;width:auto;display:block}
+  .lc-ic{width:22px;height:22px;flex:none;fill:none;stroke:#111;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .lc-item span{font-weight:700;color:var(--navy);font-size:15px;white-space:nowrap}
+  .elig-wrap{max-width:640px;margin:0 auto}
+  .band-navy .elig{box-shadow:0 34px 64px -30px rgba(0,0,0,.55)}
+
+  /* calculator-first landing */
+  .introsec{padding:52px 0 38px}
+  .calcsec{display:flex;flex-direction:column;justify-content:center;min-height:100vh;padding:28px 0 40px}
+  .calc-extras{margin-top:26px}
+  .extras-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+  @media (max-width:760px){ .extras-row{grid-template-columns:1fr} }
+  .calc-extras .formula,.calc-extras .limits{margin-top:0}
+
+  /* footer sign-off */
+  .built{margin-top:24px;padding-top:22px;border-top:1px solid var(--line-2);text-align:center}
+  .built-line{display:block;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:12.5px;color:var(--muted);letter-spacing:.01em}
+  .built-by{display:block;margin-top:9px;font-size:14px;font-weight:600;color:var(--navy)}
+  .built-by a{color:var(--blue);font-weight:700}
+  .built-by a:hover{text-decoration:underline}
+
+  /* platform links */
+  .ticker a.plat{cursor:pointer;transition:opacity .15s,color .15s;text-decoration:none}
+  .ticker a.plat:hover{opacity:1;color:var(--blue)}
+  .platwrap th a{color:inherit;text-decoration:none}
+  .platwrap th a:hover{color:var(--blue);text-decoration:underline}
+
+  /* restructured result card */
+  .result .receipt{padding:14px 24px 6px}
+  .result .payout{border-top:1px solid rgba(255,255,255,.12);margin-top:4px;padding:14px 24px 8px}
+  .result .payout .sub{margin-top:6px}
+  .effrow{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:13px 24px;border-top:1.5px solid rgba(255,255,255,.22)}
+  .effrow .effk{color:#fff;font-weight:700;font-size:15px}
+  .effrow .effv{color:#2DD4BF;font-weight:700;font-size:22px;font-variant-numeric:tabular-nums}
+
+  /* reload calculator button */
+  .reload-btn{display:inline-flex;align-items:center;gap:9px;margin-top:0;font-family:inherit;font-weight:600;font-size:15px;color:var(--navy);background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:10px 18px;cursor:pointer;transition:border-color .15s,background .15s}
+  .reload-btn:hover{border-color:var(--navy);background:var(--fill-2)}
+  .reload-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .45s ease}
+  .reload-btn:active svg{transform:rotate(180deg)}
+
+  .disclaimer b{color:var(--navy);font-weight:700}
+  .disclaimer a{color:var(--blue);font-weight:600}
+  .disclaimer a:hover{text-decoration:underline}
+
+  /* download buttons */
+  .dl-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:0}
+  .dl-btn{display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-weight:600;font-size:14px;color:var(--navy);background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:10px 16px;cursor:pointer;transition:border-color .15s,background .15s,color .15s}
+  .dl-btn:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-tint)}
+  .dl-btn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  /* print-to-PDF summary (minimalist) */
+  #print-summary{display:none}
+  @media print{
+    @page{margin:0}
+    body{background:#fff}
+    body > *:not(#print-summary){display:none !important}
+    #print-summary{display:block !important;color:#444;font-family:"Inter Tight",system-ui,sans-serif;max-width:640px;padding:16mm 14mm;box-sizing:border-box}
+    #print-summary h2{font-size:20px;margin:0 0 22px;color:#0B3D2E;font-weight:700}
+    #print-summary .ps-table{width:100%;border-collapse:collapse}
+    #print-summary .ps-table td{padding:9px 2px;border-bottom:1px solid #E5E7EB;font-size:14px;color:#444}
+    #print-summary .ps-table td:last-child{text-align:right;font-weight:700;color:#0B3D2E}
+    #print-summary .ps-net td{font-size:15px}
+    #print-summary .ps-net td:last-child{font-size:20px;color:#0B3D2E}
+    #print-summary .ps-gap{height:22px}
+    #print-summary .ps-note{font-size:10.5px;color:#8a8f98;line-height:1.55;margin-top:24px}
+    #print-summary .ps-foot{margin-top:14px;font-size:13px}
+    #print-summary .ps-foot a{color:#0F9E8C;font-weight:700;text-decoration:none}
+  }
+
+  .wa-btn{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:#25D366;color:#fff;cursor:pointer;flex:none;transition:transform .12s ease,box-shadow .15s}
+  .wa-btn:hover{transform:translateY(-1px);box-shadow:0 8px 16px -6px rgba(37,211,102,.6)}
+  .wa-btn svg{width:24px;height:24px;fill:currentColor}
+
+  .faq-formula{margin:0 22px 22px;background:var(--fill);border-radius:10px;padding:16px 18px;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:13px;line-height:1.9;color:var(--navy);white-space:pre;overflow-x:auto;font-variant-numeric:tabular-nums}
+
+  .calc-title{text-align:center;font-size:clamp(24px,3.4vw,32px);font-weight:700;color:var(--navy);letter-spacing:-.01em;margin:0 0 26px}
+  .calc-actions{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:26px;flex-wrap:wrap}
+  .panel .field:first-child{border-top:0}
+
+  /* seven-reasons infinite carousel */
+  .gains-carousel{overflow:hidden;position:relative;margin-top:6px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+  .gains-track{display:flex;gap:20px;width:max-content;animation:gainsScroll 40s linear infinite}
+  .gains-carousel:hover .gains-track{animation-play-state:paused}
+  .gains-track .gain{width:280px;flex:none;padding:26px 24px;transition:border-color .15s,box-shadow .15s,transform .15s}
+  .gains-track .gain:hover{border-color:var(--blue);box-shadow:0 16px 32px -18px rgba(11,61,46,.3);transform:translateY(-2px)}
+  .gains-track .gi{width:48px;height:48px;border-radius:14px;background:var(--blue-soft);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+  .gains-track .gi svg{width:24px;height:24px;fill:none;stroke:var(--blue);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .gains-track .gain .gk{font-size:18px;font-weight:700;color:var(--navy);margin:0 0 7px;display:block}
+  .gains-track .gain .gk::before{display:none}
+  .gains-track .gain p{font-size:14.5px;color:var(--body);margin:0;line-height:1.5}
+  @keyframes gainsScroll{from{transform:translateX(0)}to{transform:translateX(-2100px)}}
+  @media (prefers-reduced-motion:reduce){.gains-track{animation:none}}
+
+  /* ===== six-steps sequential scroll reveal ("paid at step 5") ===== */
+  .steps.anim-ready .step{
+    opacity:0;transform:translateY(18px);
+    transition:opacity .55s ease, transform .55s cubic-bezier(.2,.7,.3,1);
+  }
+  .steps.anim-ready.revealed .step{opacity:1;transform:none}
+  .steps.anim-ready.revealed .step:nth-child(1){transition-delay:0s}
+  .steps.anim-ready.revealed .step:nth-child(2){transition-delay:.13s}
+  .steps.anim-ready.revealed .step:nth-child(3){transition-delay:.26s}
+  .steps.anim-ready.revealed .step:nth-child(4){transition-delay:.39s}
+  .steps.anim-ready.revealed .step:nth-child(5){transition-delay:.52s}
+  .steps.anim-ready.revealed .step:nth-child(6){transition-delay:.65s}
+
+  .steps.anim-ready .step .numbox{opacity:.45;transform:scale(.88)}
+  .steps.anim-ready.revealed .step .numbox{animation:stepNumPop .55s cubic-bezier(.2,.7,.3,1) forwards}
+  .steps.anim-ready.revealed .step:nth-child(1) .numbox{animation-delay:.10s}
+  .steps.anim-ready.revealed .step:nth-child(2) .numbox{animation-delay:.23s}
+  .steps.anim-ready.revealed .step:nth-child(3) .numbox{animation-delay:.36s}
+  .steps.anim-ready.revealed .step:nth-child(4) .numbox{animation-delay:.49s}
+  .steps.anim-ready.revealed .step:nth-child(5) .numbox{animation-delay:.62s}
+  .steps.anim-ready.revealed .step:nth-child(6) .numbox{animation-delay:.75s}
+  @keyframes stepNumPop{
+    0%{opacity:.45;transform:scale(.88);box-shadow:0 0 0 0 rgba(45,212,191,0)}
+    55%{opacity:1;transform:scale(1.1);box-shadow:0 0 0 7px rgba(45,212,191,.20)}
+    100%{opacity:1;transform:scale(1);box-shadow:0 0 0 0 rgba(45,212,191,0)}
+  }
+
+  /* step 5 is the payout climax — softly marked even when static */
+  .steps .step:nth-child(5){position:relative;border-color:rgba(45,212,191,.4)}
+  .steps .step:nth-child(5)::after{
+    content:"Paid to you";position:absolute;top:16px;right:16px;
+    font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--navy);background:#2DD4BF;padding:4px 9px;border-radius:999px;white-space:nowrap;
+  }
+  .steps.anim-ready .step:nth-child(5)::after{opacity:0;transform:translateY(-5px);transition:opacity .45s ease,transform .45s ease}
+  .steps.anim-ready.revealed .step:nth-child(5)::after{opacity:1;transform:none;transition-delay:1s}
+  .steps.anim-ready.revealed .step:nth-child(5){animation:stepPaidRing .6s ease 1s forwards}
+  @keyframes stepPaidRing{to{border-color:#2DD4BF;box-shadow:0 0 0 1.5px #2DD4BF,0 18px 34px -20px rgba(45,212,191,.5)}}
+
+  @media (prefers-reduced-motion:reduce){
+    .steps.anim-ready .step,
+    .steps.anim-ready .step .numbox,
+    .steps.anim-ready .step:nth-child(5)::after{opacity:1;transform:none;animation:none}
+  }
+
+  /* ===== participants image slider (person photos + content) ===== */
+  .pslider{max-width:1040px;margin:0 auto;position:relative}
+  .pfeature{display:grid;grid-template-columns:1.05fr .95fr;background:#fff;border:1px solid var(--line-2);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow)}
+  @media (max-width:820px){ .pfeature{grid-template-columns:1fr} }
+
+  .pstage{position:relative;aspect-ratio:16/11;background:var(--fill)}
+  @media (max-width:820px){ .pstage{aspect-ratio:16/9} }
+  .pslide{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .7s ease, visibility 0s linear .7s}
+  .pslide.active{opacity:1;visibility:visible;transition:opacity .7s ease, visibility 0s linear 0s}
+  .pslide img{width:100%;height:100%;object-fit:cover;display:block}
+  .pslide[data-i="0"] img{object-position:28% center}
+  .pslide[data-i="1"] img{object-position:55%}
+  .pslide[data-i="2"] img{object-position:62% center}
+  .pstage-tag{position:absolute;left:16px;top:16px;font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--navy);background:#2DD4BF;padding:6px 12px;border-radius:999px;box-shadow:0 8px 16px -8px rgba(11,61,46,.55)}
+
+  .pcopy-wrap{display:grid}
+  .pcopy{grid-area:1/1;align-self:center;padding:34px 36px 32px;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .5s ease,transform .5s ease,visibility 0s linear .5s}
+  .pcopy.active{opacity:1;visibility:visible;transform:none;transition:opacity .5s ease,transform .5s ease,visibility 0s linear 0s}
+  @media (max-width:820px){ .pcopy{padding:26px 24px 28px} }
+  .pcopy .prole{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);font-weight:700;margin-bottom:9px}
+  .pcopy h3{font-size:clamp(21px,2.5vw,27px);font-weight:600;margin-bottom:12px}
+  .pcopy p{font-size:15.5px;color:var(--body);margin:0}
+  .pcopy .ppoints{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:10px}
+  .pcopy .ppoints li{position:relative;padding-left:27px;font-size:14.5px;font-weight:600;color:var(--navy)}
+  .pcopy .ppoints li::before{content:"";position:absolute;left:0;top:4px;width:16px;height:16px;border-radius:5px;background:var(--blue-tint);box-shadow:inset 0 0 0 1.5px var(--blue)}
+  .pcopy .ppoints li::after{content:"";position:absolute;left:5.5px;top:7px;width:4px;height:8px;border:2px solid var(--blue);border-top:0;border-left:0;transform:rotate(45deg)}
+
+  .ptabs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+  .ptab{display:flex;align-items:center;gap:12px;text-align:left;background:#fff;border:1.5px solid var(--line-2);border-radius:14px;padding:12px 14px;position:relative;overflow:hidden;cursor:pointer;font-family:inherit;transition:border-color .15s,box-shadow .15s,transform .15s}
+  .ptab:hover{border-color:var(--line);transform:translateY(-1px)}
+  .ptab.active{border-color:var(--navy);box-shadow:0 0 0 1px var(--navy),var(--shadow-sm)}
+  .ptab-thumb{width:44px;height:44px;flex:none;border-radius:10px;overflow:hidden;background:var(--fill)}
+  .ptab-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .ptab[data-i="2"] .ptab-thumb img{object-position:62% center}
+  .ptab-txt{display:flex;flex-direction:column;min-width:0;line-height:1.25}
+  .ptab-txt b{font-size:15px;color:var(--navy);font-weight:700}
+  .ptab-txt span{font-size:12px;color:var(--muted);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ptab-bar{position:absolute;left:0;bottom:0;height:3px;width:100%;overflow:hidden}
+  .ptab-bar::after{content:"";position:absolute;inset:0;background:#2DD4BF;transform:scaleX(0);transform-origin:left}
+  .ptab.active .ptab-bar::after{transform:scaleX(1)}
+  .pslider.autoplay .ptab.active .ptab-bar::after{transform:scaleX(0);animation:ptabFill var(--pdur,5s) linear forwards}
+  @keyframes ptabFill{to{transform:scaleX(1)}}
+  @media (max-width:560px){
+    .ptabs{gap:8px}
+    .ptab{flex-direction:column;align-items:flex-start;gap:9px;padding:10px 10px 13px}
+    .ptab-txt span{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .pslide,.pcopy,.pslide.active,.pcopy.active{transition:none}
+    .pslider.autoplay .ptab.active .ptab-bar::after{animation:none;transform:scaleX(1)}
+  }
+
+  /* ===== buyer logo marquee — two rows, opposite directions ===== */
+  .lc-marquee{display:flex;flex-direction:column;gap:20px;overflow:hidden;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+    mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);}
+  .lc-row{overflow:hidden}
+  .lc-track{display:flex;width:max-content;will-change:transform}
+  .lc-group{display:flex;align-items:center;gap:44px;padding-right:44px;flex:none}
+  .lc-row.ltr .lc-track{animation:lcRight 32s linear infinite}
+  .lc-row.rtl .lc-track{animation:lcLeft 32s linear infinite}
+  .lc-marquee:hover .lc-track{animation-play-state:paused}
+  @keyframes lcRight{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+  @keyframes lcLeft{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @media (max-width:560px){ .lc-group{gap:30px;padding-right:30px} }
+  @media (prefers-reduced-motion:reduce){
+    .lc-track{animation:none;flex-wrap:wrap;justify-content:center;width:auto}
+    .lc-group[aria-hidden="true"]{display:none}
+  }
+
+  /* smoother horizontal scroll for the platform comparison table on touch */
+  .platscroll{-webkit-overflow-scrolling:touch}
+
+  /* platform comparison table → stacked cards on mobile (no sideways scroll) */
+  @media (max-width:680px){
+    .platscroll{overflow:visible}
+    .platwrap table{min-width:0;display:block}
+    .platwrap thead{display:none}
+    .platwrap tbody{display:block}
+    .platwrap tbody tr{display:block;padding:16px 18px;border-top:1px solid var(--line-2)}
+    .platwrap tbody tr:first-child{border-top:0}
+    .platwrap tbody th{display:block;border:0;padding:0 0 12px;font-size:18px;white-space:normal}
+    .platwrap tbody td{display:flex;justify-content:space-between;align-items:baseline;gap:16px;border:0;padding:7px 0;font-size:14px;font-weight:600;color:var(--navy);text-align:right}
+    .platwrap tbody td::before{content:"";color:var(--muted);font-weight:600;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;flex:none;text-align:left;padding-top:2px}
+    .platwrap tbody td:nth-of-type(1)::before{content:"Backing"}
+    .platwrap tbody td:nth-of-type(2)::before{content:"MSMEs"}
+    .platwrap tbody td:nth-of-type(3)::before{content:"Good to know"}
+    .platwrap tbody td:nth-of-type(3){flex-direction:column;gap:5px;align-items:stretch;text-align:left;font-weight:400;color:var(--body);line-height:1.5;padding-top:11px;margin-top:4px;border-top:1px solid var(--line-2)}
+    .platwrap tbody tr:hover td,.platwrap tbody tr:hover th{background:transparent}
+  }
+
+  /* ===== mobile refinements (spacing, density, tap targets) ===== */
+  @media (max-width:640px){
+    body{font-size:16px}
+    .wrap{padding:0 18px}
+    section{padding:46px 0}
+    .cta{padding:0}
+    .cta .wrap{padding:52px 18px}
+    footer .wrap{padding:34px 18px}
+    .sechead{margin-bottom:30px}
+    .sechead p{font-size:16.5px}
+    /* the calculator is the landing view — don't force a full-height gap on mobile */
+    .calcsec{min-height:auto;padding:20px 0 34px}
+    .introsec{padding:30px 0 22px}
+    .calc-title{margin-bottom:20px}
+    .panel{padding:12px 20px 14px}
+    .result .receipt,.result .payout,.result .rhead,.effrow{padding-left:20px;padding-right:20px}
+    /* stack action buttons cleanly instead of space-between */
+    .calc-actions{flex-direction:column;align-items:stretch;gap:12px;margin-top:22px}
+    .calc-actions .reload-btn{justify-content:center;width:100%}
+    .dl-row{justify-content:center}
+    .dl-btn{flex:1;justify-content:center}
+    .hero{padding:36px 0 28px}
+    .whycard,.startcard,.feat,.gain,.step,.part,.statcard{padding:22px}
+    .goodtoknow,.newnote{padding:18px 20px}
+    .lede{font-size:16.5px}
+  }
+  @media (max-width:400px){
+    .wrap{padding:0 15px}
+    .cta .wrap,footer .wrap{padding-left:15px;padding-right:15px}
+    /* WhatsApp button drops below the two download buttons on very narrow screens */
+    .wa-btn{width:100%;border-radius:10px}
+  }
+
+</style>
+<!-- {CODE.NULL} intro splash control: play once per browser session; skip when the visitor
+     arrived from codenull.in (the intro already played on the main site). Runs in <head>
+     before the body paints, so internal visitors never see a flash of the splash. -->
+<script>
+(function(){try{
+  var skip=false;
+  if(document.referrer){try{if(/(^|\.)codenull\.in$/i.test(new URL(document.referrer).hostname))skip=true;}catch(e){}}
+  try{if(sessionStorage.getItem("cn_intro_seen")==="1")skip=true;}catch(e){}
+  if(skip)document.documentElement.className+=" cn-skip-splash";
+  try{sessionStorage.setItem("cn_intro_seen","1");}catch(e){}
+}catch(e){}})();
+</script>
+</head>
+<body>
+<div id="splash" aria-hidden="true"><div class="splash-logo"><span class="dot"></span><span class="brandtext">{CODE.NULL}</span></div></div>
+
+<!-- ===== NAV ===== -->
+<nav class="nav">
+  <div class="wrap">
+    <a class="logo" href="https://codenull.in" aria-label="TReDS — home"><span class="wordmark">TR<span class="e">e</span>DS</span></a>
+    <div class="links" id="navlinks">
+      <a href="#calculator" class="active">Calculator</a>
+      <a href="#what">What is TReDS</a>
+      <a href="#new-2026">New · 2026</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <button class="navtoggle" id="navtoggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navlinks"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- ===== INTRO (scroll up to reach) ===== -->
+<section id="intro" class="introsec">
+  <div class="wrap">
+    <div class="leadhead">
+      <span class="eyebrow"><svg viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/><path d="M9 13h6"/><path d="M9 17h4"/></svg> Trade Receivables Discounting System</span>
+      <h1 class="leadh1">Turn an unpaid invoice into cash <span class="u">today.</span></h1>
+      <p class="lede">You raised a buyer-approved invoice and now you're waiting out the credit period. Enter your numbers to see exactly what lands in your account, the true cost, and whether it beats your overdraft.</p>
+      <div class="chips">
+        <span class="chip"><svg viewBox="0 0 24 24"><path d="M7 11V7a5 5 0 0 1 9.9-1"/><rect x="3" y="11" width="18" height="11" rx="2"/></svg><span class="ct"><b>Collateral-free</b></span></span>
+        <span class="chip"><svg viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg><span class="ct">Cash in <b>T+1&nbsp;/&nbsp;T+2</b></span></span>
+        <span class="chip"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg><span class="ct"><b>Without recourse</b></span></span>
+        <span class="chip"><svg viewBox="0 0 24 24"><line x1="3" y1="21" x2="21" y2="21"/><line x1="6" y1="18" x2="6" y2="12"/><line x1="10" y1="18" x2="10" y2="12"/><line x1="14" y1="18" x2="14" y2="12"/><line x1="18" y1="18" x2="18" y2="12"/><polygon points="12 3 20 8 4 8"/></svg><span class="ct">RBI-regulated</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SCALE TICKER ===== -->
+<section class="band" style="padding:44px 0">
+  <div class="wrap ticker">
+    <div class="lead">Over ₹7 lakh crore of invoices financed on TReDS — across five RBI-authorised platforms</div>
+    <div class="plats">
+      <a class="plat" href="https://www.rxil.in/" target="_blank" rel="noopener noreferrer">RXIL</a><a class="plat" href="https://www.m1xchange.com/" target="_blank" rel="noopener noreferrer">M1xchange</a><a class="plat" href="https://www.invoicemart.com/" target="_blank" rel="noopener noreferrer">Invoicemart</a><a class="plat" href="https://c2treds.com/" target="_blank" rel="noopener noreferrer">C2treds</a><a class="plat" href="https://www.dtxindia.in/" target="_blank" rel="noopener noreferrer">DTX <span class="dot">★</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CALCULATOR (opening view) ===== -->
+<section id="calculator" class="calcsec">
+  <div class="wrap">
+    <div class="calc-title">TReDS Calculator</div>
+    <div class="calc">
+      <div>
+        <div class="panel">
+          
+          <div class="field">
+            <div class="flabel"><label for="invoice">Invoice amount</label></div>
+            <div class="inbox"><span class="pfx">₹</span><input id="invoice" inputmode="decimal" value="10,00,000"><span class="sfx">rupees</span></div>
+          </div>
+          <div class="field">
+            <div class="flabel"><label for="rate">Discount rate (per year)</label></div>
+            <div class="inbox"><input id="rate" inputmode="decimal" value="8.5"><span class="sfx">% p.a.</span></div>
+          </div>
+          <div class="field">
+            <div class="flabel"><label for="credit">Credit period</label></div>
+            <div class="inbox"><input id="credit" inputmode="decimal" value="60"><span class="sfx">days</span></div>
+          </div>
+          <div class="sliderfield">
+            <div class="slider-head"><label for="days">Days you're financing</label><span class="slider-val"><b id="days-out" class="num">60</b> days</span></div>
+            <input type="range" id="days" min="1" max="60" value="60" step="1" aria-label="Days you are financing">
+          </div>
+          <div class="field">
+            <div class="flabel"><label for="fee">Platform fee</label></div>
+            <div class="inbox"><input id="fee" inputmode="decimal" value="0.10"><span class="sfx">% of invoice</span></div>
+          </div>
+          
+          
+        </div>
+      </div>
+      <div>
+        <div class="result">
+          <div class="receipt">
+            <div class="rrow"><span class="rk">Invoice amount</span><span class="rv num">₹<span id="r-invoice">10,00,000</span></span></div>
+            <div class="rrow"><span class="rk">Discount charge</span><span class="rv num">− ₹<span id="r-discount">13,973</span></span></div>
+            <div class="rrow"><span class="rk">Platform fee</span><span class="rv num">− ₹<span id="r-fee">1,000</span></span></div>
+          </div>
+          <div class="payout">
+            <div class="k">In your account, within 24–48 hours</div>
+            <div class="v num"><span class="cur">₹</span><span id="r-net">9,85,027</span></div>
+            <p class="sub">instead of waiting <b id="r-wait" class="num">60</b> days — <span class="em">without recourse</span>.</p>
+          </div>
+          <div class="effrow"><span class="effk">Effective annualised cost</span><span class="effv num"><span id="r-eff">9.25</span>%</span></div>
+        </div>
+        
+        
+        
+      </div>
+    </div>
+    <div class="calc-actions">
+      <button type="button" id="reload-calc" class="reload-btn">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+            Reload calculator
+          </button>
+      <div class="dl-row">
+          <button type="button" id="dl-pdf" class="dl-btn"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg> Download as PDF</button>
+          <button type="button" id="dl-xls" class="dl-btn"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h2M8 17h2M14 13h2M14 17h2"/></svg> Download as Excel</button><a id="dl-wa" class="wa-btn" href="https://wa.me/" target="_blank" rel="noopener noreferrer" aria-label="Share on WhatsApp" title="Share on WhatsApp"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+        </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+<!-- ===== WHAT IS TReDS ===== -->
+<section id="what" class="band">
+  <div class="wrap">
+    <div class="sechead">
+      <span class="eyebrow center"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg> What is TReDS</span>
+      <h2>An invoice becomes working capital</h2>
+      <p><b>TReDS is regulated by the <a href="https://www.rbi.org.in" target="_blank" rel="noopener noreferrer">Reserve Bank of India (RBI)</a></b> — an online marketplace where you sell a buyer-approved invoice to banks and NBFCs at a small discount and get paid within a day or two, instead of waiting out the credit period. In short: an invoice becomes working capital, priced on the buyer's credit, not the supplier's.</p>
+    </div>
+    <div class="grid3">
+      <div class="card feat">
+        <div class="fi"><svg viewBox="0 0 24 24"><path d="M12 3l7 4v5c0 4-3 7-7 8-4-1-7-4-7-8V7z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <h3>Collateral-free</h3><p>Nothing pledged — approval rests on your buyer's strength, not on you.</p>
+      </div>
+      <div class="card feat">
+        <div class="fi"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></div>
+        <h3>Cash in T+1 / T+2</h3><p>Funds hit your account a day or two after you accept a financier's bid.</p>
+      </div>
+      <div class="card feat">
+        <div class="fi"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 8-8 8 8 0 0 1 8 8"/><path d="M20 12a8 8 0 0 1-8 8 8 8 0 0 1-8-8"/><path d="M8 12h8"/></svg></div>
+        <h3>Without recourse</h3><p>No liability for you if the buyer later fails to pay. That risk sits with the financier.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="problem">
+      <div class="body">
+        <span class="eyebrow"><svg viewBox="0 0 24 24"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg> The problem it solves</span>
+        <h2 style="font-size:clamp(28px,4vw,44px);margin:14px 0 22px">You did the work. Now you wait.</h2>
+        <p>You ship goods, raise an invoice, then wait weeks to be paid — while you still have to <b>buy materials, run the plant and pay wages</b>.</p>
+        <p>A bank overdraft needs collateral, costs more, and leans on your own credit. The law says buyers must pay within 45 days, but delays are the norm.</p>
+        <p><b>TReDS closes the gap: the invoice itself becomes the funding.</b></p>
+      </div>
+      <div class="statpair">
+        <div class="statcard wait"><div class="sn num">30–90 days</div><div class="sl">you wait to be paid — without TReDS</div></div>
+        <div class="statcard now"><div class="sn num">24–48 hrs</div><div class="sl">to get paid — with TReDS</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="participants">
+  <div class="wrap">
+    <div class="sechead">
+      <span class="eyebrow center"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Who's involved</span>
+      <h2>Three participants, one platform</h2>
+      <p>Every financed invoice needs all three, registered on the same platform. Here's who does what.</p>
+    </div>
+
+    <div class="pslider" id="pslider">
+      <div class="pfeature">
+        <div class="pstage">
+          <div class="pslide active" data-i="0"><img src="assets/an-msme-supplier-at-work-the-seller.webp" alt="An MSME supplier at work — the seller" loading="lazy" decoding="async" width="1000" height="545"><span class="pstage-tag">That's you</span></div>
+          <div class="pslide" data-i="1"><img src="assets/a-corporate-psu-or-government-buyer.webp" alt="A corporate, PSU or government buyer" loading="lazy" decoding="async" width="1000" height="545"></div>
+          <div class="pslide" data-i="2"><img src="assets/a-bank-or-nbfc-financier.webp" alt="A bank or NBFC financier" loading="lazy" decoding="async" width="1000" height="545"></div>
+        </div>
+        <div class="pcopy-wrap">
+          <div class="pcopy active" data-i="0">
+            <div class="prole">Seller</div>
+            <h3>You &mdash; the MSME supplier</h3>
+            <p>You upload buyer-approved invoices and take the early payment. Approval rests on your buyer's credit, not yours &mdash; and nothing is pledged.</p>
+            <ul class="ppoints"><li>Upload the invoice</li><li>Pick the winning bid</li><li>Paid in T+1 / T+2</li></ul>
+          </div>
+          <div class="pcopy" data-i="1">
+            <div class="prole">Buyer</div>
+            <h3>Your buyer</h3>
+            <p>A large corporate, PSU / CPSE or government department. They confirm the invoice is genuine and settle the full amount on the original due date.</p>
+            <ul class="ppoints"><li>Approves the invoice</li><li>No cost to enable</li><li>Settles on the due date</li></ul>
+          </div>
+          <div class="pcopy" data-i="2">
+            <div class="prole">Financier</div>
+            <h3>Banks &amp; NBFCs</h3>
+            <p>Multiple financiers compete in a live auction to discount your invoice and fund the early payment &mdash; without recourse, so the default risk is theirs.</p>
+            <ul class="ppoints"><li>Bid competitively</li><li>Lowest rate wins</li><li>Carry the default risk</li></ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="ptabs" role="tablist" aria-label="TReDS participants">
+        <button class="ptab active" type="button" role="tab" aria-selected="true" data-i="0">
+          <span class="ptab-thumb"><img src="assets/thumb-4.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="220" height="120"></span>
+          <span class="ptab-txt"><b>Seller</b><span>The MSME supplier</span></span>
+          <span class="ptab-bar"></span>
+        </button>
+        <button class="ptab" type="button" role="tab" aria-selected="false" tabindex="-1" data-i="1">
+          <span class="ptab-thumb"><img src="assets/thumb-5.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="220" height="120"></span>
+          <span class="ptab-txt"><b>Buyer</b><span>Corporate / PSU / govt.</span></span>
+          <span class="ptab-bar"></span>
+        </button>
+        <button class="ptab" type="button" role="tab" aria-selected="false" tabindex="-1" data-i="2">
+          <span class="ptab-thumb"><img src="assets/thumb-6.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="220" height="120"></span>
+          <span class="ptab-txt"><b>Financier</b><span>Banks &amp; NBFCs</span></span>
+          <span class="ptab-bar"></span>
+        </button>
+      </div>
+    </div>
+
+    <p class="parts-note">Both you and your buyer must be registered on the <b>same platform</b> for an invoice to be financed.</p>
+  </div>
+</section>
+
+<section id="how" class="band-navy">
+  <div class="wrap">
+    <div class="sechead">
+      <span class="eyebrow center" style="color:#2DD4BF"><svg viewBox="0 0 24 24"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></svg> How a transaction works</span>
+      <h2>Six steps, and you're paid at step five</h2>
+    </div>
+    <div class="steps">
+      <div class="card feat step"><div class="numbox">1</div><h4>Supply &amp; invoice</h4><p>You deliver goods and raise an invoice on 30–90 day credit.</p></div>
+      <div class="card feat step"><div class="numbox">2</div><h4>Upload</h4><p>You upload that invoice to a TReDS platform.</p></div>
+      <div class="card feat step"><div class="numbox">3</div><h4>Buyer approves</h4><p>The buyer confirms it's genuine and will pay on the due date.</p></div>
+      <div class="card feat step"><div class="numbox">4</div><h4>Multiple banks bid</h4><p>Banks &amp; NBFCs compete — the lowest discount rate wins.</p></div>
+      <div class="card feat step"><div class="numbox">5</div><h4>You pick &amp; get paid</h4><p>You select the best rate; the financier pays you at once, less the discount (T+1 / T+2).</p></div>
+      <div class="card feat step"><div class="numbox">6</div><h4>Buyer settles</h4><p>On the due date the buyer pays the full invoice to the financier.</p></div>
+    </div>
+    <div class="loop">You're already paid at step 5 — and carry <b>no liability</b> if the buyer defaults.</div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sechead">
+      <span class="eyebrow center"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg> Why it works — and why it's safe</span>
+      <h2>You borrow at your buyer's strength</h2>
+    </div>
+    <div class="why">
+      <div class="card whycard">
+        <h3>Why banks are <span>comfortable</span></h3>
+        <p>The financing decision rests mainly on your <b>buyer's creditworthiness — not on yours</b>. So even a small supplier gets funded, at the strength and rate of a large buyer.</p>
+      </div>
+      <div class="card whycard">
+        <h3>Why it's <span>safe for you</span></h3>
+        <p>It is <b>without recourse</b>: if the buyer defaults later, that's the financier's risk. Their exposure is to the buyer; you keep the cash, with no repayment obligation.</p>
+      </div>
+    </div>
+    <div class="goodtoknow">
+      <span class="k">Good to know</span>
+      <p>TReDS covers domestic trade — it works when your buyer is Indian. Export invoices aren't included yet.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="sechead">
+      <span class="eyebrow center"><svg viewBox="0 0 24 24"><path d="M22 7 13.5 15.5 8.5 10.5 2 17"/><path d="M16 7h6v6"/></svg> What you gain as an MSME</span>
+      <h2>Why sellers use it</h2>
+    </div>
+    <div class="gains-carousel">
+      <div class="gains-track">
+        <div class="card gain"><div class="gi"><svg viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><div class="gk">Fast cash</div><p>A 60-day receivable becomes cash in T+1 / T+2.</p></div>
+        <div class="card gain"><div class="gi"><svg viewBox="0 0 24 24"><path d="M7 11V7a5 5 0 0 1 9.9-1"/><rect x="3" y="11" width="18" height="11" rx="2"/></svg></div><div class="gk">Collateral-free</div><p>No property, security or personal guarantee.</p></div>
+        <div class="card gain"><div class="gi"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div><div class="gk">Without recourse</div><p>No liability if the buyer later defaults.</p></div>
+        <div class="card gain"><div class="gi"><svg viewBox="0 0 24 24"><path d="M22 17 13.5 8.5 8.5 13.5 2 7"/><path d="M16 17h6v-6"/></svg></div><div class="gk">Buyer's-credit pricing</div><p>Borrow at your blue-chip buyer's rate — far cheaper.</p></div>
+        <div class="card gain"><div class="gi"><svg viewBox="0 0 24 24"><path d="m14.5 12.5-8 8a2.12 2.12 0 1 1-3-3l8-8"/><path d="m16 16 6-6"/><path d="m8 8 6-6"/><path d="m9 7 8 8"/><path d="m21 11-8-8"/></svg></div><div class="gk">Competitive bidding</div><p>Many financiers compete; you pick the best rate.</p></div>
+        <div class="card gain"><div class="gi"><svg viewBox="0 0 24 24"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg></div><div class="gk">Off the balance sheet</div><p>It's a sale of receivables, not a loan, so leverage ratios stay clean.</p></div>
+        <div class="card gain"><div class="gi"><svg viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></svg></div><div class="gk">Healthier buyer relations</div><p>You stop chasing dues, and payment discipline improves across the chain.</p></div>
+        <div class="card gain"><div class="gi"><svg viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><div class="gk">Fast cash</div><p>A 60-day receivable becomes cash in T+1 / T+2.</p></div>
+        <div class="card gain"><div class="gi"><svg viewBox="0 0 24 24"><path d="M7 11V7a5 5 0 0 1 9.9-1"/><rect x="3" y="11" width="18" height="11" rx="2"/></svg></div><div class="gk">Collateral-free</div><p>No property, security or personal guarantee.</p></div>
+        <div class="card gain"><div class="gi"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div><div class="gk">Without recourse</div><p>No liability if the buyer later defaults.</p></div>
+        <div class="card gain"><div class="gi"><svg viewBox="0 0 24 24"><path d="M22 17 13.5 8.5 8.5 13.5 2 7"/><path d="M16 17h6v-6"/></svg></div><div class="gk">Buyer's-credit pricing</div><p>Borrow at your blue-chip buyer's rate — far cheaper.</p></div>
+        <div class="card gain"><div class="gi"><svg viewBox="0 0 24 24"><path d="m14.5 12.5-8 8a2.12 2.12 0 1 1-3-3l8-8"/><path d="m16 16 6-6"/><path d="m8 8 6-6"/><path d="m9 7 8 8"/><path d="m21 11-8-8"/></svg></div><div class="gk">Competitive bidding</div><p>Many financiers compete; you pick the best rate.</p></div>
+        <div class="card gain"><div class="gi"><svg viewBox="0 0 24 24"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg></div><div class="gk">Off the balance sheet</div><p>It's a sale of receivables, not a loan, so leverage ratios stay clean.</p></div>
+        <div class="card gain"><div class="gi"><svg viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></svg></div><div class="gk">Healthier buyer relations</div><p>You stop chasing dues, and payment discipline improves across the chain.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sechead">
+      <span class="eyebrow center"><svg viewBox="0 0 24 24"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg> It isn't only you who gains</span>
+      <h2>Why buyers and financiers take part</h2>
+      <p>TReDS keeps growing because all three sides win — which is what makes the financing reliably available to you.</p>
+    </div>
+    <div class="why">
+      <div class="card whycard">
+        <h3>For the <span>buyer</span></h3>
+        <ul>
+          <li>Keeps its supply chain liquid and its vendors solvent.</li>
+          <li>Meets the MSME 45-day payment rule and the TReDS onboarding mandate.</li>
+          <li>Can negotiate better terms in exchange for prompt, digital settlement.</li>
+        </ul>
+      </div>
+      <div class="card whycard">
+        <h3>For the <span>financier</span></h3>
+        <ul>
+          <li>Access to short-tenor, self-liquidating assets backed by strong buyers.</li>
+          <li>Low risk: financing rests on the buyer's credit, not the small supplier's.</li>
+          <li>Steady, RBI-regulated deal flow that helps meet priority-sector / MSME lending targets.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="sechead">
+      <span class="eyebrow center"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg> First — is your buyer on TReDS?</span>
+      <h2>It only works if your buyer approves</h2>
+      <p>TReDS only works if your buyer is registered on it and approves your invoice. Not every buyer is on TReDS — confirm your buyer will accept invoices on it before you count on the financing.</p>
+    </div>
+    <div class="logocloud">
+      <div class="lc-title">Few PSU buyers on TReDS</div>
+      <div class="lc-marquee">
+        <div class="lc-row ltr"><div class="lc-track"><div class="lc-group"><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>NTPC</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>Indian Oil</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>BPCL</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>ONGC</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>Power Grid</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>HAL</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>Engineers India</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>SAIL</span></div></div><div class="lc-group" aria-hidden="true"><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>NTPC</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>Indian Oil</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>BPCL</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>ONGC</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>Power Grid</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>HAL</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>Engineers India</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>SAIL</span></div></div></div></div>
+        <div class="lc-row rtl"><div class="lc-track"><div class="lc-group"><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>GAIL</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>HPCL</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>Coal India</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>BHEL</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>BEL</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>NHPC</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>CONCOR</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>NMDC</span></div></div><div class="lc-group" aria-hidden="true"><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>GAIL</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>HPCL</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>Coal India</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>BHEL</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>BEL</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>NHPC</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>CONCOR</span></div><div class="lc-item"><svg class="lc-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10m4 11V10m6 11V10m4 11V10"/><path d="M4 10h16"/><path d="m12 3 8 4H4l8-4z"/></svg><span>NMDC</span></div></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== QUICK FIT CHECK ===== -->
+<section id="fit-check" class="band-navy">
+  <div class="wrap">
+    <div class="sechead">
+      <span class="eyebrow center" style="color:#2DD4BF"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg> Check your eligibility</span>
+      <h2>Quick fit check</h2>
+      <p>Three quick questions to see whether your invoice can be financed on TReDS.</p>
+    </div>
+    <div class="elig-wrap">
+      <div class="elig">
+        <div class="q"><div class="qt">Are you a registered MSME (Udyam)?</div><div class="tgl" data-q="msme"><button data-v="1">Yes</button><button data-v="0">No</button></div></div>
+        <div class="q"><div class="qt">Is your buyer a large corporate, PSU or CPSE?</div><div class="tgl" data-q="buyer"><button data-v="1">Yes</button><button data-v="0">Not sure</button></div></div>
+        <div class="q"><div class="qt">Will your buyer approve invoices on a TReDS platform?</div><div class="tgl" data-q="approve"><button data-v="1">Yes</button><button data-v="0">Not sure</button></div></div>
+        <div class="eout" id="elig-msg">Answer all three to see whether TReDS fits your invoice.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sechead">
+      <span class="eyebrow center"><svg viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg> Getting started</span>
+      <h2>What you need, and what happens next</h2>
+    </div>
+    <div class="start">
+      <div class="card startcard">
+        <h3>To register</h3>
+        <ul class="checklist">
+          <li>Udyam (MSME) registration</li>
+          <li>GST certificate + PAN</li>
+          <li>KYC of the authorised signatory</li>
+          <li>Board resolution / authorisation letter</li>
+        </ul>
+      </div>
+      <div class="card startcard">
+        <h3>Then, for every invoice</h3>
+        <ul class="checklist">
+          <li>Register on the platform your buyer is on</li>
+          <li>Upload the buyer-approved invoice</li>
+          <li>Financiers bid — you accept the best rate</li>
+          <li>Cash reaches you in T+1 / T+2</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band-navy" id="policy">
+  <div class="wrap">
+    <div class="sechead">
+      <span class="eyebrow center" style="color:#2DD4BF"><svg viewBox="0 0 24 24"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg> The rules — and the latest moves</span>
+      <h2>Where the policy is heading</h2>
+      <p>The 2026 Master Direction is pulling TReDS into the mainstream of MSME finance — wider mandates, credit-guarantee cover, and simpler onboarding.</p>
+    </div>
+    <div class="policy">
+      <div class="policy-lead" id="new-2026">
+        <div class="pl-top">
+          <span class="pl-badge">New · 2026</span>
+          <span class="pl-eff">Effective 30 June 2026</span>
+        </div>
+        <h3>RBI TReDS Master Direction, 2026</h3>
+        <p>All operational central PSEs must now route MSME invoice settlements through an RBI-authorised TReDS platform. Onboarding is simpler — the mandatory seller due-diligence step is gone, financiers can take credit-guarantee cover, and insurance premiums can't be charged to you. It isn't compulsory discounting: take early financing, or let the invoice settle on its due date.</p>
+        <div class="pl-actions">
+          <a class="pl-btn primary" href="https://rbi.org.in/scripts/BS_ViewMasDirections.aspx?id=13526" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg> Read it on rbi.org.in</a>
+          <a class="pl-btn" href="RBI_Master_Directions.pdf" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg> Download PDF</a>
+        </div>
+      </div>
+      <ul class="policy-points">
+        <li class="ppoint">
+          <span class="pp-ic"><svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/><path d="M9 11h.01M15 11h.01"/></svg></span>
+          <div class="pp-tx"><b>Who must join</b><span>Companies with turnover above ₹250 crore and all Central Public Sector Enterprises (CPSEs) must onboard a TReDS platform.</span></div>
+        </li>
+        <li class="ppoint">
+          <span class="pp-ic"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span>
+          <div class="pp-tx"><b>CGTMSE guarantee</b><span>Invoice discounting is being brought under CGTMSE credit-guarantee cover — lower risk for lenders, better rates for MSMEs.</span></div>
+        </li>
+        <li class="ppoint">
+          <span class="pp-ic"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+          <div class="pp-tx"><b>GeM–TReDS integration</b><span>The Government e-Marketplace is being linked to TReDS, giving financiers real-time visibility of government purchases.</span></div>
+        </li>
+        <li class="ppoint">
+          <span class="pp-ic"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m9 15 2 2 4-4"/></svg></span>
+          <div class="pp-tx"><b>Statutory-auditor sign-off</b><span>CPSEs routing MSME settlements through TReDS must have their statutory auditors certify compliance each year.</span></div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PLATFORMS (table) ===== -->
+<section id="platforms">
+  <div class="wrap">
+    <div class="sechead">
+      <span class="eyebrow center"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> The platforms</span>
+      <h2>Pick the one your buyer is already on</h2>
+      <p>Five RBI-authorised operators. MSME counts are approximate. An invoice can be financed only if both you and your buyer are registered on the same platform.</p>
+    </div>
+    <div class="platwrap">
+      <div class="platscroll">
+        <table>
+          <thead><tr><th>Platform</th><th>Backing</th><th>MSMEs</th><th>Good to know</th></tr></thead>
+          <tbody>
+            <tr><th><a href="https://www.rxil.in/" target="_blank" rel="noopener noreferrer">RXIL</a></th><td>SIDBI &amp; NSE</td><td>44,000+</td><td>Largest by volume; strong for PSU / CPSE buyers.</td></tr>
+            <tr><th><a href="https://www.m1xchange.com/" target="_blank" rel="noopener noreferrer">M1xchange</a></th><td>Mynd Solutions</td><td>50,000+</td><td>Zero MSME registration fee; technology-led, deep-tier financing; GeM integration.</td></tr>
+            <tr><th><a href="https://www.invoicemart.com/" target="_blank" rel="noopener noreferrer">Invoicemart</a></th><td>A.TReDS — Axis &amp; mjunction</td><td>28,000+</td><td>User-friendly; broad corporate &amp; financier base.</td></tr>
+            <tr><th><a href="https://c2treds.com/" target="_blank" rel="noopener noreferrer">C2treds</a></th><td>C2FO Factoring</td><td>89,000+</td><td>Global working-capital-finance network; ERP integrations.</td></tr>
+            <tr><th><a href="https://www.dtxindia.in/" target="_blank" rel="noopener noreferrer">DTX</a> <span class="badge2">newest</span></th><td>KredX</td><td>—</td><td>Fifth operator; final RBI nod in 2025; rolling out.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p class="plat-note">Rates are set by <b>live auction</b> — roughly 8–18% p.a., driven by your buyer's credit, not a flat fee.</p>
+  </div>
+</section>
+
+<!-- ===== GOVERNMENT RESOURCES (slider) ===== -->
+<section class="band" id="resources">
+  <div class="wrap">
+    <div class="sechead">
+      <span class="eyebrow center"><svg viewBox="0 0 24 24"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg> Government resources</span>
+      <h2>Official portals worth bookmarking</h2>
+      <p>Direct links to the RBI and Government of India portals behind TReDS and MSME finance. Swipe for more.</p>
+    </div>
+    <div class="gov">
+      <div class="gov-track" id="gov-track">
+        <a class="gov-card" href="https://rbi.org.in/scripts/BS_ViewMasDirections.aspx?id=13526" target="_blank" rel="noopener noreferrer">
+          <div class="gov-ic"><svg viewBox="0 0 24 24"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg></div>
+          <span class="gov-tag">rbi.org.in</span>
+          <h3>RBI — TReDS Master Direction, 2026</h3>
+          <p>The Reserve Bank rulebook that governs how TReDS platforms operate.</p>
+          <span class="gov-go">Visit site <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a class="gov-card" href="https://udyamregistration.gov.in" target="_blank" rel="noopener noreferrer">
+          <div class="gov-ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M15 8h4M15 12h4M7 16h10"/></svg></div>
+          <span class="gov-tag">udyamregistration.gov.in</span>
+          <h3>Udyam Registration</h3>
+          <p>Register your firm as an MSME — free, and needed to sell on TReDS.</p>
+          <span class="gov-go">Visit site <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a class="gov-card" href="https://samadhaan.msme.gov.in" target="_blank" rel="noopener noreferrer">
+          <div class="gov-ic"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 7l7-4 7 4"/><path d="m3 10 3 6M3 10l-1 4a3 3 0 0 0 6 0l-2-4"/><path d="m21 10-3 6M21 10l1 4a3 3 0 0 1-6 0l2-4"/></svg></div>
+          <span class="gov-tag">samadhaan.msme.gov.in</span>
+          <h3>MSME SAMADHAAN</h3>
+          <p>Raise and track complaints about buyer payment delays.</p>
+          <span class="gov-go">Visit site <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a class="gov-card" href="https://sambandh.msme.gov.in/PPP_index.aspx" target="_blank" rel="noopener noreferrer">
+          <div class="gov-ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M8 11h6M8 8h6M8 14h4"/></svg></div>
+          <span class="gov-tag">sambandh.msme.gov.in</span>
+          <h3>MSME SAMBANDH</h3>
+          <p>See what Central PSUs procure from MSEs, buyer by buyer.</p>
+          <span class="gov-go">Visit site <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a class="gov-card" href="https://gem.gov.in" target="_blank" rel="noopener noreferrer">
+          <div class="gov-ic"><svg viewBox="0 0 24 24"><path d="M3 3h2l2.6 12.4a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L23 6H6"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg></div>
+          <span class="gov-tag">gem.gov.in</span>
+          <h3>Government e-Marketplace (GeM)</h3>
+          <p>The government's procurement marketplace, now linking to TReDS.</p>
+          <span class="gov-go">Visit site <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a class="gov-card" href="https://www.cgtmse.in" target="_blank" rel="noopener noreferrer">
+          <div class="gov-ic"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
+          <span class="gov-tag">cgtmse.in</span>
+          <h3>CGTMSE</h3>
+          <p>The credit-guarantee fund being extended to TReDS financing.</p>
+          <span class="gov-go">Visit site <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a class="gov-card" href="https://msme.gov.in" target="_blank" rel="noopener noreferrer">
+          <div class="gov-ic"><svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/><path d="M9 11h.01M15 11h.01"/></svg></div>
+          <span class="gov-tag">msme.gov.in</span>
+          <h3>Ministry of MSME</h3>
+          <p>Central ministry for MSME schemes, policy and updates.</p>
+          <span class="gov-go">Visit site <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+      </div>
+      <div class="gov-nav">
+        <span class="gov-hint"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg> Swipe for more resources</span>
+        <div class="gov-arrows">
+          <button class="gov-arrow" id="gov-prev" type="button" aria-label="Previous resources"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <button class="gov-arrow" id="gov-next" type="button" aria-label="More resources"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+        </div>
+      </div>
+    </div>
+    <p class="plat-note" style="margin-top:20px">External government &amp; regulator sites — opened in a new tab. We link to them for reference only and don't reproduce their content.</p>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section id="faq" class="band">
+  <div class="wrap">
+    <div class="sechead">
+      <span class="eyebrow center"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg> FAQ</span>
+      <h2>Frequently asked questions</h2>
+    </div>
+    <div class="faq">
+      <div class="faq-item"><button class="faq-q">What exactly is TReDS?<span class="ic"></span></button><div class="faq-a"><p>TReDS — the Trade Receivables Discounting System — is an RBI-regulated online marketplace where an MSME seller sells a buyer-approved invoice to banks and NBFCs at a small discount and is paid within a day or two, instead of waiting out the credit period. <b>An invoice becomes working capital, priced on the buyer's credit, not yours.</b></p></div></div>
+      <div class="faq-item"><button class="faq-q">How fast do I get paid, and is it collateral-free?<span class="ic"></span></button><div class="faq-a"><p>Once you accept the winning bid, funds reach your account in <b>T+1 / T+2</b> — a day or two. Nothing is pledged: it's <b>collateral-free</b> and <b>without recourse</b>, so if the buyer defaults later, that's the financier's risk, not yours.</p></div></div>
+      <div class="faq-item"><button class="faq-q">What does it cost me?<span class="ic"></span></button><div class="faq-a"><p>You pay a discount at the winning bid rate — set by live auction, typically <b>8–18% p.a.</b> depending on your buyer's credit — plus any platform fee (many charge sellers ₹0). The number that matters is the <b>effective annualised cost</b>; use the calculator above to compare it against your overdraft or cash-credit rate.</p></div></div>
+      <div class="faq-item"><button class="faq-q">Is my buyer eligible?<span class="ic"></span></button><div class="faq-a"><p>Your buyer must be registered on the same platform and must approve the invoice. Financing rests on the buyer's credit, so large corporates, PSUs and CPSEs work best — and companies with turnover above <b>₹250 crore</b> plus all CPSEs are required to onboard. Confirm your buyer's platform before you count on the financing.</p></div></div>
+      <div class="faq-item"><button class="faq-q">Which platform should I use?<span class="ic"></span></button><div class="faq-a"><p>Pick the one your buyer is already on — that's the only way an invoice gets financed. There are five RBI-authorised operators: <b>RXIL, M1xchange, Invoicemart, C2treds and DTX (KredX)</b>. See the platforms table above for what each is good at.</p></div></div>
+      <div class="faq-item"><button class="faq-q">What changed under the 2026 rules?<span class="ic"></span></button><div class="faq-a"><p>The RBI's <a href="https://rbi.org.in/scripts/BS_ViewMasDirections.aspx?id=13526" target="_blank" rel="noopener noreferrer"><b>TReDS Master Direction, 2026</b></a> made onboarding simpler for sellers — the mandatory due-diligence step is gone, financiers can take CGTMSE credit-guarantee cover, and insurance premiums can't be charged to you. From <b>30 June 2026</b>, all operational central PSEs must route MSME invoice settlements through a TReDS platform. <a href="RBI_Master_Directions.pdf" target="_blank" rel="noopener noreferrer">Download the Master Direction (PDF)</a>.</p></div></div>
+      <div class="faq-item"><button class="faq-q">How is the cost worked out?<span class="ic"></span></button><div class="faq-a"><div class="faq-formula">Discount   = Invoice × Rate% × Days ÷ 365
+Platform   = Invoice × Fee%
+Cost       = Discount + Platform
+Net        = Invoice − Cost
+Eff. cost  = Cost ÷ Net × 365 ÷ Days × 100</div></div></div>
+      <div class="faq-item"><button class="faq-q">What are the limitations of this calculator?<span class="ic"></span></button><div class="faq-a"><p>The live bid rate depends on the buyer's rating and market appetite, so treat the rate as an estimate. Fee structures differ by platform and by who bears them. TReDS covers domestic receivables only — export invoices aren't included yet. Always confirm the day-count and the actual bid before relying on the number.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap">
+    <div class="sechead" style="margin-bottom:0">
+      <span class="eyebrow center" style="color:#2DD4BF"><svg viewBox="0 0 24 24"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></svg> What to do next</span>
+      <h2>Put a TReDS invoice through this week</h2>
+    </div>
+    <div class="ctalist">
+      <div class="ctastep"><span class="n">1</span><p>Check whether your key buyers are already on a TReDS platform — <b>or can onboard.</b></p></div>
+      <div class="ctastep"><span class="n">2</span><p>Register with Udyam, GST, PAN and KYC. It's <b>collateral-free and without recourse.</b></p></div>
+      <div class="ctastep"><span class="n">3</span><p>Upload approved invoices, let financiers bid, and <b>take the best rate.</b></p></div>
+      <div class="ctastep"><span class="n">4</span><p>Every time, <b>compare the effective annualised cost</b> against your overdraft — using the calculator.</p></div>
+    </div>
+    <div class="ctabtns">
+      <a class="btn btn-primary" href="#calculator">Run your numbers <svg class="arw" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="btn btn-ghost" href="#what">Learn how it works</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      
+      <div class="flinks">
+        <a href="#calculator">Calculator</a>
+        <a href="#what">What is TReDS</a>
+        <a href="#how">How it works</a>
+        <a href="#platforms">Platforms</a>
+        <a href="#faq">FAQ</a>
+      </div>
+    </div>
+    <div class="fbot">
+      <span class="cp">A free tool for MSME sellers</span>
+    </div>
+    <p class="disclaimer">For guidance only, not financial advice. Live bid rates depend on your buyer's rating and market appetite, so treat any rate here as an estimate and confirm the actual bid on the platform. The model uses a 365-day year, ignores GST on fees and other taxes, and covers domestic receivables only — export invoices aren't on TReDS yet. Figures reflect the RBI TReDS Master Direction, 2026; always confirm current rules and your buyer's platform before relying on them. <b>{CODE.NULL} is an independent party providing information only; this website is not affiliated with, endorsed by, or sponsored by any TReDS platform (RXIL, M1xchange, Invoicemart, C2treds, DTX) or the Reserve Bank of India (RBI).</b> All platform names and links are provided for reference only. For authoritative, up-to-date information, refer to the RBI's official website at <a href="https://www.rbi.org.in" target="_blank" rel="noopener noreferrer">www.rbi.org.in</a>.</p>
+    <div class="built">
+      <span class="built-line">// built from scratch — without writing a single line of code</span>
+      <span class="built-by">Powered by <a href="https://codenull.in" target="_blank" rel="noopener noreferrer">{CODE.NULL}</a></span>
+    </div>
+  </div>
+</footer>
+
+<div id="print-summary" aria-hidden="true"></div>
+
+<!-- ===== CALCULATOR + INTERACTIONS (JS) ===== -->
+<script>
+(function(){
+  "use strict";
+  var $=function(id){var el=document.getElementById(id); if(!el&&window.TReDS){TReDS.warn('Expected element not found: #'+id);} return el;};
+  var grp0=new Intl.NumberFormat('en-IN',{maximumFractionDigits:0});
+  var grp2=new Intl.NumberFormat('en-IN',{minimumFractionDigits:0,maximumFractionDigits:2});
+  function money(n){return isFinite(n)?grp0.format(Math.round(n)):"—";}
+  function fmt2(n){return isFinite(n)?grp2.format(n):"—";}
+  function parseNum(s){if(s==null)return NaN;var v=String(s).replace(/,/g,'').replace(/[^0-9.\-]/g,'').trim();return v===''?NaN:parseFloat(v);}
+  function groupInput(s){var parts=String(s).replace(/,/g,'').split('.');var i=parseInt(parts[0],10);if(!isFinite(i))return s;var g=grp0.format(Math.abs(i));if(i<0)g='-'+g;return parts.length>1?g+'.'+parts[1]:g;}
+
+  var invoiceEl=$('invoice'),rateEl=$('rate'),creditEl=$('credit'),feeEl=$('fee'),slider=$('days');
+
+  function calc(invoice,rate,days,fee){
+    var discount=invoice*(rate/100)*(days/365);
+    var platform=invoice*(fee/100);
+    var cost=discount+platform,net=invoice-cost;
+    var eff=(net>0&&days>0)?(cost/net)*(365/days)*100:NaN;
+    return {discount:discount,platform:platform,cost:cost,net:net,eff:eff};
+  }
+  function fillRange(){var mn=+slider.min,mx=+slider.max,v=+slider.value,pct=mx>mn?((v-mn)/(mx-mn))*100:0;slider.style.background='linear-gradient(to right,var(--navy) 0%,var(--navy) '+pct+'%,var(--line) '+pct+'%,var(--line) 100%)';}
+  function syncCredit(){var c=parseNum(creditEl.value);if(isFinite(c)&&c>=1){var cap=Math.round(c);slider.max=cap;if(+slider.value>cap)slider.value=cap;}$('days-out').textContent=slider.value;fillRange();}
+
+  function recompute(){
+    try{
+      var invoice=parseNum(invoiceEl.value),rate=parseNum(rateEl.value),fee=parseNum(feeEl.value),days=+slider.value;
+      var dout=$('days-out'); if(dout){dout.textContent=slider.value;} fillRange();
+      var set=function(k,v){var el=$(k); if(el){el.textContent=v;}};
+      var ok=[invoice,rate,fee].every(isFinite)&&invoice>0&&rate>=0&&fee>=0&&days>=1;
+      if(!ok){['r-net','r-invoice','r-discount','r-fee','r-eff'].forEach(function(k){set(k,'—');});return;}
+      var c=calc(invoice,rate,days,fee);
+      set('r-invoice',money(invoice));
+      set('r-discount',money(c.discount));
+      set('r-fee',money(c.platform));
+      set('r-net',money(c.net));
+      set('r-eff',isFinite(c.eff)?fmt2(c.eff):'—');
+      set('r-wait',days);
+    }catch(err){
+      TReDS.error('Calculator recompute failed', err, {invoice:invoiceEl&&invoiceEl.value, rate:rateEl&&rateEl.value, fee:feeEl&&feeEl.value, days:slider&&slider.value});
+      ['r-net','r-invoice','r-discount','r-fee','r-eff'].forEach(function(k){var el=$(k); if(el){el.textContent='—';}});
+    }
+  }
+
+  [invoiceEl,rateEl,creditEl,feeEl].forEach(function(el){
+    el.addEventListener('input',function(){if(el===creditEl)syncCredit();recompute();});
+    el.addEventListener('blur',function(){if(el===invoiceEl)el.value=groupInput(el.value);recompute();});
+  });
+  slider.addEventListener('input',recompute);
+  var reloadBtn=$('reload-calc');
+  if(reloadBtn){reloadBtn.addEventListener('click',function(){
+    invoiceEl.value='10,00,000';rateEl.value='8.5';creditEl.value='60';feeEl.value='0.10';
+    slider.max=60;slider.value=60;syncCredit();recompute();
+  });}
+
+  var elig={msme:null,buyer:null,approve:null};
+  document.querySelectorAll('.tgl').forEach(function(t){
+    var q=t.getAttribute('data-q');
+    t.querySelectorAll('button').forEach(function(b){
+      b.addEventListener('click',function(){t.querySelectorAll('button').forEach(function(x){x.classList.remove('on');});b.classList.add('on');elig[q]=b.getAttribute('data-v')==='1';eligMsg();});
+    });
+  });
+  function eligMsg(){
+    var m=$('elig-msg');
+    if(elig.msme===null||elig.buyer===null||elig.approve===null){m.className='eout';m.innerHTML='Answer all three to see whether TReDS fits your invoice.';return;}
+    if(elig.msme&&elig.buyer&&elig.approve){m.className='eout good';m.innerHTML='<b>You\'re a strong fit.</b> You\'re an MSME, your buyer qualifies, and they\'ll approve on-platform. Register where your buyer sits, upload the invoice, take the best bid — cash usually reaches you in <b>T+1 / T+2</b>.';return;}
+    m.className='eout warn';
+    if(!elig.msme){m.innerHTML='<b>Get your Udyam registration first.</b> TReDS finances invoices raised by registered MSMEs — it\'s free and online. Come back and re-check once you have it.';}
+    else if(!elig.buyer&&!elig.approve){m.innerHTML='<b>Confirm your buyer.</b> Financing rests on the buyer\'s credit, so a large / PSU buyer helps most. Ask which platform they use and whether they\'ll approve invoices there.';}
+    else if(!elig.buyer){m.innerHTML='<b>Check your buyer\'s size and status.</b> A large or PSU buyer helps most — ask whether they\'re registered on a TReDS platform.';}
+    else{m.innerHTML='<b>Nudge your buyer to approve.</b> An invoice only gets financed once your buyer approves it on the platform. A quick confirmation unlocks the bid.';}
+  }
+
+  document.querySelectorAll('.faq-item').forEach(function(item){
+    var q=item.querySelector('.faq-q'),a=item.querySelector('.faq-a');
+    q.addEventListener('click',function(){
+      var open=item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(function(o){o.classList.remove('open');o.querySelector('.faq-a').style.maxHeight=null;});
+      if(!open){item.classList.add('open');a.style.maxHeight=a.scrollHeight+'px';}
+    });
+  });
+
+  function dlData(){var T=function(id){var el=document.getElementById(id);return el?el.textContent:'—';};
+    return {invoice:invoiceEl.value,rate:rateEl.value,credit:creditEl.value,days:slider.value,fee:feeEl.value,
+      net:T('r-net'),discount:T('r-discount'),platform:T('r-fee'),eff:T('r-eff')};}
+  function nOf(v){return parseFloat(String(v).replace(/,/g,''))||0;}
+  var pdfBtn=$('dl-pdf'),xlsBtn=$('dl-xls'),ps=$('print-summary');
+
+  /* PDF: minimalist print summary (no timestamp; {CODE.NULL} once in footer) */
+  if(pdfBtn&&ps){pdfBtn.addEventListener('click',function(){
+    try{
+    var d=dlData();
+    function row(a,b,cls){return '<tr'+(cls?' class="'+cls+'"':'')+'><td>'+a+'</td><td>'+b+'</td></tr>';}
+    var inputs=row('Invoice amount','\u20B9'+d.invoice)
+      +row('Discount rate',d.rate+'% p.a.')
+      +row('Credit period',d.credit+' days')
+      +row('Days financing',d.days+' days')
+      +row('Platform fee',d.fee+'%');
+    var results=row('Discount charge','\u2212 \u20B9'+d.discount)
+      +row('Platform fee','\u2212 \u20B9'+d.platform)
+      +row('You receive, within 24\u201348 hours','\u20B9'+d.net,'ps-net')
+      +row('Effective annualised cost',d.eff+'% p.a.');
+    ps.innerHTML='<h2>TReDS Calculator \u2014 your result</h2>'
+      +'<table class="ps-table">'+inputs+'</table>'
+      +'<div class="ps-gap"></div>'
+      +'<table class="ps-table">'+results+'</table>'
+      +'<p class="ps-note">For guidance only, not financial advice. Live bid rates vary \u2014 confirm the actual bid on the platform. This is an independent tool, not affiliated with or endorsed by any TReDS platform or the Reserve Bank of India. Source: www.rbi.org.in</p>'
+      +'<div class="ps-foot"><a href="https://codenull.in">{CODE.NULL}</a></div>';
+    window.print();
+    }catch(err){TReDS.error('PDF export failed', err);}
+  });}
+
+  /* Excel: a working calculator with live formulas (SpreadsheetML) */
+  if(xlsBtn){xlsBtn.addEventListener('click',function(){
+    try{
+    var inv=nOf(invoiceEl.value),rate=nOf(rateEl.value),days=nOf(slider.value),fee=nOf(feeEl.value);
+    var disc=inv*rate/100*days/365, plat=inv*fee/100, net=inv-disc-plat, eff=(net>0&&days>0)?(disc+plat)/net*365/days*100:0;
+    var r2=function(n){return Math.round(n*100)/100;};
+    function lbl(t){return '<Cell><Data ss:Type="String">'+t+'</Data></Cell>';}
+    function num(v){return '<Cell><Data ss:Type="Number">'+v+'</Data></Cell>';}
+    function frm(f,v){return '<Cell ss:Formula="'+f+'"><Data ss:Type="Number">'+v+'</Data></Cell>';}
+    function Row(c){return '<Row>'+c+'</Row>';}
+    var rows=Row(lbl('Invoice amount')+num(inv))
+      +Row(lbl('Discount rate (% p.a.)')+num(rate))
+      +Row(lbl('Days financing')+num(days))
+      +Row(lbl('Platform fee (%)')+num(fee))
+      +Row('')
+      +Row(lbl('Discount charge')+frm('=R1C2*R2C2/100*R3C2/365',Math.round(disc)))
+      +Row(lbl('Platform fee')+frm('=R1C2*R4C2/100',Math.round(plat)))
+      +Row(lbl('You receive')+frm('=R1C2-R6C2-R7C2',Math.round(net)))
+      +Row(lbl('Effective cost (% p.a.)')+frm('=(R6C2+R7C2)/R8C2*365/R3C2*100',r2(eff)));
+    var xml='<?xml version="1.0"?>\n<?mso-application progid="Excel.Sheet"?>\n'
+      +'<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">'
+      +'<Worksheet ss:Name="TReDS"><Table>'
+      +'<Column ss:Width="170"/><Column ss:Width="110"/>'
+      +rows
+      +'</Table></Worksheet></Workbook>';
+    var blob=new Blob([xml],{type:'application/vnd.ms-excel'});
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='TReDS-calculator.xls';
+    document.body.appendChild(a);a.click();setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(a.href);},100);
+    }catch(err){TReDS.error('Excel export failed', err);}
+  });}
+  var waBtn=$('dl-wa');
+  if(waBtn){waBtn.addEventListener('click',function(e){
+    e.preventDefault();
+    try{
+    var d=dlData();
+    var site=(location.protocol==='http:'||location.protocol==='https:')?location.href.split('#')[0]:'https://codenull.in';
+    var msg='TReDS Calculator \u2014 on a \u20B9'+d.invoice+' invoice ('+d.rate+'% for '+d.days+' days), you receive \u20B9'+d.net+' within 24\u201348 hours at an effective '+d.eff+'% p.a.\n\nTry it: '+site;
+    window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
+    }catch(err){TReDS.error('WhatsApp share failed', err); window.open('https://wa.me/','_blank');}
+  });}
+  invoiceEl.value=groupInput(invoiceEl.value);
+  syncCredit();recompute();
+})();
+</script>
+
+<script>
+(function(){
+  if('scrollRestoration' in history){ try{history.scrollRestoration='manual';}catch(e){} }
+  function land(){
+    if(location.hash) return;
+    var el=document.getElementById('calculator'); if(!el) return;
+    var nav=document.querySelector('.nav'); var navH=nav?nav.offsetHeight:0;
+    var pb=document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior='auto';
+    window.scrollTo(0, Math.max(0, el.getBoundingClientRect().top+window.pageYOffset-navH-8));
+    document.documentElement.style.scrollBehavior=pb;
+  }
+  document.addEventListener('DOMContentLoaded', land);
+  window.addEventListener('load', function(){ land(); setTimeout(land,60); });
+})();
+</script>
+
+<script>
+/* mobile nav (hamburger) toggle */
+(function(){
+  var nav=document.querySelector('.nav'), t=document.getElementById('navtoggle');
+  if(!nav||!t) return;
+  function close(){ nav.classList.remove('open'); t.setAttribute('aria-expanded','false'); t.setAttribute('aria-label','Open menu'); }
+  function open(){ nav.classList.add('open'); t.setAttribute('aria-expanded','true'); t.setAttribute('aria-label','Close menu'); }
+  t.addEventListener('click',function(e){ e.stopPropagation(); nav.classList.contains('open')?close():open(); });
+  nav.querySelectorAll('.links a').forEach(function(a){ a.addEventListener('click',close); });
+  document.addEventListener('click',function(e){ if(nav.classList.contains('open') && !nav.contains(e.target)) close(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
+})();
+</script>
+<script>
+/* Smooth in-page scrolling WITHOUT hash navigation.
+   Following a real "#id" link inside the sandboxed preview can trigger a full
+   reload of this large file and surface a "taking longer than expected" error,
+   so we scroll via JS and preventDefault instead. */
+(function(){
+  function offset(){ var n=document.querySelector('.nav'); return (n?n.offsetHeight:60)+8; }
+  document.addEventListener('click', function(e){
+    var a = e.target && e.target.closest ? e.target.closest('a[href^="#"]') : null;
+    if(!a) return;
+    var href = a.getAttribute('href');
+    if(!href || href === '#') return;
+    var target = document.getElementById(href.slice(1));
+    if(!target) return;
+    e.preventDefault();
+    var y = Math.max(0, target.getBoundingClientRect().top + window.pageYOffset - offset());
+    window.scrollTo({ top:y, behavior:'smooth' });
+  });
+})();
+</script>
+<script>
+/* Six-steps sequential reveal — triggers once when the section scrolls into view */
+(function(){
+  var steps=document.querySelector('#how .steps');
+  if(!steps) return;
+  var mq=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)');
+  if(mq&&mq.matches) return;            /* honour reduced motion: leave static */
+  steps.classList.add('anim-ready');
+  var done=false;
+  function reveal(){ if(done) return; done=true; steps.classList.add('revealed'); }
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting){ reveal(); io.disconnect(); } });
+    },{threshold:.2, rootMargin:'0px 0px -8% 0px'});
+    io.observe(steps);
+  } else { reveal(); }
+})();
+</script>
+<script>
+/* Participants slider — person photos + content, autoplay with progress, click/keyboard nav */
+(function(){
+  var root=document.getElementById('pslider'); if(!root) return;
+  var tabs=[].slice.call(root.querySelectorAll('.ptab'));
+  var slides=[].slice.call(root.querySelectorAll('.pslide'));
+  var copies=[].slice.call(root.querySelectorAll('.pcopy'));
+  var n=tabs.length, cur=0, timer=null, DUR=5000;
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  root.style.setProperty('--pdur',(DUR/1000)+'s');
+
+  function paint(i){
+    tabs.forEach(function(t,k){var on=k===i;t.classList.toggle('active',on);t.setAttribute('aria-selected',on?'true':'false');t.tabIndex=on?0:-1;});
+    slides.forEach(function(s,k){s.classList.toggle('active',k===i);});
+    copies.forEach(function(c,k){c.classList.toggle('active',k===i);});
+    cur=i;
+  }
+  function auto(){ return !reduce && !root.classList.contains('paused'); }
+  function restartBar(){ root.classList.remove('autoplay'); void root.offsetWidth; if(auto()) root.classList.add('autoplay'); }
+  function schedule(){ clearTimeout(timer); if(auto()){ restartBar(); timer=setTimeout(function(){ go(cur+1); }, DUR); } }
+  function go(i){ paint((i+n)%n); schedule(); }
+
+  tabs.forEach(function(t,k){
+    t.addEventListener('click',function(){ go(k); });
+    t.addEventListener('keydown',function(e){
+      if(e.key==='ArrowRight'||e.key==='ArrowDown'){ e.preventDefault(); go(cur+1); tabs[cur].focus(); }
+      else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){ e.preventDefault(); go(cur-1); tabs[cur].focus(); }
+    });
+  });
+  function pause(){ root.classList.add('paused'); clearTimeout(timer); root.classList.remove('autoplay'); }
+  function resume(){ root.classList.remove('paused'); schedule(); }
+  root.addEventListener('mouseenter',pause);
+  root.addEventListener('mouseleave',resume);
+  root.addEventListener('focusin',pause);
+  root.addEventListener('focusout',function(){ if(!root.contains(document.activeElement)) resume(); });
+
+  paint(0);
+  if(!reduce){ root.classList.add('autoplay'); schedule(); }
+})();
+</script>
+<script>
+/* Government resources slider — arrow controls + edge disabling */
+(function(){
+  var t=document.getElementById('gov-track'); if(!t) return;
+  var prev=document.getElementById('gov-prev'), next=document.getElementById('gov-next');
+  function step(){ var c=t.querySelector('.gov-card'); return (c?c.getBoundingClientRect().width:300)+16; }
+  function upd(){
+    if(prev) prev.disabled = t.scrollLeft <= 4;
+    if(next) next.disabled = t.scrollLeft + t.clientWidth >= t.scrollWidth - 4;
+  }
+  if(prev) prev.addEventListener('click',function(){ t.scrollBy({left:-step()*1.5,behavior:'smooth'}); });
+  if(next) next.addEventListener('click',function(){ t.scrollBy({left:step()*1.5,behavior:'smooth'}); });
+  t.addEventListener('scroll',upd,{passive:true});
+  window.addEventListener('resize',upd);
+  upd();
+})();
+</script>
+<!-- ===================== SEO: JSON-LD structured data ===================== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://codenull.in/#org",
+      "name": "{CODE.NULL}",
+      "url": "https://codenull.in/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://codenull.in/apple-touch-icon.png",
+        "width": 180,
+        "height": 180
+      },
+      "sameAs": [
+        "https://codenull.in"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://codenull.in/tools/treds/#website",
+      "url": "https://codenull.in/tools/treds/",
+      "name": "TReDS Calculator",
+      "description": "Free TReDS calculator and guide for Indian MSMEs — day-one payout and true annualised cost of discounting a buyer-approved invoice.",
+      "publisher": {
+        "@id": "https://codenull.in/#org"
+      },
+      "inLanguage": "en-IN"
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "https://codenull.in/tools/treds/#app",
+      "name": "TReDS Calculator",
+      "url": "https://codenull.in/tools/treds/",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Any (web browser)",
+      "browserRequirements": "Requires JavaScript",
+      "description": "Interactive calculator for Indian MSME sellers: enter your invoice amount, bid rate, credit period and platform fee to see your day-one payout and the true effective annualised cost of financing on TReDS.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "INR"
+      },
+      "publisher": {
+        "@id": "https://codenull.in/#org"
+      },
+      "inLanguage": "en-IN"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://codenull.in/tools/treds/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What exactly is TReDS?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "TReDS — the Trade Receivables Discounting System — is an RBI-regulated online marketplace where an MSME seller sells a buyer-approved invoice to banks and NBFCs at a small discount and is paid within a day or two, instead of waiting out the credit period. An invoice becomes working capital, priced on the buyer's credit, not yours."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How fast do I get paid, and is it collateral-free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Once you accept the winning bid, funds reach your account in T+1 / T+2 — a day or two. Nothing is pledged: it's collateral-free and without recourse , so if the buyer defaults later, that's the financier's risk, not yours."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does it cost me?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You pay a discount at the winning bid rate — set by live auction, typically 8–18% p.a. depending on your buyer's credit — plus any platform fee (many charge sellers ₹0). The number that matters is the effective annualised cost ; use the calculator above to compare it against your overdraft or cash-credit rate."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my buyer eligible?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Your buyer must be registered on the same platform and must approve the invoice. Financing rests on the buyer's credit, so large corporates, PSUs and CPSEs work best — and companies with turnover above ₹250 crore plus all CPSEs are required to onboard. Confirm your buyer's platform before you count on the financing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which platform should I use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pick the one your buyer is already on — that's the only way an invoice gets financed. There are five RBI-authorised operators: RXIL, M1xchange, Invoicemart, C2treds and DTX (KredX) . See the platforms table above for what each is good at."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What changed under the 2026 rules?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The RBI's TReDS Master Direction, 2026 made onboarding simpler for sellers — the mandatory due-diligence step is gone, financiers can take CGTMSE credit-guarantee cover, and insurance premiums can't be charged to you. From 30 June 2026 , all operational central PSEs must route MSME invoice settlements through a TReDS platform. Download the Master Direction (PDF) ."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How is the cost worked out?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The live bid rate depends on the buyer's rating and market appetite, so treat the rate as an estimate. Fee structures differ by platform and by who bears them. TReDS covers domestic receivables only — export invoices aren't included yet. Always confirm the day-count and the actual bid before relying on the number."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<!-- ======================================================================== -->
+</body>
+</html>
