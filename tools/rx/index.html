@@ -367,6 +367,10 @@ h1 em{font-style:normal;color:var(--cobalt)}
 .tcard.tred .t-tag{background:var(--cobalt);color:#fff}
 .tcard h4{font-family:var(--disp);font-size:16px;font-weight:700;margin-bottom:6px}
 .tcard p{font-size:13px;color:var(--ink2);line-height:1.5}
+a.tcard{display:block;text-decoration:none;color:inherit;transition:transform .15s ease,box-shadow .15s ease}
+a.tcard:hover{transform:translateY(-2px);box-shadow:0 14px 30px -16px rgba(39,67,230,.55)}
+a.tcard .t-open{display:inline-block;margin-top:12px;font-family:var(--mono);font-size:12px;font-weight:600;color:var(--cobalt)}
+a.tcard:hover .t-open{text-decoration:underline}
 
 /* faq */
 .faq{margin-top:24px;max-width:760px}
@@ -720,7 +724,7 @@ footer p{font-size:12.5px;color:var(--ink3);max-width:70ch;line-height:1.55}
     <div class="tools">
       <div class="tcard live"><span class="t-tag">Live</span><h4>PTR / PTS calculator</h4><p>MRP, GST and margins in &mdash; retailer &amp; stockist prices out, with a full breakdown.</p></div>
       <div class="tcard live"><span class="t-tag">Live</span><h4>Margin calculator</h4><p>Read the margin and markup between any two rates in an instant.</p></div>
-      <div class="tcard tred"><span class="t-tag">MSME</span><h4>TReDS</h4><p>Turn an unpaid invoice into cash today &mdash; priced on your buyer&rsquo;s credit, not yours.</p></div>
+      <a class="tcard tred" href="/tools/treds/"><span class="t-tag">MSME</span><h4>TReDS</h4><p>Turn an unpaid invoice into cash today &mdash; priced on your buyer&rsquo;s credit, not yours.</p><span class="t-open">Open tool &rarr;</span></a>
       <div class="tcard soon"><span class="t-tag">Planned</span><h4>Rate-list maker</h4><p>Paste products, set margins once, export a clean party-wise rate list.</p></div>
       <div class="tcard soon"><span class="t-tag">Planned</span><h4>GST invoice / bill</h4><p>Quick tax invoices with CGST / SGST / IGST split and batch &amp; expiry fields.</p></div>
       <div class="tcard soon"><span class="t-tag">Planned</span><h4>Expiry tracker</h4><p>Flag near-expiry stock so you can return or push it before it becomes a loss.</p></div>
