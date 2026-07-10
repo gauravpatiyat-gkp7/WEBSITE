@@ -14,12 +14,13 @@ import re, json, html, hashlib, base64, os
 ROOT = "/mnt/user-data/outputs"
 SITE = "https://codenull.in"
 BRAND = "CA Gaurav K Patiyat"   # top-bar brand (update here after the {CODE.NULL} rebrand)
-TODAY = "2026-07-02"
+TODAY = "2026-07-10"
 
 # Hand-maintained standalone pages (NOT generated here) that must still appear in the sitemap.
 # Each: (path relative to SITE, changefreq, priority). Add future tools/landing pages here.
 TOOLS = [
-    ("tools/rx/", "monthly", "0.8"),   # Rx — PTR/PTS & margin calculator (folded in from the old Rx repo)
+    ("tools/rx/", "monthly", "0.8"),      # Rx — PTR/PTS & margin calculator (folded in from the old Rx repo)
+    ("tools/treds/", "monthly", "0.8"),   # TReDS — invoice/bill-discounting calculator for MSMEs (Business Solutions)
 ]
 
 src = open(f"{ROOT}/index.html", encoding="utf-8").read()
