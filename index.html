@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <!-- SECURITY: Content-Security-Policy — only these specific sources may load code, styles, fonts or be contacted. Blocks injected/3rd-party scripts. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'sha256-b5FzpM+NhsKob47pnstxA+fyiVF0djzuFXpQC+jd3ns='; connect-src 'self' https://api.web3forms.com; form-action 'self' https://api.web3forms.com; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'sha256-aA2JE9e50zBYNsefesGKa/twRvohr/S+VDs2mTo2AFM='; connect-src 'self' https://api.web3forms.com; form-action 'self' https://api.web3forms.com; upgrade-insecure-requests">
 <!-- SECURITY: don't leak the full URL to other sites when a visitor clicks an outbound link -->
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <!-- Favicon / tab icon -->
@@ -380,6 +380,19 @@
 #splash .splash-logo .brandtext{display:inline-block;white-space:nowrap;clip-path:inset(0 100% 0 0);animation:cnType .8s steps(12,end) .45s both}
 @keyframes cnSplashOut{0%,72%{opacity:1;visibility:visible}96%{opacity:0;visibility:visible}100%{opacity:0;visibility:hidden;pointer-events:none}}
 @media (prefers-reduced-motion:reduce){#splash{display:none}}
+  /* --- Vibe rail: infinite auto-scrolling marquee --- */
+  .blograil.marquee{overflow:hidden}
+  .mq-viewport{overflow:hidden;padding:6px 0 18px;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 5%,#000 95%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 5%,#000 95%,transparent 100%)}
+  .mq-track{display:flex;width:max-content;animation:mqScroll 40s linear infinite;will-change:transform}
+  .mq-viewport:hover .mq-track,.mq-track:focus-within{animation-play-state:paused}
+  .mq-group{display:flex;gap:18px;padding-right:18px;flex:0 0 auto}
+  @keyframes mqScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @media (prefers-reduced-motion:reduce){
+    .mq-viewport{overflow-x:auto;scroll-snap-type:x mandatory;-webkit-mask-image:none;mask-image:none}
+    .mq-track{animation:none;width:auto}
+    .mq-group[aria-hidden="true"]{display:none}
+    .mq-group .bcard{scroll-snap-align:start}
+  }
 </style>
 </head>
 <body>
@@ -428,10 +441,8 @@
       <h2>Building with AI &mdash; from a finance lens.</h2>
       <p class="mono-accent">// experiments, shipped &amp; explained</p>
     </div>
-    <div class="blograil">
-      <button class="rail-nav prev" data-row="vibeRow" aria-label="Scroll left" type="button">‹</button>
-      <div class="blogtrack" id="vibeRow"></div>
-      <button class="rail-nav next" data-row="vibeRow" aria-label="Scroll right" type="button">›</button>
+    <div class="blograil marquee">
+      <div id="vibeRow"></div>
     </div>
   </div>
 </section>
@@ -856,6 +867,7 @@
   function _card(p){return '<a class="bcard" href="/posts/'+p.slug+'/"><div class="pc-top"><span class="pc-badge">'+p._num+'</span><span class="pc-tag">'+p.tag+'</span></div><h3>'+p.title+'</h3><p>'+p.dek+'</p><span class="pc-cta">Read post \u2192</span></a>';}
   function _soon(){return '<div class="bcard soon"><span class="s-eye">Coming soon</span><h3>More on the way</h3><p>New posts drop here as I publish them \u2014 check back shortly.</p></div>';}
   function _emptyCard(){return '<a class="bcard soon" href="#series"><span class="s-eye">Coming soon</span><h3>Briefs on the way</h3><p>Systems &amp; finance write-ups land here next — meanwhile, explore the Vibe Coding series →</p></a>';}function _fillRow(id,cat){var el=document.getElementById(id);if(!el)return;var items=BDATA.filter(function(p){return p.category===cat;});el.innerHTML=items.length?(items.map(_card).join('')+_soon()):_emptyCard();}
+  function _fillMarquee(id,cat){var el=document.getElementById(id);if(!el)return;var items=BDATA.filter(function(p){return p.category===cat;});if(!items.length){el.innerHTML=_emptyCard();return;}el.classList.add('mq-viewport');var g=items.map(_card).join('');el.innerHTML='<div class="mq-track"><div class="mq-group">'+g+'</div><div class="mq-group" aria-hidden="true">'+g+'</div></div>';var dup=el.querySelectorAll('.mq-group[aria-hidden="true"] a');for(var k=0;k<dup.length;k++){dup[k].setAttribute('tabindex','-1');}}
   function _find(s){for(var i=0;i<BDATA.length;i++){if(BDATA[i].slug===s)return BDATA[i];}return null;}
   // ---- per-post SEO: update title + description + social tags on navigation ----
   // (Google renders JS so it picks these up; non-JS social bots fall back to the static head tags.)
@@ -886,7 +898,7 @@
   }
   function _renderPost(p){var back='#'+(_sectionOf[p.category]||'series');_pv.innerHTML='<header class="post"><div class="wrap"><a class="crumb" href="'+back+'">'+(_labelOf[p.category]||'All posts')+'</a><span class="eyebrow">'+p.tag+'</span><h1>'+p.title+'</h1><p class="dek">'+p.dek+'</p><div class="meta"><span>CA Gaurav K Patiyat</span><span class="sep"></span><span>'+p._num+'</span>'+(p.date?'<span class="sep"></span><span>'+p.date+'</span>':'')+'<span class="sep"></span><span>'+p.read+'</span></div></div></header><article><div class="wrap">'+p.body+'</div></article>';}
   function _route(){var h=location.hash||'';if(h.indexOf('#blog/')===0){var p=_find(h.slice(6));if(p){_renderPost(p);_pf.classList.add('hide');if(_pp)_pp.classList.remove('show');_pv.classList.add('show');_seoPost(p);window.scrollTo(0,0);return;}}if(h==='#profile'){_pf.classList.add('hide');_pv.classList.remove('show');if(_pp)_pp.classList.add('show');_seoReset('Profile \u2014 '+_blogBase);window.scrollTo(0,0);return;}_pv.classList.remove('show');if(_pp)_pp.classList.remove('show');_pf.classList.remove('hide');_seoReset(_mainTitle);if(h&&h.indexOf('#blog/')!==0){var el=document.getElementById(h.slice(1));if(el){setTimeout(function(){el.scrollIntoView();},0);}}}
-  _fillRow('vibeRow','vibe');_fillRow('bizRow','business');_fillRow('investRow','investing');
+  _fillMarquee('vibeRow','vibe');_fillRow('bizRow','business');_fillRow('investRow','investing');
   Array.prototype.forEach.call(document.querySelectorAll('.rail-nav'),function(btn){btn.addEventListener('click',function(){var tr=document.getElementById(btn.getAttribute('data-row'));if(!tr)return;var d=(btn.classList.contains('next')?1:-1)*Math.max(330,tr.clientWidth*0.85);tr.scrollBy({left:d,behavior:'smooth'});});});
   document.addEventListener('click',function(ev){var b=ev.target.closest&&ev.target.closest('.copy-btn');if(!b)return;var box=b.closest('.prompt-box'),pre=box&&box.querySelector('.prompt');if(!pre)return;var txt=pre.textContent.trim();function ok(){b.textContent='Copied!';b.classList.add('done');setTimeout(function(){b.textContent='Copy';b.classList.remove('done');},1800);}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(ok).catch(function(){b.textContent='Press Ctrl+C';});}else{b.textContent='Press Ctrl+C';}});
   window.addEventListener('hashchange',_route);_route();
