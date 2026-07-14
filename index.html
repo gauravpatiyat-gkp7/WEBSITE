@@ -412,6 +412,45 @@
     .mq-group[aria-hidden="true"]{display:none}
     .mq-group .bcard{scroll-snap-align:start}
   }
+  /* --- Scope band: vertical infinite carousels --- */
+  #scope{overflow:hidden}
+  .vband{position:relative;background:var(--mist);border:1px solid var(--line);border-radius:20px;padding:0 22px;
+    display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) minmax(300px,1.45fr) repeat(3,minmax(0,1fr));
+    gap:16px;height:212px;overflow:hidden}
+  .vcol{height:100%;overflow:hidden}
+  .vtrack{display:flex;flex-direction:column;width:100%;animation:vScrollUp var(--vd,30s) linear infinite;animation-delay:var(--vdel,0s);will-change:transform}
+  .vcol.down .vtrack{animation-name:vScrollDown}
+  .vgroup{display:flex;flex-direction:column;gap:14px;padding-bottom:14px;flex:0 0 auto}
+  .vtile{flex:0 0 auto;min-height:64px;display:flex;align-items:center;justify-content:center;text-align:center;
+    padding:10px 12px;border-radius:12px;color:rgba(255,255,255,.94);
+    background:var(--ink);
+    border:1px solid rgba(255,255,255,.07);
+    font-family:var(--display);font-weight:600;font-size:.92rem;letter-spacing:.02em;line-height:1.25}
+  @keyframes vScrollUp{from{transform:translateY(0)}to{transform:translateY(-50%)}}
+  @keyframes vScrollDown{from{transform:translateY(-50%)}to{transform:translateY(0)}}
+  .vcenter{align-self:center;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;padding:30px 10px}
+  .vc-line{font-family:var(--display);font-weight:700;font-size:clamp(1.15rem,2vw,1.5rem);letter-spacing:-.01em;color:var(--ink);line-height:1.3;max-width:22ch;margin:0}
+  .vc-cta{font-family:var(--mono);font-size:.84rem;letter-spacing:.14em;text-transform:uppercase;font-weight:500;color:var(--teal);transition:color .18s,transform .18s;display:inline-block}
+  .vc-cta:hover{color:var(--ink);transform:translateX(3px)}
+  @media (max-width:1120px){
+    .vband{grid-template-columns:repeat(2,minmax(0,1fr)) minmax(280px,1.45fr) repeat(2,minmax(0,1fr))}
+    .vcol.c1,.vcol.c6{display:none}
+  }
+  @media (max-width:900px){
+    .vband{grid-template-columns:minmax(0,1fr) minmax(240px,1.6fr) minmax(0,1fr);height:194px}
+    .vcol.c2,.vcol.c5{display:none}
+  }
+  @media (max-width:640px){
+    .vband{grid-template-columns:1fr 1fr;height:auto;padding:26px 16px;gap:14px}
+    .vcenter{grid-column:1/-1;order:-1;padding:6px 4px 14px}
+    .vcol{height:135px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .vtrack{animation:none}
+    .vgroup[aria-hidden="true"]{display:none}
+    .vcol{overflow-y:auto}
+  }
+
   /* --- {CODE.NULL} kinetic hero --- */
   #top.hero-x{position:relative;overflow:hidden;color:#fff;min-height:100vh;min-height:100dvh;display:flex;align-items:center;padding:120px 0 60px;
     background:radial-gradient(46% 44% at 28% 46%,#17466f 0%,rgba(11,31,56,0) 68%),radial-gradient(40% 42% at 82% 56%,rgba(15,158,140,.16) 0%,rgba(11,31,56,0) 70%),var(--ink)}
@@ -652,6 +691,152 @@
         <div class="bcard soon"><span class="s-eye">Coming soon</span><h3>More on the way</h3><p>New tools &amp; experiments drop here as I build them &mdash; check back shortly.</p></div>
       </div>
       <button class="rail-nav next" data-row="codenullRow" aria-label="Scroll right" type="button">›</button>
+    </div>
+  </div>
+</section>
+
+<section id="scope">
+  <div class="wrap">
+    <div class="sec-head" style="max-width:none;text-align:center;margin-bottom:26px">
+      <h2>// the moving parts behind every build</h2>
+    </div>
+    <div class="vband">
+      <div class="vcol c1" style="--vdel:-18s;--vd:34s">
+        <div class="vtrack">
+        <div class="vgroup">
+          <span class="vtile">Inventory</span>
+          <span class="vtile t2">Leads</span>
+          <span class="vtile tt">API</span>
+          <span class="vtile">Taxation</span>
+          <span class="vtile t2">Database</span>
+          <span class="vtile t3">CRM</span>
+          <span class="vtile">Calculator</span>
+        </div>
+        <div class="vgroup" aria-hidden="true">
+          <span class="vtile">Inventory</span>
+          <span class="vtile t2">Leads</span>
+          <span class="vtile tt">API</span>
+          <span class="vtile">Taxation</span>
+          <span class="vtile t2">Database</span>
+          <span class="vtile t3">CRM</span>
+          <span class="vtile">Calculator</span>
+        </div>
+        </div>
+      </div>
+      <div class="vcol c2 down" style="--vdel:-7s;--vd:28s">
+        <div class="vtrack">
+        <div class="vgroup">
+          <span class="vtile t2">Startup</span>
+          <span class="vtile t3">ERM</span>
+          <span class="vtile">Supply chain</span>
+          <span class="vtile t2">Accessibility</span>
+          <span class="vtile t3">Indexing</span>
+          <span class="vtile tt">Analytics</span>
+          <span class="vtile t2">Deployment</span>
+        </div>
+        <div class="vgroup" aria-hidden="true">
+          <span class="vtile t2">Startup</span>
+          <span class="vtile t3">ERM</span>
+          <span class="vtile">Supply chain</span>
+          <span class="vtile t2">Accessibility</span>
+          <span class="vtile t3">Indexing</span>
+          <span class="vtile tt">Analytics</span>
+          <span class="vtile t2">Deployment</span>
+        </div>
+        </div>
+      </div>
+      <div class="vcol c3" style="--vdel:-23s;--vd:26s">
+        <div class="vtrack">
+        <div class="vgroup">
+          <span class="vtile t3">Website</span>
+          <span class="vtile">Customisation</span>
+          <span class="vtile t2">IP</span>
+          <span class="vtile tt">UI/UX</span>
+          <span class="vtile">Security</span>
+          <span class="vtile t2">Invoicing</span>
+          <span class="vtile t3">BI</span>
+        </div>
+        <div class="vgroup" aria-hidden="true">
+          <span class="vtile t3">Website</span>
+          <span class="vtile">Customisation</span>
+          <span class="vtile t2">IP</span>
+          <span class="vtile tt">UI/UX</span>
+          <span class="vtile">Security</span>
+          <span class="vtile t2">Invoicing</span>
+          <span class="vtile t3">BI</span>
+        </div>
+        </div>
+      </div>
+      <div class="vcenter">
+        <p class="vc-line">The moving parts behind every build</p>
+        <a class="vc-cta" href="#codenull">+ Explore the tools</a>
+      </div>
+      <div class="vcol c4 down" style="--vdel:-11s;--vd:30s">
+        <div class="vtrack">
+        <div class="vgroup">
+          <span class="vtile tt">Valuation</span>
+          <span class="vtile t2">Performance</span>
+          <span class="vtile t3">Marketing</span>
+          <span class="vtile">Reliability</span>
+          <span class="vtile t2">Maintenance</span>
+          <span class="vtile t3">Template</span>
+          <span class="vtile">SOP</span>
+        </div>
+        <div class="vgroup" aria-hidden="true">
+          <span class="vtile tt">Valuation</span>
+          <span class="vtile t2">Performance</span>
+          <span class="vtile t3">Marketing</span>
+          <span class="vtile">Reliability</span>
+          <span class="vtile t2">Maintenance</span>
+          <span class="vtile t3">Template</span>
+          <span class="vtile">SOP</span>
+        </div>
+        </div>
+      </div>
+      <div class="vcol c5" style="--vdel:-4s;--vd:27s">
+        <div class="vtrack">
+        <div class="vgroup">
+          <span class="vtile t2">Application</span>
+          <span class="vtile t3">Investing</span>
+          <span class="vtile">SEO</span>
+          <span class="vtile t2">Animation</span>
+          <span class="vtile t3">Research</span>
+          <span class="vtile tt">Design</span>
+          <span class="vtile t2">Compliance</span>
+        </div>
+        <div class="vgroup" aria-hidden="true">
+          <span class="vtile t2">Application</span>
+          <span class="vtile t3">Investing</span>
+          <span class="vtile">SEO</span>
+          <span class="vtile t2">Animation</span>
+          <span class="vtile t3">Research</span>
+          <span class="vtile tt">Design</span>
+          <span class="vtile t2">Compliance</span>
+        </div>
+        </div>
+      </div>
+      <div class="vcol c6 down" style="--vdel:-27s;--vd:36s">
+        <div class="vtrack">
+        <div class="vgroup">
+          <span class="vtile t3">Vibe Coding</span>
+          <span class="vtile">Audit</span>
+          <span class="vtile t2">Branding</span>
+          <span class="vtile t3">Set up</span>
+          <span class="vtile tt">Cash flow</span>
+          <span class="vtile t2">Automation</span>
+          <span class="vtile t3">Accounting</span>
+        </div>
+        <div class="vgroup" aria-hidden="true">
+          <span class="vtile t3">Vibe Coding</span>
+          <span class="vtile">Audit</span>
+          <span class="vtile t2">Branding</span>
+          <span class="vtile t3">Set up</span>
+          <span class="vtile tt">Cash flow</span>
+          <span class="vtile t2">Automation</span>
+          <span class="vtile t3">Accounting</span>
+        </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
