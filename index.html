@@ -444,8 +444,14 @@
   @media (max-width:640px){
     .vband:not(.m){display:none}
     .vband.m{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;height:280px;padding:0 12px}
-    .vband.m .vtile{min-height:56px;font-size:.8rem;padding:8px 8px;border-radius:10px}
+    .vband.m .vtile{min-height:56px;font-size:.72rem;padding:8px 6px;border-radius:10px;
+      letter-spacing:0;line-height:1.2;word-break:break-word;overflow-wrap:anywhere;hyphens:auto}
     .vband.m .vgroup{gap:10px;padding-bottom:10px}
+  }
+  @media (max-width:400px){
+    .vband.m{gap:8px;padding:0 10px}
+    .vband.m .vtile{font-size:.66rem;padding:8px 4px;min-height:52px}
+    .vband.m .vgroup{gap:8px;padding-bottom:8px}
   }
   @media (prefers-reduced-motion:reduce){
     .vtrack{animation:none}
