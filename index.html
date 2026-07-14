@@ -440,10 +440,12 @@
     .vband{grid-template-columns:minmax(0,1fr) minmax(240px,1.6fr) minmax(0,1fr);height:194px}
     .vcol.c2,.vcol.c5{display:none}
   }
+  .vband.m{display:none}
   @media (max-width:640px){
-    .vband{grid-template-columns:1fr 1fr;height:auto;padding:26px 16px;gap:14px}
-    .vcenter{grid-column:1/-1;order:-1;padding:6px 4px 14px}
-    .vcol{height:135px}
+    .vband:not(.m){display:none}
+    .vband.m{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;height:280px;padding:0 12px}
+    .vband.m .vtile{min-height:56px;font-size:.8rem;padding:8px 8px;border-radius:10px}
+    .vband.m .vgroup{gap:10px;padding-bottom:10px}
   }
   @media (prefers-reduced-motion:reduce){
     .vtrack{animation:none}
@@ -768,7 +770,7 @@
         </div>
       </div>
       <div class="vcenter">
-        <p class="vc-line">The moving parts behind every build</p>
+        <p class="vc-line">Finance, systems &amp; everything between</p>
         <a class="vc-cta" href="#codenull">+ Explore the tools</a>
       </div>
       <div class="vcol c4 down" style="--vdel:-11s;--vd:30s">
@@ -834,6 +836,124 @@
           <span class="vtile tt">Cash flow</span>
           <span class="vtile t2">Automation</span>
           <span class="vtile t3">Accounting</span>
+        </div>
+        </div>
+      </div>
+    </div>
+    <div class="vband m" aria-hidden="true">
+      <div class="vcol m1" style="--vdel:-13s;--vd:44s">
+        <div class="vtrack">
+        <div class="vgroup">
+          <span class="vtile">Inventory</span>
+          <span class="vtile">Leads</span>
+          <span class="vtile">API</span>
+          <span class="vtile">Taxation</span>
+          <span class="vtile">Database</span>
+          <span class="vtile">CRM</span>
+          <span class="vtile">Calculator</span>
+          <span class="vtile">Startup</span>
+          <span class="vtile">ERM</span>
+          <span class="vtile">Supply chain</span>
+        </div>
+        <div class="vgroup" aria-hidden="true">
+          <span class="vtile">Inventory</span>
+          <span class="vtile">Leads</span>
+          <span class="vtile">API</span>
+          <span class="vtile">Taxation</span>
+          <span class="vtile">Database</span>
+          <span class="vtile">CRM</span>
+          <span class="vtile">Calculator</span>
+          <span class="vtile">Startup</span>
+          <span class="vtile">ERM</span>
+          <span class="vtile">Supply chain</span>
+        </div>
+        </div>
+      </div>
+      <div class="vcol m2 down" style="--vdel:-29s;--vd:50s">
+        <div class="vtrack">
+        <div class="vgroup">
+          <span class="vtile">Accessibility</span>
+          <span class="vtile">Indexing</span>
+          <span class="vtile">Analytics</span>
+          <span class="vtile">Deployment</span>
+          <span class="vtile">Website</span>
+          <span class="vtile">Customisation</span>
+          <span class="vtile">IP</span>
+          <span class="vtile">UI/UX</span>
+          <span class="vtile">Security</span>
+          <span class="vtile">Invoicing</span>
+          <span class="vtile">BI</span>
+        </div>
+        <div class="vgroup" aria-hidden="true">
+          <span class="vtile">Accessibility</span>
+          <span class="vtile">Indexing</span>
+          <span class="vtile">Analytics</span>
+          <span class="vtile">Deployment</span>
+          <span class="vtile">Website</span>
+          <span class="vtile">Customisation</span>
+          <span class="vtile">IP</span>
+          <span class="vtile">UI/UX</span>
+          <span class="vtile">Security</span>
+          <span class="vtile">Invoicing</span>
+          <span class="vtile">BI</span>
+        </div>
+        </div>
+      </div>
+      <div class="vcol m3" style="--vdel:-6s;--vd:46s">
+        <div class="vtrack">
+        <div class="vgroup">
+          <span class="vtile">Valuation</span>
+          <span class="vtile">Performance</span>
+          <span class="vtile">Marketing</span>
+          <span class="vtile">Reliability</span>
+          <span class="vtile">Maintenance</span>
+          <span class="vtile">Template</span>
+          <span class="vtile">SOP</span>
+          <span class="vtile">Application</span>
+          <span class="vtile">Investing</span>
+          <span class="vtile">SEO</span>
+        </div>
+        <div class="vgroup" aria-hidden="true">
+          <span class="vtile">Valuation</span>
+          <span class="vtile">Performance</span>
+          <span class="vtile">Marketing</span>
+          <span class="vtile">Reliability</span>
+          <span class="vtile">Maintenance</span>
+          <span class="vtile">Template</span>
+          <span class="vtile">SOP</span>
+          <span class="vtile">Application</span>
+          <span class="vtile">Investing</span>
+          <span class="vtile">SEO</span>
+        </div>
+        </div>
+      </div>
+      <div class="vcol m4 down" style="--vdel:-21s;--vd:52s">
+        <div class="vtrack">
+        <div class="vgroup">
+          <span class="vtile">Animation</span>
+          <span class="vtile">Research</span>
+          <span class="vtile">Design</span>
+          <span class="vtile">Compliance</span>
+          <span class="vtile">Vibe Coding</span>
+          <span class="vtile">Audit</span>
+          <span class="vtile">Branding</span>
+          <span class="vtile">Set up</span>
+          <span class="vtile">Cash flow</span>
+          <span class="vtile">Automation</span>
+          <span class="vtile">Accounting</span>
+        </div>
+        <div class="vgroup" aria-hidden="true">
+          <span class="vtile">Animation</span>
+          <span class="vtile">Research</span>
+          <span class="vtile">Design</span>
+          <span class="vtile">Compliance</span>
+          <span class="vtile">Vibe Coding</span>
+          <span class="vtile">Audit</span>
+          <span class="vtile">Branding</span>
+          <span class="vtile">Set up</span>
+          <span class="vtile">Cash flow</span>
+          <span class="vtile">Automation</span>
+          <span class="vtile">Accounting</span>
         </div>
         </div>
       </div>
