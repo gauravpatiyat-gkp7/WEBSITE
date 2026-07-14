@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /clients/
 
 Sitemap: https://codenull.in/sitemap.xml
