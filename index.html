@@ -110,7 +110,7 @@
   .nc-links .up{font-size:.85em;color:var(--teal-bright)}
   .nav-card.c3 .nc-links .up{color:var(--ink)}
   
-  .nav-toggle{display:flex;flex-direction:column;justify-content:center;gap:6px;background:none;border:0;cursor:pointer;padding:12px;border-radius:10px}
+  .nav-toggle{display:flex;flex-direction:column;justify-content:center;gap:6px;background:none;border:0;cursor:pointer;padding:12px;border-radius:10px;position:relative;z-index:10;-webkit-tap-highlight-color:transparent}
   .nav-toggle:hover span{opacity:.75}
   .nav-toggle[aria-expanded="true"] span:first-child{transform:translateY(4px) rotate(45deg)}
   .nav-toggle[aria-expanded="true"] span:last-child{transform:translateY(-4px) rotate(-45deg)}
@@ -249,6 +249,7 @@
     .exp-grid,.grid2,.contact,.screen-card{grid-template-columns:1fr}
     .contact{gap:30px;padding:36px 26px}
     .cnv-cards{flex-direction:column;gap:8px}
+    .nav-links.open .cnv-cards{max-height:calc(100vh - 84px);overflow-y:auto;-webkit-overflow-scrolling:touch}
     .nav-card{min-height:0;padding:14px 16px}
     .nc-links{padding-top:12px}
     nav.cnv{top:0;width:100%}
@@ -393,7 +394,7 @@
 @media (prefers-reduced-motion:reduce){.monogram .brandtext{animation:none;clip-path:none}.monogram .dot{animation:none}}
 
 /* {CODE.NULL} intro splash — pure CSS; shows ~2.5s on load, then fades into the page */
-#splash{position:fixed;inset:0;z-index:9999;background:#fff;display:flex;align-items:center;justify-content:center;animation:cnSplashOut 2.6s ease forwards}
+#splash{position:fixed;inset:0;z-index:9999;background:#fff;display:flex;align-items:center;justify-content:center;animation:cnSplashOut 2.6s ease forwards;pointer-events:none}
 #splash .splash-logo{font-family:var(--display);font-weight:700;color:var(--ink);letter-spacing:-.01em;display:flex;align-items:center;gap:16px;font-size:clamp(2rem,6vw,3.2rem)}
 #splash .splash-logo .dot{width:18px;height:18px;border-radius:4px;background:var(--teal-bright);box-shadow:0 0 0 5px rgba(45,212,191,.18);animation:cnPrime .24s ease 2 both}
 #splash .splash-logo .brandtext{display:inline-block;white-space:nowrap;clip-path:inset(0 100% 0 0);animation:cnType .8s steps(12,end) .45s both}
@@ -569,7 +570,7 @@
 <nav class="cnv">
   <div class="cnv-top">
     <a class="monogram" href="#top"><span class="dot"></span><span class="brandtext">{CODE.NULL}</span></a>
-    <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+    <button type="button" class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
   </div>
   <div class="nav-links" id="navlinks">
     <div class="cnv-cards">
@@ -1045,37 +1046,263 @@
             </div>
       </div>
       <div class="profile-block">
-        <h2>Two skill sets, one perspective.</h2>
-        <div class="exp-grid">
-              <div class="card">
-                <h3><span class="tag"></span>Finance &amp; Accounting</h3>
-                <p class="sub">The foundation &mdash; built across audit, advisory and consulting.</p>
-                <div class="chips">
-                  <span class="chip lead">Internal Audit</span>
-                  <span class="chip">Financial Modelling</span>
-                  <span class="chip">Valuation</span>
-                  <span class="chip">Statutory &amp; Tax Audit</span>
-                  <span class="chip">Due Diligence</span>
-                  <span class="chip">Financial Consolidation</span>
-                  <span class="chip">Taxation</span>
-                  <span class="chip">Deal Advisory</span>
-                </div>
-              </div>
-              <div class="card">
-                <h3><span class="tag"></span>Technology &amp; Tools</h3>
-                <p class="sub">The systems and tools I work with.</p>
-                <div class="chips">
-                  <span class="chip lead">Zoho CRM</span>
-                  <span class="chip">Power BI</span>
-                  <span class="chip">Inventory Management</span>
-                  <span class="chip">ERP &amp; Accounting</span>
-                  <span class="chip">Canva</span>
-                  <span class="chip">MS Office</span>
-                  <span class="chip">PLM</span>
-                </div>
-              </div>
-            </div>
-            <p class="strengths"><b>Strengths:</b> &nbsp;Analytical ability &nbsp;·&nbsp; Critical thinking &nbsp;·&nbsp; Leadership &nbsp;·&nbsp; Attention to detail</p>
+        <h2>Skills.</h2>
+        <div class="vband">
+      <div class="vcol c1" style="--vdel:-18s;--vd:34s">
+        <div class="vtrack">
+        <div class="vgroup">
+          <span class="vtile">Inventory</span>
+          <span class="vtile t2">Leads</span>
+          <span class="vtile tt">API</span>
+          <span class="vtile">Taxation</span>
+          <span class="vtile t2">Database</span>
+          <span class="vtile t3">CRM</span>
+          <span class="vtile">Calculator</span>
+        </div>
+        <div class="vgroup" aria-hidden="true">
+          <span class="vtile">Inventory</span>
+          <span class="vtile t2">Leads</span>
+          <span class="vtile tt">API</span>
+          <span class="vtile">Taxation</span>
+          <span class="vtile t2">Database</span>
+          <span class="vtile t3">CRM</span>
+          <span class="vtile">Calculator</span>
+        </div>
+        </div>
+      </div>
+      <div class="vcol c2 down" style="--vdel:-7s;--vd:28s">
+        <div class="vtrack">
+        <div class="vgroup">
+          <span class="vtile t2">Startup</span>
+          <span class="vtile t3">ERM</span>
+          <span class="vtile">Supply chain</span>
+          <span class="vtile t2">Accessibility</span>
+          <span class="vtile t3">Indexing</span>
+          <span class="vtile tt">Analytics</span>
+          <span class="vtile t2">Deployment</span>
+        </div>
+        <div class="vgroup" aria-hidden="true">
+          <span class="vtile t2">Startup</span>
+          <span class="vtile t3">ERM</span>
+          <span class="vtile">Supply chain</span>
+          <span class="vtile t2">Accessibility</span>
+          <span class="vtile t3">Indexing</span>
+          <span class="vtile tt">Analytics</span>
+          <span class="vtile t2">Deployment</span>
+        </div>
+        </div>
+      </div>
+      <div class="vcol c3" style="--vdel:-23s;--vd:26s">
+        <div class="vtrack">
+        <div class="vgroup">
+          <span class="vtile t3">Website</span>
+          <span class="vtile">Customisation</span>
+          <span class="vtile t2">IP</span>
+          <span class="vtile tt">UI/UX</span>
+          <span class="vtile">Security</span>
+          <span class="vtile t2">Invoicing</span>
+          <span class="vtile t3">BI</span>
+        </div>
+        <div class="vgroup" aria-hidden="true">
+          <span class="vtile t3">Website</span>
+          <span class="vtile">Customisation</span>
+          <span class="vtile t2">IP</span>
+          <span class="vtile tt">UI/UX</span>
+          <span class="vtile">Security</span>
+          <span class="vtile t2">Invoicing</span>
+          <span class="vtile t3">BI</span>
+        </div>
+        </div>
+      </div>
+      <div class="vcenter">
+        <p class="vc-line">Finance, systems &amp; everything between</p>
+        <a class="vc-cta" href="#codenull">+ Explore the tools</a>
+      </div>
+      <div class="vcol c4 down" style="--vdel:-11s;--vd:30s">
+        <div class="vtrack">
+        <div class="vgroup">
+          <span class="vtile tt">Valuation</span>
+          <span class="vtile t2">Performance</span>
+          <span class="vtile t3">Marketing</span>
+          <span class="vtile">Reliability</span>
+          <span class="vtile t2">Maintenance</span>
+          <span class="vtile t3">Template</span>
+          <span class="vtile">SOP</span>
+        </div>
+        <div class="vgroup" aria-hidden="true">
+          <span class="vtile tt">Valuation</span>
+          <span class="vtile t2">Performance</span>
+          <span class="vtile t3">Marketing</span>
+          <span class="vtile">Reliability</span>
+          <span class="vtile t2">Maintenance</span>
+          <span class="vtile t3">Template</span>
+          <span class="vtile">SOP</span>
+        </div>
+        </div>
+      </div>
+      <div class="vcol c5" style="--vdel:-4s;--vd:27s">
+        <div class="vtrack">
+        <div class="vgroup">
+          <span class="vtile t2">Application</span>
+          <span class="vtile t3">Investing</span>
+          <span class="vtile">SEO</span>
+          <span class="vtile t2">Animation</span>
+          <span class="vtile t3">Research</span>
+          <span class="vtile tt">Design</span>
+          <span class="vtile t2">Compliance</span>
+        </div>
+        <div class="vgroup" aria-hidden="true">
+          <span class="vtile t2">Application</span>
+          <span class="vtile t3">Investing</span>
+          <span class="vtile">SEO</span>
+          <span class="vtile t2">Animation</span>
+          <span class="vtile t3">Research</span>
+          <span class="vtile tt">Design</span>
+          <span class="vtile t2">Compliance</span>
+        </div>
+        </div>
+      </div>
+      <div class="vcol c6 down" style="--vdel:-27s;--vd:36s">
+        <div class="vtrack">
+        <div class="vgroup">
+          <span class="vtile t3">Vibe Coding</span>
+          <span class="vtile">Audit</span>
+          <span class="vtile t2">Branding</span>
+          <span class="vtile t3">Set up</span>
+          <span class="vtile tt">Cash flow</span>
+          <span class="vtile t2">Automation</span>
+          <span class="vtile t3">Accounting</span>
+        </div>
+        <div class="vgroup" aria-hidden="true">
+          <span class="vtile t3">Vibe Coding</span>
+          <span class="vtile">Audit</span>
+          <span class="vtile t2">Branding</span>
+          <span class="vtile t3">Set up</span>
+          <span class="vtile tt">Cash flow</span>
+          <span class="vtile t2">Automation</span>
+          <span class="vtile t3">Accounting</span>
+        </div>
+        </div>
+      </div>
+    </div>
+    <div class="vband m" aria-hidden="true">
+      <div class="vcol m1" style="--vdel:-13s;--vd:44s">
+        <div class="vtrack">
+        <div class="vgroup">
+          <span class="vtile">Inventory</span>
+          <span class="vtile">Leads</span>
+          <span class="vtile">API</span>
+          <span class="vtile">Taxation</span>
+          <span class="vtile">Database</span>
+          <span class="vtile">CRM</span>
+          <span class="vtile">Calculator</span>
+          <span class="vtile">Startup</span>
+          <span class="vtile">ERM</span>
+          <span class="vtile">Supply chain</span>
+        </div>
+        <div class="vgroup" aria-hidden="true">
+          <span class="vtile">Inventory</span>
+          <span class="vtile">Leads</span>
+          <span class="vtile">API</span>
+          <span class="vtile">Taxation</span>
+          <span class="vtile">Database</span>
+          <span class="vtile">CRM</span>
+          <span class="vtile">Calculator</span>
+          <span class="vtile">Startup</span>
+          <span class="vtile">ERM</span>
+          <span class="vtile">Supply chain</span>
+        </div>
+        </div>
+      </div>
+      <div class="vcol m2 down" style="--vdel:-29s;--vd:50s">
+        <div class="vtrack">
+        <div class="vgroup">
+          <span class="vtile">Accessibility</span>
+          <span class="vtile">Indexing</span>
+          <span class="vtile">Analytics</span>
+          <span class="vtile">Deployment</span>
+          <span class="vtile">Website</span>
+          <span class="vtile">Customisation</span>
+          <span class="vtile">IP</span>
+          <span class="vtile">UI/UX</span>
+          <span class="vtile">Security</span>
+          <span class="vtile">Invoicing</span>
+          <span class="vtile">BI</span>
+        </div>
+        <div class="vgroup" aria-hidden="true">
+          <span class="vtile">Accessibility</span>
+          <span class="vtile">Indexing</span>
+          <span class="vtile">Analytics</span>
+          <span class="vtile">Deployment</span>
+          <span class="vtile">Website</span>
+          <span class="vtile">Customisation</span>
+          <span class="vtile">IP</span>
+          <span class="vtile">UI/UX</span>
+          <span class="vtile">Security</span>
+          <span class="vtile">Invoicing</span>
+          <span class="vtile">BI</span>
+        </div>
+        </div>
+      </div>
+      <div class="vcol m3" style="--vdel:-6s;--vd:46s">
+        <div class="vtrack">
+        <div class="vgroup">
+          <span class="vtile">Valuation</span>
+          <span class="vtile">Performance</span>
+          <span class="vtile">Marketing</span>
+          <span class="vtile">Reliability</span>
+          <span class="vtile">Maintenance</span>
+          <span class="vtile">Template</span>
+          <span class="vtile">SOP</span>
+          <span class="vtile">Application</span>
+          <span class="vtile">Investing</span>
+          <span class="vtile">SEO</span>
+        </div>
+        <div class="vgroup" aria-hidden="true">
+          <span class="vtile">Valuation</span>
+          <span class="vtile">Performance</span>
+          <span class="vtile">Marketing</span>
+          <span class="vtile">Reliability</span>
+          <span class="vtile">Maintenance</span>
+          <span class="vtile">Template</span>
+          <span class="vtile">SOP</span>
+          <span class="vtile">Application</span>
+          <span class="vtile">Investing</span>
+          <span class="vtile">SEO</span>
+        </div>
+        </div>
+      </div>
+      <div class="vcol m4 down" style="--vdel:-21s;--vd:52s">
+        <div class="vtrack">
+        <div class="vgroup">
+          <span class="vtile">Animation</span>
+          <span class="vtile">Research</span>
+          <span class="vtile">Design</span>
+          <span class="vtile">Compliance</span>
+          <span class="vtile">Vibe Coding</span>
+          <span class="vtile">Audit</span>
+          <span class="vtile">Branding</span>
+          <span class="vtile">Set up</span>
+          <span class="vtile">Cash flow</span>
+          <span class="vtile">Automation</span>
+          <span class="vtile">Accounting</span>
+        </div>
+        <div class="vgroup" aria-hidden="true">
+          <span class="vtile">Animation</span>
+          <span class="vtile">Research</span>
+          <span class="vtile">Design</span>
+          <span class="vtile">Compliance</span>
+          <span class="vtile">Vibe Coding</span>
+          <span class="vtile">Audit</span>
+          <span class="vtile">Branding</span>
+          <span class="vtile">Set up</span>
+          <span class="vtile">Cash flow</span>
+          <span class="vtile">Automation</span>
+          <span class="vtile">Accounting</span>
+        </div>
+        </div>
+      </div>
+    </div>
       </div>
       <div class="profile-block">
         <h2>Where I&rsquo;ve worked.</h2>
