@@ -249,7 +249,7 @@ const MENU = [
       {h:"Print & Weave", items:["Bandhani Drape","Ikat Drape","Leheriya Drape","Cotton Drape","Linen Drape","Kalamkari Drape"]},
       {h:"Modern", items:["Georgette Drape","Organza Drape","Chiffon Drape","Sequin Drape","Pre-draped","Ruffle Drape"]},
       {h:"Drape Room", items:["Designer Blouses","Petticoats","Fall & Pico","Blouse Stitching"]}
-    ], promo:{t:"Banarasi katan silks",s:"Pure zari. Fall, pico and blouse stitching included.",go:"Drapes",img:"fuchsia"} },
+    ], promo:{t:"Ready-to-wear drapes",s:"Pre-pleated and fuss-free &mdash; draped in under a minute.",go:"Drapes",img:"silverdrape"} },
   { label:"Lehengas", cols:[
       {h:"By Function", items:["Bridal Lehenga","Reception Lehenga","Sangeet Lehenga","Mehendi Lehenga","Haldi Lehenga","Engagement Lehenga"]},
       {h:"By Weight", items:["Light Lehenga","Heavy Bridal","Semi-stitched Lehenga","Ready-to-wear Lehenga"]},
@@ -1183,10 +1183,10 @@ $("#map").src="https://maps.google.com/maps?q="+encodeURIComponent(STORE.mapsQue
 
 /* ── occasion mosaic → occasion pages ── */
 const OCC_ART={
- Haldi:    {img:"marigold"}, Sangeet: {img:"blush"},
+ Haldi:    {img:"yellowfloral"}, Sangeet: {img:"lavender"},
  Mehendi:  {img:"lime"},
- Cocktail: {img:"dusty"}, Carnival: {img:"rani"},
- Wedding:  {img:"red1"},  Festive:  {img:"red2"}
+ Cocktail: {img:"blackcape"}, Carnival: {img:"tangerine"},
+ Wedding:  {img:"fuchsialehenga"},  Festive:  {img:"red1"}
 };
 const OCC_ORDER=[["Wedding","big"],["Haldi",""],["Sangeet",""],["Cocktail","tall"],["Mehendi","tall"],["Carnival",""],["Festive",""]];
 $("#occGrid").innerHTML=OCC_ORDER.map(([n,cls])=>{
@@ -1208,9 +1208,9 @@ onRepaint(paintNew);
 /* ── most loved categories → category pages ── */
 const LOVED=[
  ["Kurta & Suit Sets","Sharara, anarkali, three-piece",{img:"blush"},"kurta-sets.html"],
- ["Co-ord Sets","Matching top &amp; bottom, zero effort",{img:"red1"},"coord-sets.html"],
+ ["Co-ord Sets","Matching top &amp; bottom, zero effort",{img:"chikco"},"coord-sets.html"],
  ["Indo-Western","Capes, gowns &amp; fusion",{img:"marigold"},"indo-western.html"],
- ["Drapes","Kanjivaram to organza",{img:"fuchsia"},"drapes.html"],
+ ["Drapes","Kanjivaram to organza",{img:"silverdrape"},"drapes.html"],
  ["Lehengas","Bridal to featherlight",{img:"cocoa"},"lehengas.html"]
 ];
 $("#loveGrid").innerHTML=LOVED.map(([n,s,a,href],i)=>`
