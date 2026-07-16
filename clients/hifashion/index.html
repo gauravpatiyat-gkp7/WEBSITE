@@ -22,6 +22,11 @@
 .cnBrand{color:var(--ivory);font-weight:700;letter-spacing:.06em;font-size:14px;display:inline-flex;align-items:center;gap:8px}
 .cnDot{width:9px;height:9px;border-radius:2.5px;background:#2DD4BF;box-shadow:0 0 10px rgba(45,212,191,.55)}
 .cnLine{color:#2DD4BF;font-size:12.5px;letter-spacing:.02em;text-align:center;opacity:.85;transition:opacity .25s}
+.cnCredit{transition:background .25s}
+.cnCredit:hover{background:#1e1a14}
+.cnCredit:hover .cnBrand{text-decoration:underline;text-underline-offset:3px;text-decoration-color:#2DD4BF}
+.cnCredit:hover .cnArrow{transform:translateX(3px)}
+.cnArrow{display:inline-block;color:#2DD4BF;margin-left:6px;transition:transform .25s}
 .cnCredit:hover .cnLine{opacity:1}
 @media(max-width:520px){.cnLine{font-size:11px}.cnBrand{font-size:13px}}
 </style> <script> /* ═══ HF logger — central, tiny, dependency-free. HF.logs() in the console dumps everything. ═══ */
@@ -683,9 +688,17 @@ const MEDIA_META={"00008":{q:518400},"00010":{q:1784000},"00011":{q:1843824},"00
 const mnum=p=>((p||"").match(/media\/(\d{5})\./)||[])[1];
 /* video +6 · group +4 · clean +2 · quality up to +1.9 (decides ties,
    never overrides the video/people/clean ladder) */
+/* Media added from #00155 onward are "new" and lead the site overall.
+   The bonus scales with the number so the newest sit ahead of the merely-new,
+   while quality/people/video still order items of the same vintage. To reset
+   the "new" baseline after a big drop, raise NEW_FROM to the then-current max. */
+const NEW_FROM=154, NEW_LEAD=1000;
+function recencyBonus(num){const n=parseInt(num,10);
+  return (n && n>NEW_FROM) ? NEW_LEAD + n : 0;}
 function mScore(num,isVid){const m=MEDIA_META[num]||{};let s=isVid?6:0;
   if(m.ppl>=2)s+=4;if(m.txt===0)s+=2;
-  if(m.q)s+=Math.min(m.q/2200000,1)*1.9;return s;}
+  if(m.q)s+=Math.min(m.q/2200000,1)*1.9;
+  s+=recencyBonus(num);return s;}
 const imgScore=k=>mScore(mnum(IMG[k]),false);
 const prodScore=p=>(p.imgs?Math.max(...p.imgs.map(imgScore)):-9)+(p.vid?6:0);
 const byEngage=(a,b)=>prodScore(b)-prodScore(a)||(b.r*b.rv-a.r*a.rv);
@@ -776,7 +789,7 @@ const chromeBottom = `
 </footer>
 
 <a href="https://codenull.in" target="_blank" rel="noopener noreferrer" class="cnCredit" aria-label="Website built by CODE.NULL">
-  <span class="cnBrand"><span class="cnDot"></span>{CODE.NULL}</span>
+  <span class="cnBrand"><span class="cnDot"></span>{CODE.NULL}<span class="cnArrow">&rarr;</span></span>
   <span class="cnLine">// built from scratch &mdash; without writing a single line of code</span>
 </a>
 
@@ -1250,7 +1263,7 @@ $("#loveGrid").innerHTML=LOVED.map(([n,s,a,href],i)=>`
 (function(){
   const rail=$("#reelRail"); if(!rail) return;
   const _rq=r=>(MEDIA_META[mnum(r.v)]||{}).q||0;
-  REELS.sort((a,b)=>_rq(b)-_rq(a)||mScore(mnum(b.v),true)-mScore(mnum(a.v),true));
+  REELS.sort((a,b)=>(recencyBonus(mnum(b.v))-recencyBonus(mnum(a.v)))||_rq(b)-_rq(a)||mScore(mnum(b.v),true)-mScore(mnum(a.v),true));
   rail.innerHTML=REELS.map((r,i)=>`
     <figure class="reel" data-i="${i}">
       <video data-src="${r.v}" poster="${r.p}" muted playsinline preload="none"></video>
@@ -1323,7 +1336,8 @@ $("#loveGrid").innerHTML=LOVED.map(([n,s,a,href],i)=>`
   let built=false, sndOn=true;
   const LIKES=(()=>{try{return new Set(JSON.parse(localStorage.getItem("hf_reel_likes")||"[]"))}catch(e){return new Set()}})();
   const saveLikes=()=>{try{localStorage.setItem("hf_reel_likes",JSON.stringify([...LIKES]))}catch(e){}};
-  const data=REELS.filter(r=>r.v);
+  let data=REELS.filter(r=>r.v);
+  const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
   const sndBtn=$("#rvSnd");
   const syncSnd=()=>{sndBtn.dataset.on=sndOn?1:0;sndBtn.setAttribute("aria-label",sndOn?"Mute":"Unmute");};
   function build(){
@@ -1355,8 +1369,9 @@ $("#loveGrid").innerHTML=LOVED.map(([n,s,a,href],i)=>`
   sndBtn.addEventListener("click",()=>{ sndOn=!sndOn; syncSnd();
     scroll.querySelectorAll("video").forEach(v=>v.muted=!sndOn); });
   let popClosing=false;
-  function open(){
+  function open(reshuffle){
     if(!data.length){ toast("Reels are loading — try again shortly"); return; }
+    if(reshuffle!==false){ data=shuffle(data.slice()); built=false; }
     if(!built) build();
     if(!view.classList.contains("on")) history.pushState({hfrv:1},"");
     view.classList.add("on"); document.documentElement.classList.add("rv-lock");
@@ -1373,7 +1388,7 @@ $("#loveGrid").innerHTML=LOVED.map(([n,s,a,href],i)=>`
   btn.addEventListener("click",open);
   window.HF_openReelsAt=function(ri){
     if(!data.length) return;
-    open();
+    open(false);
     const t=REELS[ri], fi=Math.max(0,data.indexOf(t));
     requestAnimationFrame(()=>{ const sl=scroll.querySelector('.rv-slide[data-i="'+fi+'"]');
       if(sl) scroll.scrollTop=sl.offsetTop; });
@@ -1569,7 +1584,6 @@ function initShop(PG, q){
             <b class="ftitle">Refine</b>
             ${PG.type!=="cat" ? fgroup("Category","cat",[...new Set(pool.map(p=>p.cat))].sort(),F.cat):""}
             ${occs.length>1 ? fgroup("Occasion","occ",occs,F.occ):""}
-            ${fabs.length>1 ? fgroup("Fabric","fab",fabs,F.fab):""}
             ${fgroup("Size","size",[...new Set(pool.flatMap(p=>p.sz))].sort(),F.size)}
             <div class="fgrp"><b>Price</b>
               ${[["","Any"],["0-3000","Under ₹3,000"],["3000-6000","₹3,000 – 6,000"],["6000-10000","₹6,000 – 10,000"],["10000-9999999","₹10,000 +"]]
@@ -1590,7 +1604,7 @@ function initShop(PG, q){
                     <option value="rated"${F.sort==="rated"?" selected":""}>Top rated</option>
                   </select>
                 </label>
-                <span class="tcount" id="tCount"></span>
+                
               </div>
             </div>
             <div class="grid rv in" id="shopGrid"></div>
@@ -1632,7 +1646,7 @@ function initShop(PG, q){
   }
   function paintShop(){
     const r=refined(); _cycle=r; _shown=0;
-    $("#tCount").textContent = r.length+" piece"+(r.length===1?"":"s")+" on the floor";
+    
     const rackEmpty = !basePool().length;
     if(!r.length){
       $("#shopGrid").innerHTML=`<div class="empty"><b>${rackEmpty ? "This rack is in store — not online yet" : "Nothing at this filter"}</b>
