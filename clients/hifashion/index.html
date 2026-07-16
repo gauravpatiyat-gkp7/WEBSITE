@@ -892,6 +892,7 @@ const chromeBottom = `
     </div>
     <div class="rlb-acts">
       <button class="rv-act rv-like" id="rlbLike" data-on="0" aria-label="Like this reel"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="22"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 00-7.8 7.8l8.8 8.8 8.8-8.8a5.5 5.5 0 000-7.8z"/></svg></i><span>Like</span></button>
+      <button class="rv-act" id="rlbSave" aria-label="Save this look"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="22"><path d="M6 3h12a1 1 0 011 1v16l-7-4-7 4V4a1 1 0 011-1z"/></svg></i><span>Save look</span></button>
       <button class="rv-act" id="rlbShare" aria-label="Share this reel"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="22"><path d="M12 3v13M7 8l5-5 5 5"/><path d="M5 13v6a2 2 0 002 2h10a2 2 0 002-2v-6"/></svg></i><span>Share</span></button>
     </div>
     <button class="rnav" data-lbdir="1" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="22"><path d="M4 12h16M13 5l7 7-7 7"/></svg></button>
@@ -979,6 +980,26 @@ $("#burger").addEventListener("click",function(){
 })();
 
 /* ═══════ product card (shared by home + shop pages) ═══════ */
+
+/* ── saved looks from reels (reel → intent capture) ── */
+const LOOK_KEY="hifashion.looks.v1";
+const LOOKS={list:[]};
+(function loadLooks(){ try{ LOOKS.list=JSON.parse(localStorage.getItem(LOOK_KEY)||"[]")||[]; }catch(e){ LOOKS.list=[]; } })();
+const saveLooks=()=>{ try{ localStorage.setItem(LOOK_KEY,JSON.stringify(LOOKS.list)); }catch(e){} };
+function saveLook(num,cap,code){
+  // if the reel is mapped to a product, shortlist that product directly
+  if(code && typeof toggle==="function" && P.find(x=>x.c===code)){
+    if(!S.list.some(x=>x.c===code)) toggle(code);
+    return "product";
+  }
+  // otherwise capture the reel look itself
+  if(LOOKS.list.some(l=>l.num===num)){ toast("Already in your looks"); return "dup"; }
+  LOOKS.list.push({num,cap:cap||""}); saveLooks();
+  toast("Saved to your looks"); if(typeof paintSlCount==="function") paintSlCount();
+  return "look";
+}
+window.HF_saveLook=saveLook;
+
 function cardHTML(p){
   const o=off(p), liked=S.list.some(x=>x.c===p.c);
   const tag = p.new?'<span class="tag new">New in</span>'
@@ -1018,11 +1039,12 @@ const repaintAll=()=>{ repaints.forEach(f=>f()); paintSl(); };
 /* ── global clicks ── */
 document.addEventListener("click",e=>{
   const add=e.target.closest("[data-add]"), qv=e.target.closest("[data-qv]"),
-        qk=e.target.closest("[data-quick]"), rm=e.target.closest("[data-rm]"),
+        qk=e.target.closest("[data-quick]"), rm=e.target.closest("[data-rm]"), rmlook=e.target.closest("[data-rmlook]"),
         rl=e.target.closest("[data-rail]"), sc=e.target.closest("[data-scroll]");
   if(sc){ const t=$(sc.dataset.scroll); if(t) t.scrollIntoView({behavior:"smooth"}); }
   if(add) toggle(add.dataset.add);
   if(rm) toggle(rm.dataset.rm);
+  if(rmlook && window.LOOKS){ LOOKS.list=LOOKS.list.filter(l=>l.num!==rmlook.dataset.rmlook); saveLooks(); paintSl(); toast("Look removed"); }
   if(qv) quick(qv.dataset.qv);
   if(qk && !qk.classList.contains("gone")) toggle(qk.dataset.quick, qk.dataset.sz);
   if(rl){ const el=document.getElementById(rl.dataset.rail);
@@ -1045,21 +1067,30 @@ function toggle(code,size){
   saveSl(); repaintAll();
 }
 function paintSl(){
+  const nl=(window.LOOKS&&LOOKS.list.length)||0;
   const n=S.list.length;
-  $("#slN").textContent=n; $("#mSlN").textContent=n;
-  $("#slSub").textContent = n ? `${n} piece${n===1?"":"s"} · held 48 hrs` : "Nothing yet";
+  const tot=n+nl;
+  $("#slN").textContent=tot; $("#mSlN").textContent=tot;
+  $("#slSub").textContent = tot ? `${n} piece${n===1?"":"s"}${nl?` · ${nl} look${nl===1?"":"s"}`:""} · held 48 hrs` : "Nothing yet";
   $("#slTot").textContent = inr(S.list.reduce((s,x)=>s+x.price,0));
   $("#slBody").innerHTML = n ? S.list.map(x=>`
     <div class="sli"><div class="th">${thumb(x)}</div>
       <div><b>${x.n}</b><span>${x.c} · Size ${x.size} · ${inr(x.price)}</span>
       <button class="rm" data-rm="${x.c}">Remove</button></div></div>`).join("")
+    + ((window.LOOKS&&LOOKS.list.length)?LOOKS.list.map(l=>`
+    <div class="sli"><div class="th"><img src="media/${l.num}.jpg" alt="" loading="lazy"></div>
+      <div><b>Look from reel</b><span>Reel #${l.num}${l.cap?" · "+l.cap:""}</span>
+      <button class="rm" data-rmlook="${l.num}">Remove</button></div></div>`).join(""):"")
   : `<div class="slempty"><b>Your shortlist is empty</b>
       <p>Tap the heart on anything you like. We'll keep it aside in your size for 48 hours — no payment, no obligation.</p></div>`;
 }
-const waList=()=>!S.list.length ? wa(`Hi ${STORE.name}! Can you show me what's new?`)
+const looksLine=()=>((window.LOOKS&&LOOKS.list.length)?("\n\nAlso, from your reels I liked:\n"+LOOKS.list.map(l=>`• Reel #${l.num}${l.cap?" — "+l.cap.replace(/&amp;/g,"&"):""}`).join("\n")):"");
+const waList=()=>(!S.list.length && !(window.LOOKS&&LOOKS.list.length)) ? wa(`Hi ${STORE.name}! Can you show me what's new?`)
+  : !S.list.length ? wa(`Hi ${STORE.name}! I saved some looks from your reels:\n`+LOOKS.list.map(l=>`• Reel #${l.num}${l.cap?" — "+l.cap.replace(/&amp;/g,"&"):""}`).join("\n")+`\n\nCan you help me find these? My name is `)
   : wa(`Hi ${STORE.name}! Please hold these for me:\n\n`+
        S.list.map(x=>`• ${x.n.replace(/&amp;/g,"&")} (${x.c}) — Size ${x.size} — ${inr(x.price)}`).join("\n")+
-       `\n\nApprox total: ${inr(S.list.reduce((s,x)=>s+x.price,0))}\n\nI'll come in to try them. My name is `);
+       `\n\nApprox total: ${inr(S.list.reduce((s,x)=>s+x.price,0))}`+looksLine()+
+       `\n\nI'll come in to try them. My name is `);
 $("#sendWa").addEventListener("click",()=>window.open(waList(),"_blank","noopener"));
 
 /* ── drawer + quick view ── */
@@ -1349,6 +1380,8 @@ $("#loveGrid").innerHTML=LOVED.map(([n,s,a,href],i)=>`
         <div class="rv-actions">
           <button class="rv-act rv-like" data-i="${REELS.indexOf(r)}" data-on="${LIKES.has(REELS.indexOf(r))?1:0}" aria-label="Like this reel">
             <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="22"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 00-7.8 7.8l8.8 8.8 8.8-8.8a5.5 5.5 0 000-7.8z"/></svg></i><span>Like</span></button>
+          <button class="rv-act rv-save" data-num="${mnum(r.v)}" data-code="${r.c||''}" data-cap="${r.cap.replace(/"/g,"&quot;")}" aria-label="Save this look">
+            <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="22"><path d="M6 3h12a1 1 0 011 1v16l-7-4-7 4V4a1 1 0 011-1z"/></svg></i><span>Save look</span></button>
           <a class="rv-act" href="${wa(r.go)}" target="_blank" rel="noopener noreferrer" aria-label="Ask about this reel on WhatsApp">
             <i><svg viewBox="0 0 24 24" fill="currentColor" width="22"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm0 18a8 8 0 01-4.1-1.1l-.3-.2-3.1.8.8-3-.2-.3A8 8 0 1112 20z"/></svg></i><span>WhatsApp</span></a>
           <button class="rv-act rv-share" data-cap="${r.cap.replace(/"/g,"&quot;")}" data-num="${mnum(r.v)}" aria-label="Share this reel">
@@ -1401,6 +1434,8 @@ $("#loveGrid").innerHTML=LOVED.map(([n,s,a,href],i)=>`
     if(like){ const i=+like.dataset.i;
       LIKES.has(i)?LIKES.delete(i):LIKES.add(i);
       like.dataset.on=LIKES.has(i)?1:0; saveLikes(); return; }
+    const sv=e.target.closest(".rv-save");
+    if(sv){ window.HF_saveLook && HF_saveLook(sv.dataset.num, sv.dataset.cap, sv.dataset.code); return; }
     const sh=e.target.closest(".rv-share");
     if(sh){ const url=location.origin+location.pathname+"#/reel/"+(sh.dataset.num||"");
       if(navigator.share){ navigator.share({title:"Hi Fashion",text:sh.dataset.cap,url}).catch(()=>{}); }
@@ -1462,6 +1497,7 @@ $("#loveGrid").innerHTML=LOVED.map(([n,s,a,href],i)=>`
     if(sndOn&&mainV.src&&mainV.paused) mainV.play().catch(()=>{}); });
   likeB.addEventListener("click",()=>{ const ri=REELS.indexOf(data[cur]);
     LIKES.has(ri)?LIKES.delete(ri):LIKES.add(ri); likeB.dataset.on=LIKES.has(ri)?1:0; save(); });
+  $("#rlbSave") && $("#rlbSave").addEventListener("click",()=>{ const r=data[cur]; window.HF_saveLook && HF_saveLook(mnum(r.v), r.cap, r.c); });
   shareB.addEventListener("click",()=>{ const url=location.origin+location.pathname+"#/reel/"+mnum(data[cur].v);
     if(navigator.share){ navigator.share({title:"Hi Fashion",text:data[cur].cap,url}).catch(()=>{}); }
     else if(navigator.clipboard){ navigator.clipboard.writeText(url).then(()=>toast("Reel link copied")); } });
