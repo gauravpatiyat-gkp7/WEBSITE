@@ -1151,7 +1151,8 @@ $("#heroImg").src=IMG.herobg;
 (function(){
   const vids=$$(".hero .bg .hvid"); if(vids.length<2) return;
   const slow = navigator.connection && (navigator.connection.saveData || /2g/.test(navigator.connection.effectiveType||""));
-  if(slow || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const smallScreen = matchMedia("(max-width: 700px)").matches;   /* mobile: keep the hero image, skip the ~6.7MB video for speed */
+  if(slow || smallScreen || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
   let clip=0, cur=0;
   const load=(v,i)=>{ v.src=HERO_REEL[i%HERO_REEL.length]; v.load(); };
@@ -1350,7 +1351,7 @@ $("#loveGrid").innerHTML=LOVED.map(([n,s,a,href],i)=>`
             <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="22"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 00-7.8 7.8l8.8 8.8 8.8-8.8a5.5 5.5 0 000-7.8z"/></svg></i><span>Like</span></button>
           <a class="rv-act" href="${wa(r.go)}" target="_blank" rel="noopener noreferrer" aria-label="Ask about this reel on WhatsApp">
             <i><svg viewBox="0 0 24 24" fill="currentColor" width="22"><path d="M12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2zm0 18a8 8 0 01-4.1-1.1l-.3-.2-3.1.8.8-3-.2-.3A8 8 0 1112 20z"/></svg></i><span>WhatsApp</span></a>
-          <button class="rv-act rv-share" data-cap="${r.cap.replace(/"/g,"&quot;")}" aria-label="Share this reel">
+          <button class="rv-act rv-share" data-cap="${r.cap.replace(/"/g,"&quot;")}" data-num="${mnum(r.v)}" aria-label="Share this reel">
             <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="22"><path d="M12 3v13M7 8l5-5 5 5"/><path d="M5 13v6a2 2 0 002 2h10a2 2 0 002-2v-6"/></svg></i><span>Share</span></button>
         </div>
       </section>`).join("");
@@ -1401,9 +1402,10 @@ $("#loveGrid").innerHTML=LOVED.map(([n,s,a,href],i)=>`
       LIKES.has(i)?LIKES.delete(i):LIKES.add(i);
       like.dataset.on=LIKES.has(i)?1:0; saveLikes(); return; }
     const sh=e.target.closest(".rv-share");
-    if(sh){ const url=location.origin+location.pathname+"#reels";
+    if(sh){ const url=location.origin+location.pathname+"#/reel/"+(sh.dataset.num||"");
       if(navigator.share){ navigator.share({title:"Hi Fashion",text:sh.dataset.cap,url}).catch(()=>{}); }
-      else if(navigator.clipboard){ navigator.clipboard.writeText(url).then(()=>toast("Link copied")); }
+      else if(navigator.clipboard){ navigator.clipboard.writeText(url).then(()=>toast("Reel link copied")); }
+      else { toast("Copy this link: "+url); }
       return; }
     if(e.target.closest(".rv-act")) return;
     const v=e.target.closest(".rv-slide") && e.target.closest(".rv-slide").querySelector("video");
@@ -1460,9 +1462,9 @@ $("#loveGrid").innerHTML=LOVED.map(([n,s,a,href],i)=>`
     if(sndOn&&mainV.src&&mainV.paused) mainV.play().catch(()=>{}); });
   likeB.addEventListener("click",()=>{ const ri=REELS.indexOf(data[cur]);
     LIKES.has(ri)?LIKES.delete(ri):LIKES.add(ri); likeB.dataset.on=LIKES.has(ri)?1:0; save(); });
-  shareB.addEventListener("click",()=>{ const url=location.origin+location.pathname+"#reels";
+  shareB.addEventListener("click",()=>{ const url=location.origin+location.pathname+"#/reel/"+mnum(data[cur].v);
     if(navigator.share){ navigator.share({title:"Hi Fashion",text:data[cur].cap,url}).catch(()=>{}); }
-    else if(navigator.clipboard){ navigator.clipboard.writeText(url).then(()=>toast("Link copied")); } });
+    else if(navigator.clipboard){ navigator.clipboard.writeText(url).then(()=>toast("Reel link copied")); } });
   mainV.addEventListener("click",()=>{ if(!mainV.getAttribute("src")) return;
     mainV.paused?mainV.play().catch(()=>{}):mainV.pause(); });
   addEventListener("keydown",e=>{ if(!lb.classList.contains("on")) return;
@@ -1702,6 +1704,15 @@ function route(){
   const [fileQ,anchor]=h.split("@");
   const [file,qs]=fileQ.split("?");
   if(file==="index.html"){ showHome(anchor); if(!anchor){ if(location.hash) history.replaceState(null,"",location.pathname+location.search); } return; }
+  // deep link to a single reel: #/reel/00114 opens that reel on whichever viewer fits
+  if(file.indexOf("reel/")===0){
+    const num=file.slice(5).replace(/[^0-9]/g,"");
+    const ri=REELS.findIndex(r=>mnum(r.v)===num);
+    showHome();
+    if(ri>=0){ const opener=(matchMedia("(max-width:820px)").matches?window.HF_openReelsAt:window.HF_openReelLB)||window.HF_openReelsAt||window.HF_openReelLB;
+      if(opener) requestAnimationFrame(()=>opener(ri)); }
+    return;
+  }
   const pg=FILE2PAGE[file];
   if(!pg){ showHome(); return; }
   const q={}; if(qs) new URLSearchParams(qs).forEach((v,k)=>q[k]=v);
