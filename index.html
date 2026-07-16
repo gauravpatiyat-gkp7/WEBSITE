@@ -248,10 +248,13 @@
     .hero-grid{grid-template-columns:1fr;gap:34px}
     .exp-grid,.grid2,.contact,.screen-card{grid-template-columns:1fr}
     .contact{gap:30px;padding:36px 26px}
-    .cnv-cards{flex-direction:column;gap:8px}
-    .nav-links.open .cnv-cards{max-height:calc(100vh - 84px);overflow-y:auto;-webkit-overflow-scrolling:touch}
-    .nav-card{min-height:0;padding:14px 16px}
-    .nc-links{padding-top:12px}
+    .cnv-cards{flex-direction:column;gap:10px;padding-top:12px;padding-bottom:16px}
+    /* mobile: open the menu without the fragile grid-rows animation so cards never overlap */
+    .nav-links{display:block;grid-template-rows:none;max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.22,1,.36,1)}
+    .nav-links.open{max-height:calc(100vh - 64px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+    .nav-card{min-height:0;padding:15px 16px;transform:none;opacity:1}
+    .nc-label{font-size:1.15rem}
+    .nc-links{margin-top:10px;padding-top:12px;gap:9px}
     nav.cnv{top:0;width:100%}
   }
   @media (prefers-reduced-motion:reduce){
