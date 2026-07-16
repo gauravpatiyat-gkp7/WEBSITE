@@ -263,17 +263,11 @@ const OCCASIONS = ["Haldi","Sangeet","Mehendi","Cocktail","Carnival","Wedding","
 const MENU = [
   { label:"New In", go:"__new" },
   { label:"Kurtas & Sets", cols:[
-      {h:"Kurtas & Kurtis", items:["Straight Kurta","A-line Kurta","Anarkali Kurta","Short Kurti","Tunic","Kaftan"]},
       {h:"Kurta & Suit Sets", items:["Two-piece Set","Three-piece Set","Straight Suit Set","Anarkali Suit Set","Sharara Set","Palazzo Suit Set","Patiala Set","Pakistani Suit Set"]},
       {h:"Co-ords & Fusion", items:["Co-ord Sets","Shirt & Pant Set","Jacket Set","Skirt Set"]},
       {h:"Unstitched", items:["Dress Material","Chikankari Material","Cotton Suit Piece"]}
     ], promo:{t:"Crimson zari co-ord",s:"Gold thread on cherry red. The one everyone photographs.",go:"Co-ord Sets",img:"red1"} },
-  { label:"Lehengas", cols:[
-      {h:"By Function", items:["Bridal Lehenga","Reception Lehenga","Sangeet Lehenga","Mehendi Lehenga","Haldi Lehenga","Engagement Lehenga"]},
-      {h:"By Weight", items:["Light Lehenga","Heavy Bridal","Semi-stitched Lehenga","Ready-to-wear Lehenga"]},
-      {h:"By Work", items:["Zardozi & Dabka","Mirror & Gota","Sequin Lehenga","Printed Lehenga","Floral Lehenga"]},
-      {h:"Also", items:["Lehenga Cholis","Skirt Sets"]}
-    ], promo:{t:"Wedding season, sorted",s:"Bridal to light — trials in a private room, tea included.",go:"Lehengas",img:"cocoa"} },
+  { label:"Lehengas", go:"Lehengas" },
   { label:"Indo-Western", cols:[
       {h:"Silhouettes", items:["Gown","Jumpsuit","Cape Set","Crop Top Set","Draped Dress","Dhoti Set"]},
       {h:"Evening", items:["Cocktail Wear","Reception Gown","Sequin Fusion","Velvet Fusion"]},
@@ -651,8 +645,8 @@ function pageFor(f){
 
 /* menu leaf → stocked filter (then pageFor gives the URL) */
 function mapLeaf(v){
-  const m={"Straight Kurta":"Kurtas & Kurtis","A-line Kurta":"Kurtas & Kurtis","Anarkali Kurta":"Kurtas & Kurtis",
-   "Short Kurti":"Kurtas & Kurtis","Tunic":"Kurtas & Kurtis","Kaftan":"Kurtas & Kurtis",
+  const m={
+   
    "Two-piece Set":"Kurta & Suit Sets","Three-piece Set":"Kurta & Suit Sets","Straight Suit Set":"Kurta & Suit Sets",
    "Anarkali Suit Set":"Kurta & Suit Sets","Sharara Set":"Kurta & Suit Sets","Palazzo Suit Set":"Kurta & Suit Sets",
    "Patiala Set":"Kurta & Suit Sets","Pakistani Suit Set":"Kurta & Suit Sets","Dress Material":"Kurta & Suit Sets",
@@ -1575,7 +1569,6 @@ function initShop(PG, q){
             <b class="ftitle">Refine</b>
             ${PG.type!=="cat" ? fgroup("Category","cat",[...new Set(pool.map(p=>p.cat))].sort(),F.cat):""}
             ${occs.length>1 ? fgroup("Occasion","occ",occs,F.occ):""}
-            ${fabs.length>1 ? fgroup("Fabric","fab",fabs,F.fab):""}
             ${fgroup("Size","size",[...new Set(pool.flatMap(p=>p.sz))].sort(),F.size)}
             <div class="fgrp"><b>Price</b>
               ${[["","Any"],["0-3000","Under ₹3,000"],["3000-6000","₹3,000 – 6,000"],["6000-10000","₹6,000 – 10,000"],["10000-9999999","₹10,000 +"]]
@@ -1596,7 +1589,7 @@ function initShop(PG, q){
                     <option value="rated"${F.sort==="rated"?" selected":""}>Top rated</option>
                   </select>
                 </label>
-                <span class="tcount" id="tCount"></span>
+                
               </div>
             </div>
             <div class="grid rv in" id="shopGrid"></div>
@@ -1638,7 +1631,7 @@ function initShop(PG, q){
   }
   function paintShop(){
     const r=refined(); _cycle=r; _shown=0;
-    $("#tCount").textContent = r.length+" piece"+(r.length===1?"":"s")+" on the floor · scrolls forever";
+    
     const rackEmpty = !basePool().length;
     if(!r.length){
       $("#shopGrid").innerHTML=`<div class="empty"><b>${rackEmpty ? "This rack is in store — not online yet" : "Nothing at this filter"}</b>
