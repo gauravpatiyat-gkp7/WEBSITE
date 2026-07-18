@@ -215,14 +215,22 @@ greendrape:"media/00104.jpg",
 blackcape:"media/00105.jpg",
 limedhoti:"media/00106.jpg",
 storeposter:"media/00097.jpg",
-herobg:"media/00153.jpg"
+herobg:"media/00153.jpg",
+/* Batch 11 — 2026-07-18 */
+amberrose:"media/00155.jpg",
+peacockteal:"media/00156.jpg",
+wineberry:"media/00158.jpg",
+scarletrose:"media/00160.jpg"
 };
 
 /* ═══════ VIDEOS — separate files (too heavy to embed as base64).
    Keep the /media folder next to index.html when you upload the site. ═══════ */
 const VID={
  kanjivaram:"media/00008.mp4",   /* HF-201 drape reel */
- store:"media/00096.mp4"              /* store walkthrough, Visit section */
+ store:"media/00096.mp4",              /* store walkthrough, Visit section */
+ peacocktealv:"media/00157.mp4",  /* HF-364 in-store reel */
+ wineberryv:"media/00159.mp4",    /* HF-365 mirror reel */
+ scarletrosev:"media/00161.mp4"   /* HF-366 outdoor reel */
 };
 
 /* Hero plays these back-to-back, on a loop. Add or reorder to change the sequence. */
@@ -262,7 +270,10 @@ const REELS=[
  {v:"media/00146.mp4", p:"media/00145.jpg", cap:"In store from today", go:"Hi! Is the reel outfit that's in store from today available?"},
  {v:"media/00148.mp4", p:"media/00147.jpg", cap:"Fresh on camera", go:"Hi! What's the fresh-on-camera piece in your reel?"},
  {v:"media/00150.mp4", p:"media/00149.jpg", cap:"Newest of the new", go:"Hi! Tell me about the newest piece in your reels?"},
- {v:"media/00152.mp4", p:"media/00151.jpg", cap:"One more for the rail", go:"Hi! What's the latest addition on your reels rail?"}
+ {v:"media/00152.mp4", p:"media/00151.jpg", cap:"One more for the rail", go:"Hi! What's the latest addition on your reels rail?"},
+ {v:"media/00157.mp4", p:"media/00156.jpg", cap:"Peacock teal, tried on in-store", go:"Hi! I'd like the Peacock Teal Zari Kurta Set (HF-364) from your reel."},
+ {v:"media/00159.mp4", p:"media/00158.jpg", cap:"Wine berry, mirror check", go:"Hi! Tell me about the Wine Berry Kurta Set (HF-365) from the reel."},
+ {v:"media/00161.mp4", p:"media/00160.jpg", cap:"Scarlet rose, in motion", go:"Hi! I'd like the Scarlet Rose Kurta Set (HF-366) from your reel."}
 ];
 const vidEl=(k,poster)=>`<video src="${VID[k]}" ${poster?`poster="${poster}"`:""} autoplay muted loop playsinline></video>`;
 
@@ -593,7 +604,25 @@ const P = [
   d:"All black, all drama — sequinned halter, floor-sweeping cape, dhoti drape. Cocktail hour sorted."},
  {c:"HF-362",n:"Lime Embellished Dhoti Co-ord",cat:"Indo-Western",occ:["Haldi","Cocktail","Festive"],fab:"Crepe",work:"Thread &amp; mirror crop and kimono jacket, ruched dhoti skirt",
   col:"Lime",cx:"#BFCE3A",price:4190,mrp:4990,sz:["S","M","L","XL"],out:[],r:4.7,rv:3,tag:"",new:1,pt:"mirror",cols:["#BFCE3A","#F2EEE6"],imgs:["limedhoti"],
-  d:"Citrus lime with white-worked crop and jacket over a ruched dhoti skirt. Design no. 197339 — haldi-proof colour."}
+  d:"Citrus lime with white-worked crop and jacket over a ruched dhoti skirt. Design no. 197339 — haldi-proof colour."},
+
+ /* ── Batch 11 drop — 2026-07-18 · owner price Rs.1900 (30% off applied) ── */
+ {c:"HF-363",n:"Amber Rose Kurta Set",cat:"Kurta & Suit Sets",occ:["Haldi","Festive","Sangeet"],
+  fab:"Viscose Silk",work:"Floral thread-embroidered yoke with tassels, rose-vine hem border",
+  col:"Amber Orange",cx:"#DD7118",price:1900,mrp:2715,sz:["S","M","L","XL","XXL"],out:[],r:4.8,rv:2,tag:"",new:1,imgs:["amberrose"],
+  d:"Sunset amber with a rose-vine border that runs the hem, matching palazzo and a crinkled dupatta. The tasselled yoke does the talking."},
+ {c:"HF-364",n:"Peacock Teal Zari Kurta Set",cat:"Kurta & Suit Sets",occ:["Festive","Wedding","Everyday"],
+  fab:"Silk Blend",work:"Gold zari-thread floral yoke, embroidered side slits &amp; hem, matching palazzo",
+  col:"Peacock Teal",cx:"#1F4E5A",price:1900,mrp:2715,sz:["S","M","L","XL","XXL"],out:[],r:4.9,rv:3,tag:"",new:1,imgs:["peacockteal"],vid:"peacocktealv",
+  d:"Deep peacock teal lifted with gold zari — tried on in-store in the reel so you can see exactly how it falls. Crinkled dupatta included."},
+ {c:"HF-365",n:"Wine Berry Embroidered Kurta Set",cat:"Kurta & Suit Sets",occ:["Festive","Sangeet","Everyday"],
+  fab:"Rayon Silk",work:"Beige floral thread embroidery on yoke &amp; sleeves, rose-vine embroidered pants",
+  col:"Wine",cx:"#722F4E",price:1900,mrp:2715,sz:["S","M","L","XL","XXL"],out:[],r:4.7,rv:2,tag:"",new:1,imgs:["wineberry"],vid:"wineberryv",
+  d:"Berry-wine kurta with soft beige florals, embroidered pants to match. The mirror reel shows the true colour in daylight."},
+ {c:"HF-366",n:"Scarlet Rose Kurta Set",cat:"Kurta & Suit Sets",occ:["Karwa Chauth","Festive","Wedding"],
+  fab:"Silk Blend",work:"Gold floral yoke with tassels, rose-embroidered hem, pants &amp; dupatta set",
+  col:"Scarlet",cx:"#C8342A",price:1900,mrp:2715,sz:["S","M","L","XL","XXL"],out:[],r:4.8,rv:2,tag:"",new:1,imgs:["scarletrose"],vid:"scarletrosev",
+  d:"Head-to-toe scarlet with gold roses at the yoke and hem — made for the festive red dress code. See it move in the reel."}
 ];
 
 /* ═══════════════════════════════════════════════════════════════
@@ -710,7 +739,7 @@ const LIVE = P.filter(p => p.imgs && p.imgs.length);
    Scoring: video +6 · two-or-more people +4 · clean (txt:0) +2 ·
    pixel quality up to +1.9 as tie-decider. q = W*H from the registry.
    Unknown axes score 0 until described. */
-const MEDIA_META={"00008":{q:518400},"00010":{q:1784000},"00011":{q:1843824},"00012":{q:1032192},"00013":{q:1048576},"00014":{q:1049190},"00015":{q:1910400},"00016":{q:896000},"00017":{q:1705600},"00018":{q:1705600},"00019":{q:1705600},"00020":{q:1705600},"00021":{q:1228800},"00022":{q:984000},"00023":{q:1032192},"00024":{q:1612600},"00025":{q:1705600},"00026":{q:1705600},"00027":{q:1163712},"00028":{q:1910400},"00029":{q:964608},"00030":{q:1705600},"00031":{q:1668800},"00032":{q:1705600},"00033":{q:1705600},"00034":{q:960000},"00035":{q:1705600},"00036":{q:1705600},"00037":{q:884736},"00038":{q:1071616},"00039":{q:1974400},"00040":{q:1093120},"00041":{q:1093120},"00042":{q:1093120},"00043":{q:950400},"00044":{q:960000},"00045":{q:960000},"00046":{q:1705600},"00047":{q:1665600},"00048":{q:1614400},"00049":{q:1609600},"00050":{q:1032192},"00051":{q:884736},"00052":{q:1705600},"00053":{q:1022976},"00054":{q:960000},"00055":{q:1705600},"00056":{q:1147200},"00057":{ppl:1,txt:1,q:884736},"00058":{ppl:1,txt:0,q:2940000},"00059":{ppl:1,txt:0,q:2940000},"00060":{ppl:1,txt:1,q:1910400},"00061":{ppl:1,txt:0,q:1139200},"00062":{ppl:1,txt:0,q:1227520},"00063":{ppl:1,txt:1,q:1910400},"00064":{ppl:1,txt:1,q:1704000},"00065":{ppl:1,txt:0,q:1139200},"00066":{ppl:1,txt:0,q:1227520},"00067":{ppl:1,txt:1,q:1705600},"00068":{ppl:1,txt:1,q:1048576},"00069":{ppl:1,txt:1,q:716800},"00070":{ppl:1,txt:0,q:1093120},"00071":{ppl:1,txt:1,q:1705600},"00072":{ppl:1,txt:1,q:884736},"00073":{ppl:1,txt:0,q:1492800},"00078":{ppl:2,txt:0,q:160200},"00079":{ppl:2,txt:0},"00082":{ppl:0,txt:1,q:159000},"00083":{ppl:0,txt:1,q:407040},"00084":{ppl:1,txt:0,q:138000},"00085":{ppl:1,txt:0,q:600960},"00086":{ppl:1,txt:1,q:150000},"00087":{ppl:1,txt:1,q:552960},"00088":{ppl:1,txt:0,q:135600},"00089":{ppl:1,txt:0,q:610560},"00090":{ppl:1,txt:0,q:148200},"00091":{ppl:1,txt:0,q:852480},"00092":{ppl:1,txt:1,q:145800},"00093":{ppl:1,txt:1,q:840960},"00098":{q:1093120},"00099":{ppl:2,txt:1,q:11535680},"00100":{ppl:1,txt:1,q:1354752},"00101":{ppl:1,txt:1,q:1705600},"00102":{ppl:1,txt:1,q:1705600},"00103":{ppl:1,txt:1,q:1705600},"00104":{ppl:1,txt:1,q:1705600},"00105":{ppl:1,txt:1,q:1867200},"00106":{ppl:1,txt:1,q:1705600},"00107":{q:921600},"00108":{q:921600},"00109":{q:393472},"00110":{q:393472},"00111":{q:921600},"00112":{q:921600},"00113":{q:921600},"00114":{q:921600},"00115":{q:921600},"00116":{q:921600},"00117":{q:921600},"00118":{q:921600},"00119":{q:407040},"00120":{q:407040},"00121":{q:386048},"00122":{q:386048},"00123":{q:921600},"00124":{q:921600},"00125":{q:921600},"00126":{q:921600},"00127":{q:2073600},"00128":{q:2073600},"00129":{q:921600},"00130":{q:921600},"00131":{q:589824},"00132":{q:589824},"00133":{q:2073600},"00134":{q:2073600},"00135":{q:386048},"00136":{q:386048},"00137":{q:901120},"00138":{q:901120},"00139":{q:921600},"00140":{q:921600},"00141":{q:921600},"00142":{q:921600},"00143":{q:407040},"00144":{q:407040},"00145":{q:414720},"00146":{q:414720},"00147":{q:921600},"00148":{q:921600},"00149":{q:921600},"00150":{q:921600},"00151":{q:921600},"00152":{q:921600}};
+const MEDIA_META={"00008":{q:518400},"00010":{q:1784000},"00011":{q:1843824},"00012":{q:1032192},"00013":{q:1048576},"00014":{q:1049190},"00015":{q:1910400},"00016":{q:896000},"00017":{q:1705600},"00018":{q:1705600},"00019":{q:1705600},"00020":{q:1705600},"00021":{q:1228800},"00022":{q:984000},"00023":{q:1032192},"00024":{q:1612600},"00025":{q:1705600},"00026":{q:1705600},"00027":{q:1163712},"00028":{q:1910400},"00029":{q:964608},"00030":{q:1705600},"00031":{q:1668800},"00032":{q:1705600},"00033":{q:1705600},"00034":{q:960000},"00035":{q:1705600},"00036":{q:1705600},"00037":{q:884736},"00038":{q:1071616},"00039":{q:1974400},"00040":{q:1093120},"00041":{q:1093120},"00042":{q:1093120},"00043":{q:950400},"00044":{q:960000},"00045":{q:960000},"00046":{q:1705600},"00047":{q:1665600},"00048":{q:1614400},"00049":{q:1609600},"00050":{q:1032192},"00051":{q:884736},"00052":{q:1705600},"00053":{q:1022976},"00054":{q:960000},"00055":{q:1705600},"00056":{q:1147200},"00057":{ppl:1,txt:1,q:884736},"00058":{ppl:1,txt:0,q:2940000},"00059":{ppl:1,txt:0,q:2940000},"00060":{ppl:1,txt:1,q:1910400},"00061":{ppl:1,txt:0,q:1139200},"00062":{ppl:1,txt:0,q:1227520},"00063":{ppl:1,txt:1,q:1910400},"00064":{ppl:1,txt:1,q:1704000},"00065":{ppl:1,txt:0,q:1139200},"00066":{ppl:1,txt:0,q:1227520},"00067":{ppl:1,txt:1,q:1705600},"00068":{ppl:1,txt:1,q:1048576},"00069":{ppl:1,txt:1,q:716800},"00070":{ppl:1,txt:0,q:1093120},"00071":{ppl:1,txt:1,q:1705600},"00072":{ppl:1,txt:1,q:884736},"00073":{ppl:1,txt:0,q:1492800},"00078":{ppl:2,txt:0,q:160200},"00079":{ppl:2,txt:0},"00082":{ppl:0,txt:1,q:159000},"00083":{ppl:0,txt:1,q:407040},"00084":{ppl:1,txt:0,q:138000},"00085":{ppl:1,txt:0,q:600960},"00086":{ppl:1,txt:1,q:150000},"00087":{ppl:1,txt:1,q:552960},"00088":{ppl:1,txt:0,q:135600},"00089":{ppl:1,txt:0,q:610560},"00090":{ppl:1,txt:0,q:148200},"00091":{ppl:1,txt:0,q:852480},"00092":{ppl:1,txt:1,q:145800},"00093":{ppl:1,txt:1,q:840960},"00098":{q:1093120},"00099":{ppl:2,txt:1,q:11535680},"00100":{ppl:1,txt:1,q:1354752},"00101":{ppl:1,txt:1,q:1705600},"00102":{ppl:1,txt:1,q:1705600},"00103":{ppl:1,txt:1,q:1705600},"00104":{ppl:1,txt:1,q:1705600},"00105":{ppl:1,txt:1,q:1867200},"00106":{ppl:1,txt:1,q:1705600},"00107":{q:921600},"00108":{q:921600},"00109":{q:393472},"00110":{q:393472},"00111":{q:921600},"00112":{q:921600},"00113":{q:921600},"00114":{q:921600},"00115":{q:921600},"00116":{q:921600},"00117":{q:921600},"00118":{q:921600},"00119":{q:407040},"00120":{q:407040},"00121":{q:386048},"00122":{q:386048},"00123":{q:921600},"00124":{q:921600},"00125":{q:921600},"00126":{q:921600},"00127":{q:2073600},"00128":{q:2073600},"00129":{q:921600},"00130":{q:921600},"00131":{q:589824},"00132":{q:589824},"00133":{q:2073600},"00134":{q:2073600},"00135":{q:386048},"00136":{q:386048},"00137":{q:901120},"00138":{q:901120},"00139":{q:921600},"00140":{q:921600},"00141":{q:921600},"00142":{q:921600},"00143":{q:407040},"00144":{q:407040},"00145":{q:414720},"00146":{q:414720},"00147":{q:921600},"00148":{q:921600},"00149":{q:921600},"00150":{q:921600},"00151":{q:921600},"00152":{q:921600},"00155":{ppl:1,txt:0,q:748544},"00156":{ppl:1,txt:0,q:921600},"00157":{ppl:1,txt:0,q:921600},"00158":{ppl:1,txt:1,q:386048},"00159":{ppl:1,txt:1,q:386048},"00160":{ppl:1,txt:1,q:921600},"00161":{ppl:1,txt:1,q:921600}};
 const mnum=p=>((p||"").match(/media\/(\d{5})\./)||[])[1];
 /* video +6 · group +4 · clean +2 · quality up to +1.9 (decides ties,
    never overrides the video/people/clean ladder) */
