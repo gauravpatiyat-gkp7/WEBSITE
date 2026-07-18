@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- SECURITY: Content-Security-Policy — only these sources may load code/styles/fonts. The one inline script is whitelisted by its SHA-256 hash; edit that script and this hash must be recomputed. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'sha256-FQ/71U2QIBXUzvM2+Yq+AkukBqejxI9RqBi/pn7lMBk='; connect-src 'self'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'sha256-1LEvj6Evo/zGOCXY7ZocY2nJoTzkCL2yydW8bDxqWiI='; connect-src 'self'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -191,6 +191,8 @@ a{color:inherit;text-decoration:none}
 .hlink{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:600;color:var(--ink);text-decoration:none;white-space:nowrap}
 .hlink svg{width:19px;height:19px;color:var(--ink2);flex:none}
 .hlink:hover{color:var(--cobalt)}
+.hlink.active{color:var(--cobalt)}
+.hlink.active svg{color:var(--cobalt)}
 .hlink:hover svg{color:var(--cobalt)}
 .tk-ic{width:36px;height:36px;border-radius:12px;background:var(--cobalt-soft);display:inline-flex;
   align-items:center;justify-content:center;color:var(--cobalt);flex:none;transition:background .15s,color .15s}
@@ -210,6 +212,46 @@ a{color:inherit;text-decoration:none}
 .tkdrop .tk-soon em{font-style:normal;font-size:10.5px;font-weight:700;letter-spacing:.04em;
   text-transform:uppercase;color:var(--ink3);background:var(--line2);border-radius:var(--pill);padding:3px 9px;flex:none}
 #toolkit{scroll-margin-top:16px}
+/* ---- registration view: presentation components ---- */
+.rg-chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.rg-chip{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line2);
+  border-radius:var(--pill);padding:9px 15px;font-family:var(--mono);font-size:12px;font-weight:600;color:var(--ink2)}
+.rg-chip svg{width:15px;height:15px;color:var(--coral);flex:none}
+.rg-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:26px}
+.rg-step{position:relative;background:var(--card);border:1px solid var(--line2);border-radius:16px;
+  padding:20px;display:flex;flex-direction:column;gap:13px;box-shadow:0 1px 0 rgba(21,23,28,.02)}
+.rg-num{position:absolute;top:16px;right:18px;font-family:var(--mono);font-size:12px;font-weight:700;
+  letter-spacing:.08em;color:var(--coral)}
+.rg-ic{width:46px;height:46px;border-radius:12px;background:var(--cobalt-soft);color:var(--cobalt);flex:none;
+  display:inline-flex;align-items:center;justify-content:center}
+.rg-ic svg{width:23px;height:23px}
+.rg-ic.sm{width:38px;height:38px;border-radius:11px}
+.rg-ic.sm svg{width:19px;height:19px}
+.rg-tx b{display:block;font-family:var(--disp);font-size:15.5px;font-weight:700;color:var(--ink);margin-bottom:5px;padding-right:34px}
+.rg-tx .sd{display:block;font-size:13px;color:var(--ink2);line-height:1.55}
+.pc-ic{margin-bottom:12px}
+.rg-note{display:flex;gap:14px;align-items:flex-start}
+.note-ic{background:#fff;color:var(--coral)}
+.note-tx{min-width:0}
+.rg-cta{display:grid;grid-template-columns:repeat(2,minmax(250px,1fr));gap:14px;margin-top:24px}
+.rg-cta-card{display:flex;align-items:center;gap:16px;background:var(--card);border:1px solid var(--line2);
+  border-radius:16px;padding:22px;text-decoration:none;color:inherit;
+  transition:transform .15s ease,border-color .15s ease,box-shadow .15s ease}
+.rg-cta-card:hover{transform:translateY(-2px);border-color:var(--cobalt);box-shadow:0 14px 28px -18px rgba(22,78,196,.4)}
+.rg-cta-tx{display:flex;flex-direction:column;gap:4px;min-width:0}
+.rg-cta-tx b{font-family:var(--disp);font-size:16px;font-weight:700;color:var(--ink)}
+.rg-cta-tx > span{font-size:13px;color:var(--ink2);line-height:1.5}
+.rg-cta-go{margin-left:auto;font-size:20px;color:var(--ink3);transition:color .15s,transform .15s;flex:none}
+.rg-cta-card:hover .rg-cta-go{color:var(--cobalt);transform:translateX(3px)}
+@media(max-width:900px){.rg-steps{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.rg-steps{grid-template-columns:1fr}.rg-cta{grid-template-columns:1fr}}
+.totop{position:fixed;right:22px;bottom:22px;z-index:40;width:46px;height:46px;border-radius:50%;
+  background:#fff;border:1px solid var(--line2);box-shadow:0 10px 22px -8px rgba(21,23,28,.4);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);padding:0;
+  transition:opacity .2s ease,transform .15s ease,color .15s ease}
+.totop svg{width:20px;height:20px}
+.totop:hover{color:var(--cobalt);transform:translateY(-2px)}
+.totop.off{opacity:0;pointer-events:none}
 /* section background bands — full-bleed colour, content stays aligned */
 .band{margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);
   padding-left:calc(50vw - 50%);padding-right:calc(50vw - 50%);
@@ -395,6 +437,18 @@ a.ixcard:hover{transform:translateY(-2px);border-color:var(--cobalt);
 .ixbtn.off{opacity:0;pointer-events:none}
 @media(max-width:900px){.ixcard{flex-basis:calc((100% - 14px)/2)}}
 @media(max-width:560px){.ixcard{flex-basis:86%}#ixPrev{left:-4px}#ixNext{right:-4px}}
+/* mobile pass */
+@media(max-width:560px){
+  .tab{padding:8px 11px;font-size:12.5px}
+  .toolhead{padding:10px}
+  .brand .by2{display:none}
+  .tkmenu summary{font-size:14px;gap:7px}
+  .tk-ic{width:32px;height:32px}
+  .tk-ic svg{width:15px;height:15px}
+  .totop{right:14px;bottom:14px;width:42px;height:42px}
+  .band{padding-top:44px;padding-bottom:48px}
+  .section{margin-top:52px}
+}
 
 /* faq — centered column */
 .faq-sec{text-align:center}
@@ -418,10 +472,12 @@ footer p{font-size:12.5px;color:#A9B4CC;max-width:64ch;line-height:1.6;margin:0 
 
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
   .sclabel{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin:22px 0 11px}
-  .schemes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:760px}
+  .schemes{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
   @media(max-width:620px){.schemes{grid-template-columns:1fr 1fr}}
   @media(max-width:420px){.schemes{grid-template-columns:1fr}}
-  .scard{background:var(--card);border:1px solid var(--line2);border-radius:13px;padding:15px 16px}
+  .scard{position:relative;background:var(--card);border:1px solid var(--line2);border-radius:13px;padding:15px 38px 15px 16px}
+.scard .sc-go{position:absolute;top:13px;right:14px;font-size:13px;color:var(--ink3);transition:color .15s}
+a.scard:hover .sc-go{color:var(--cobalt)}
   .scard b{display:block;font-family:var(--disp);font-size:15px;font-weight:700;color:var(--ink)}
   .scard .st{display:block;font-family:var(--mono);font-size:12px;color:var(--coral);margin-top:5px}
   .scard.gen{border-color:var(--cobalt-soft)} .scard.gen .st{color:var(--cobalt)}
@@ -526,6 +582,73 @@ footer p{font-size:12.5px;color:#A9B4CC;max-width:64ch;line-height:1.6;margin:0 
   a.scard:hover{border-color:var(--cobalt);transform:translateY(-2px);box-shadow:var(--sh)}
   a.scard b{color:var(--ink)}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "codenull.in",
+          "item": "https://codenull.in/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Rx — PTR / PTS calculator",
+          "item": "https://codenull.in/tools/rx/"
+        }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "How to start a pharma stockist business in India",
+      "description": "The core steps to set up a licensed pharmaceutical wholesale / distribution business in India.",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": "Register the business",
+          "text": "Proprietorship, LLP or company — plus GST registration."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": "Set up the premises",
+          "text": "Adequate premises — a minimum of 10–15 sq.m depending on your state (15 if combined with retail) — with storage and a refrigerator for cold-chain drugs."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": "Appoint a competent person",
+          "text": "Science graduate with 1 year’s drug experience, or 4 years’ experience without a degree. A registered pharmacist is needed only for retail."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 4,
+          "name": "Apply for the wholesale drug licence",
+          "text": "Form 20B (general) + 21B (Schedule C/C1), filed as Form 19 on your State Drug Control portal."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 5,
+          "name": "Premises inspection",
+          "text": "A Drug Inspector verifies the site; the licence is usually issued in about 15–30 working days."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 6,
+          "name": "Stay compliant",
+          "text": "Keep stock, sales, purchase and expiry registers; deal only with licensed parties; pay the retention fee every 5 years."
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -790,21 +913,19 @@ footer p{font-size:12.5px;color:#A9B4CC;max-width:64ch;line-height:1.6;margin:0 
     <p class="lead">Working-capital and credit support a stockist or distributor can tap.</p>
     <div class="sclabel">Credit &amp; working capital</div>
     <div class="schemes">
-      <div class="scard"><b>Udyam / MSME</b><span class="st">Priority-sector loans</span></div>
-      <div class="scard"><b>TReDS</b><span class="st">Early invoice payments</span></div>
-      <div class="scard"><b>CGTMSE</b><span class="st">Collateral-free guarantee</span></div>
-      <div class="scard"><b>MUDRA (PMMY)</b><span class="st">Up to &#8377;20 lakh</span></div>
+      <a class="scard" href="https://udyamregistration.gov.in" target="_blank" rel="noopener noreferrer"><b>Udyam / MSME</b><span class="st">Priority-sector loans</span><span class="sc-go" aria-hidden="true">&#8599;</span></a>
+      <a class="scard" href="https://codenull.in/tools/treds/"><b>TReDS</b><span class="st">Early invoice payments</span><span class="sc-go" aria-hidden="true">&#8599;</span></a>
+      <a class="scard" href="https://www.cgtmse.in" target="_blank" rel="noopener noreferrer"><b>CGTMSE</b><span class="st">Collateral-free guarantee</span><span class="sc-go" aria-hidden="true">&#8599;</span></a>
+      <a class="scard" href="https://www.mudra.org.in" target="_blank" rel="noopener noreferrer"><b>MUDRA (PMMY)</b><span class="st">Up to &#8377;20 lakh</span><span class="sc-go" aria-hidden="true">&#8599;</span></a>
     </div>
     <div class="sclabel">Generic-medicine tie-up</div>
     <div class="schemes">
-      <div class="scard gen"><b>Jan Aushadhi (PMBJP)</b><span class="st">Distribute generics</span></div>
+      <a class="scard gen" href="https://janaushadhi.gov.in" target="_blank" rel="noopener noreferrer"><b>Jan Aushadhi (PMBJP)</b><span class="st">Distribute generics</span><span class="sc-go" aria-hidden="true">&#8599;</span></a>
     </div>
-    <p class="sfoot">Schemes &amp; limits change &mdash; verify on the official portals: <a href="https://udyamregistration.gov.in" target="_blank" rel="noopener noreferrer">udyamregistration.gov.in</a> &middot; <a href="https://www.mudra.org.in" target="_blank" rel="noopener noreferrer">mudra.org.in</a> &middot; <a href="https://www.cgtmse.in" target="_blank" rel="noopener noreferrer">cgtmse.in</a> &middot; <a href="https://janaushadhi.gov.in" target="_blank" rel="noopener noreferrer">janaushadhi.gov.in</a></p>
   </div>
 
   <!-- REGULATORS -->
   <div class="section">
-    <div class="sec-eyebrow">Reference</div>
     <h3>Official sources &amp; regulators</h3>
     <p class="lead">The government and global bodies behind pharma pricing, quality and licensing.</p>
     
@@ -835,11 +956,19 @@ footer p{font-size:12.5px;color:#A9B4CC;max-width:64ch;line-height:1.6;margin:0 
 
   </div>
 
+</div>
+
 <div class="rview" id="view-registration">
 <section class="hero"><div class="wrap">
   <a class="backlink" href="#">&larr; Back to the calculator</a>
   <div class="eyebrow">Registration &amp; compliance</div>
   <h1>Set up right &mdash; <em>licence, MSME &amp; TReDS.</em></h1>
+  <div class="rg-chips">
+    <span class="rg-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="3" width="12" height="18" rx="2"/><path d="M8 8h5M8 12h5"/><path d="M14.5 17.5l2.2 2.2 4-4.5" stroke-width="2"/></svg> Form 20B + 21B</span>
+    <span class="rg-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg> Licence in ~15&ndash;30 working days</span>
+    <span class="rg-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 9.5h5.5V4M20 14.5h-5.5V20"/></svg> 10&ndash;15 sq.m premises</span>
+    <span class="rg-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2.5L4.5 13.5H11L10 21.5 19.5 10H13z"/></svg> Invoice to cash in days on TReDS</span>
+  </div>
 </div></section>
 <div class="wrap">
 
@@ -848,23 +977,23 @@ footer p{font-size:12.5px;color:#A9B4CC;max-width:64ch;line-height:1.6;margin:0 
     <div class="sec-eyebrow">Registration &amp; compliance</div>
     <h3>Start a pharma stockist business in India</h3>
     <p class="lead">The core steps to set up a licensed wholesale / distribution business.</p>
-    <ol class="steps">
-      <li><b>Register the business</b><span class="sd">Proprietorship, LLP or company &mdash; plus GST registration.</span></li>
-      <li><b>Set up the premises</b><span class="sd">Adequate premises &mdash; a minimum of 10&ndash;15 sq.m depending on your state (15 if combined with retail) &mdash; with storage and a refrigerator for cold-chain drugs.</span></li>
-      <li><b>Appoint a competent person</b><span class="sd">Science graduate with 1 year&rsquo;s drug experience, or 4 years&rsquo; experience without a degree. A registered pharmacist is needed only for retail.</span></li>
-      <li><b>Apply for the wholesale drug licence</b><span class="sd">Form 20B (general) + 21B (Schedule C/C1), filed as Form 19 on your State Drug Control portal.</span></li>
-      <li><b>Premises inspection</b><span class="sd">A Drug Inspector verifies the site; the licence is usually issued in about 15&ndash;30 working days.</span></li>
-      <li><b>Stay compliant</b><span class="sd">Keep stock, sales, purchase and expiry registers; deal only with licensed parties; pay the retention fee every 5 years.</span></li>
-    </ol>
+    <div class="rg-steps">
+      <div class="rg-step"><span class="rg-num">01</span><span class="rg-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7.5" width="18" height="12.5" rx="2"/><path d="M9 7.5V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1.5"/><path d="M3 12.5h18"/></svg></span><div class="rg-tx"><b>Register the business</b><span class="sd">Proprietorship, LLP or company &mdash; plus GST registration.</span></div></div>
+      <div class="rg-step"><span class="rg-num">02</span><span class="rg-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20V9.5L12 4l9 5.5V20"/><path d="M8 20v-6h8v6"/><path d="M8 17h8"/></svg></span><div class="rg-tx"><b>Set up the premises</b><span class="sd">Adequate premises &mdash; a minimum of 10&ndash;15 sq.m depending on your state (15 if combined with retail) &mdash; with storage and a refrigerator for cold-chain drugs.</span></div></div>
+      <div class="rg-step"><span class="rg-num">03</span><span class="rg-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4L2.5 8.5 12 13l9.5-4.5z"/><path d="M6.5 10.7V15c0 1.4 2.5 2.8 5.5 2.8s5.5-1.4 5.5-2.8v-4.3"/><path d="M21.5 8.5V14"/></svg></span><div class="rg-tx"><b>Appoint a competent person</b><span class="sd">Science graduate with 1 year&rsquo;s drug experience, or 4 years&rsquo; experience without a degree. A registered pharmacist is needed only for retail.</span></div></div>
+      <div class="rg-step"><span class="rg-num">04</span><span class="rg-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="3" width="12" height="18" rx="2"/><path d="M8 8h5M8 12h5"/><path d="M14.5 17.5l2.2 2.2 4-4.5" stroke-width="2"/></svg></span><div class="rg-tx"><b>Apply for the wholesale drug licence</b><span class="sd">Form 20B (general) + 21B (Schedule C/C1), filed as Form 19 on your State Drug Control portal.</span></div></div>
+      <div class="rg-step"><span class="rg-num">05</span><span class="rg-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/><path d="M8 10.5l1.8 1.8 3.2-3.6"/></svg></span><div class="rg-tx"><b>Premises inspection</b><span class="sd">A Drug Inspector verifies the site; the licence is usually issued in about 15&ndash;30 working days.</span></div></div>
+      <div class="rg-step"><span class="rg-num">06</span><span class="rg-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7.5 3v5.5c0 4.6-3.2 8-7.5 9.5-4.3-1.5-7.5-4.9-7.5-9.5V6z"/><path d="M8.8 12l2.2 2.2 4.2-4.7"/></svg></span><div class="rg-tx"><b>Stay compliant</b><span class="sd">Keep stock, sales, purchase and expiry registers; deal only with licensed parties; pay the retention fee every 5 years.</span></div></div>
+    </div>
 
     <div class="sclabel">To also export (outside India)</div>
     <div class="reggrid">
-      <div class="rcard"><b>Drug licence</b><span class="rd">Wholesale or manufacturing</span><span class="ru">State authority</span></div>
-      <div class="rcard"><a href="https://www.dgft.gov.in" target="_blank" rel="noopener noreferrer">IEC</a><span class="rd">Import Export Code</span><span class="ru">DGFT</span></div>
-      <div class="rcard"><a href="https://pharmexcil.com" target="_blank" rel="noopener noreferrer">RCMC</a><span class="rd">Export-council membership</span><span class="ru">Pharmexcil</span></div>
-      <div class="rcard"><b>COPP</b><span class="rd">Product certificate for export</span><span class="ru">CDSCO / DCGI</span></div>
-      <div class="rcard"><b>WHO-GMP</b><span class="rd">Quality certification</span><span class="ru">Manufacturer-side</span></div>
-      <div class="rcard"><b>Market registration</b><span class="rd">In the importing country</span><span class="ru">Per market</span></div>
+      <div class="rcard"><span class="rg-ic sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="5.5"/><path d="M8.5 13.5L7 21l5-2.6L17 21l-1.5-7.5"/></svg></span><b>Drug licence</b><span class="rd">Wholesale or manufacturing</span><span class="ru">State authority</span></div>
+      <div class="rcard"><span class="rg-ic sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.6 2.3 4 5.2 4 8.5s-1.4 6.2-4 8.5c-2.6-2.3-4-5.2-4-8.5s1.4-6.2 4-8.5z"/></svg></span><a href="https://www.dgft.gov.in" target="_blank" rel="noopener noreferrer">IEC</a><span class="rd">Import Export Code</span><span class="ru">DGFT</span></div>
+      <div class="rcard"><span class="rg-ic sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9.5" r="5"/><circle cx="12" cy="9.5" r="2"/><path d="M9 13.8L7.5 20.5l4.5-2.3 4.5 2.3-1.5-6.7"/></svg></span><a href="https://pharmexcil.com" target="_blank" rel="noopener noreferrer">RCMC</a><span class="rd">Export-council membership</span><span class="ru">Pharmexcil</span></div>
+      <div class="rcard"><span class="rg-ic sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="9" width="17" height="6.5" rx="3.25" transform="rotate(-38 12 12.2)"/><path d="M9 8.2l5.5 7"/></svg></span><b>COPP</b><span class="rd">Product certificate for export</span><span class="ru">CDSCO / DCGI</span></div>
+      <div class="rcard"><span class="rg-ic sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M8.3 12l2.4 2.4 4.8-5.2"/></svg></span><b>WHO-GMP</b><span class="rd">Quality certification</span><span class="ru">Manufacturer-side</span></div>
+      <div class="rcard"><span class="rg-ic sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg></span><b>Market registration</b><span class="rd">In the importing country</span><span class="ru">Per market</span></div>
     </div>
     <p class="sfoot">Portals differ by state (e.g. Karnataka&rsquo;s ONDLS). This is a general guide, not legal advice &mdash; verify current rules with your State Drug Control Department. Export bodies: <a href="https://www.dgft.gov.in" target="_blank" rel="noopener noreferrer">dgft.gov.in</a> &middot; <a href="https://pharmexcil.com" target="_blank" rel="noopener noreferrer">pharmexcil.com</a></p>
   </div>
@@ -878,7 +1007,7 @@ footer p{font-size:12.5px;color:#A9B4CC;max-width:64ch;line-height:1.6;margin:0 
     <div class="pc2">
       <div class="pcard sch">
         <span class="pc-tag sch">Cash flow &middot; TReDS</span>
-        <h4>Get paid in days, not months</h4>
+        <span class="rg-ic sm pc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2.5L4.5 13.5H11L10 21.5 19.5 10H13z"/></svg></span><h4>Get paid in days, not months</h4>
         <ul>
           <li>Upload an accepted invoice to a large buyer on a TReDS exchange and receive most of its value in a day or two &mdash; without waiting out the credit period.</li>
           <li>The financing is priced on <b>your buyer&rsquo;s credit rating, not yours</b>, so the discount is usually small.</li>
@@ -888,7 +1017,7 @@ footer p{font-size:12.5px;color:#A9B4CC;max-width:64ch;line-height:1.6;margin:0 
       </div>
       <div class="pcard non">
         <span class="pc-tag non">Credit &amp; more</span>
-        <h4>Other things registration unlocks</h4>
+        <span class="rg-ic sm pc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9.5L12 4l9 5.5H3z"/><path d="M5.5 11v6.5M9.8 11v6.5M14.2 11v6.5M18.5 11v6.5"/><path d="M3.5 20.5h17M4.5 18h15"/></svg></span><h4>Other things registration unlocks</h4>
         <ul>
           <li><b>Priority Sector Lending</b> &mdash; banks are required to lend to MSMEs, so working-capital finance is easier to get and often cheaper.</li>
           <li>Collateral-free cover under <b>CGTMSE</b>, and small-ticket funding via <b>MUDRA</b>.</li>
@@ -898,16 +1027,16 @@ footer p{font-size:12.5px;color:#A9B4CC;max-width:64ch;line-height:1.6;margin:0 
       </div>
     </div>
 
-    <div class="note"><b>Does a trader even qualify?</b> Pure buying-and-selling was once left out of MSME. But since <b>2021</b> the government includes <b>retail and wholesale trade</b> under the MSME classification &mdash; specifically so traders can access Priority Sector Lending. So a distribution / stockist business can register on Udyam and use TReDS.</div>
+    <div class="note rg-note"><span class="rg-ic sm note-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 18h5M10.2 21h3.6"/><path d="M12 3a6 6 0 0 1 3.6 10.8c-.7.6-1.1 1.3-1.1 2.2h-5c0-.9-.4-1.6-1.1-2.2A6 6 0 0 1 12 3z"/></svg></span><div class="note-tx"><b>Does a trader even qualify?</b> Pure buying-and-selling was once left out of MSME. But since <b>2021</b> the government includes <b>retail and wholesale trade</b> under the MSME classification &mdash; specifically so traders can access Priority Sector Lending. So a distribution / stockist business can register on Udyam and use TReDS.</div></div>
 
     <div class="sclabel">How it works for a stockist</div>
-    <ol class="steps">
-      <li><b>Get Udyam registration</b><span class="sd">If your business meets the investment &amp; turnover criteria, obtain the Udyam Registration Certificate &mdash; free, on the official portal. It&rsquo;s the foundational document for everything below.</span></li>
-      <li><b>Register as a &ldquo;Seller&rdquo; on a TReDS platform</b><span class="sd">Onboard with one of the RBI-licensed exchanges &mdash; RXIL, M1xchange or Invoicemart. Your large buyer needs to be on the platform too.</span></li>
-      <li><b>Supply a large buyer</b><span class="sd">Act as stockist to a hospital chain, a pharmaceutical manufacturer, or a government healthcare facility / PSU that is registered on the platform.</span></li>
-      <li><b>Upload the invoice</b><span class="sd">Once the buyer accepts it, the invoice is listed on the exchange for financing.</span></li>
-      <li><b>Financiers bid &mdash; you get paid</b><span class="sd">Banks and NBFCs compete to fund the invoice at a discount set by the buyer&rsquo;s credit. You receive the money upfront; the financier is repaid by the buyer on the due date.</span></li>
-    </ol>
+    <div class="rg-steps">
+      <div class="rg-step"><span class="rg-num">01</span><span class="rg-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="8.6" cy="11" r="2"/><path d="M6 16c.6-1.5 1.5-2.2 2.6-2.2S10.6 14.5 11.2 16"/><path d="M14 9.5h5M14 12.5h5M14 15.5h3"/></svg></span><div class="rg-tx"><b>Get Udyam registration</b><span class="sd">If your business meets the investment &amp; turnover criteria, obtain the Udyam Registration Certificate &mdash; free, on the official portal. It&rsquo;s the foundational document for everything below.</span></div></div>
+      <div class="rg-step"><span class="rg-num">02</span><span class="rg-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5L5.5 4h13L20 9.5"/><path d="M4 9.5a2.6 2.6 0 0 0 5.3 0 2.6 2.6 0 0 0 5.4 0 2.6 2.6 0 0 0 5.3 0"/><path d="M5.5 12v8h13v-8"/><path d="M9.5 20v-5h5v5"/></svg></span><div class="rg-tx"><b>Register as a &ldquo;Seller&rdquo; on a TReDS platform</b><span class="sd">Onboard with one of the RBI-licensed exchanges &mdash; RXIL, M1xchange or Invoicemart. Your large buyer needs to be on the platform too.</span></div></div>
+      <div class="rg-step"><span class="rg-num">03</span><span class="rg-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="6.5" width="12" height="9.5" rx="1.5"/><path d="M14.5 10h4l2.5 3v3h-2.5"/><circle cx="7" cy="17.8" r="1.9"/><circle cx="17.2" cy="17.8" r="1.9"/></svg></span><div class="rg-tx"><b>Supply a large buyer</b><span class="sd">Act as stockist to a hospital chain, a pharmaceutical manufacturer, or a government healthcare facility / PSU that is registered on the platform.</span></div></div>
+      <div class="rg-step"><span class="rg-num">04</span><span class="rg-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V5.5"/><path d="M8 9l4-4 4 4"/><path d="M4.5 15.5v3a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-3"/></svg></span><div class="rg-tx"><b>Upload the invoice</b><span class="sd">Once the buyer accepts it, the invoice is listed on the exchange for financing.</span></div></div>
+      <div class="rg-step"><span class="rg-num">05</span><span class="rg-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="6.5" rx="7.5" ry="3"/><path d="M4.5 6.5v5c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3v-5"/><path d="M4.5 11.5v5c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3v-5"/></svg></span><div class="rg-tx"><b>Financiers bid &mdash; you get paid</b><span class="sd">Banks and NBFCs compete to fund the invoice at a discount set by the buyer&rsquo;s credit. You receive the money upfront; the financier is repaid by the buyer on the due date.</span></div></div>
+    </div>
 
     <p class="sfoot">TReDS lets MSME suppliers, buyers and financiers trade invoices on an RBI-regulated exchange. Criteria and eligibility change &mdash; and how much of the wider MSME benefit set applies to pure traders can vary &mdash; so confirm the current position before relying on it. Register &amp; verify: <a href="https://udyamregistration.gov.in" target="_blank" rel="noopener noreferrer">udyamregistration.gov.in</a></p>
   </div>
@@ -916,7 +1045,18 @@ footer p{font-size:12.5px;color:#A9B4CC;max-width:64ch;line-height:1.6;margin:0 
   <div class="section">
     <div class="sec-eyebrow">The tools</div>
     <h3>Once you&rsquo;re set up, do the maths</h3>
-    <p class="lead">Work out your buying and selling rates with the <a href="#" class="rt-calc">free PTR / PTS &amp; margin calculator</a>, and see what an unpaid invoice is worth today on the <a href="https://codenull.in/tools/treds/">TReDS calculator</a>.</p>
+    <div class="rg-cta">
+      <a href="#" class="rt-calc rg-cta-card">
+        <span class="rg-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8.5 7h7"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01M8.5 15h.01M12 15h.01M15.5 15h.01M8.5 18.5h.01M12 18.5h.01M15.5 18.5h.01"/></svg></span>
+        <span class="rg-cta-tx"><b>PTR / PTS &amp; margin calculator</b><span>Work out your buying and selling rates &mdash; free, with a full breakdown.</span></span>
+        <span class="rg-cta-go">&rarr;</span>
+      </a>
+      <a href="https://codenull.in/tools/treds/" class="rg-cta-card">
+        <span class="rg-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6.5" width="18" height="11" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6.5 9.5h.01M17.5 14.5h.01"/></svg></span>
+        <span class="rg-cta-tx"><b>TReDS calculator</b><span>See what an unpaid invoice to a large buyer is worth today.</span></span>
+        <span class="rg-cta-go">&rarr;</span>
+      </a>
+    </div>
   </div>
 
 </div>
@@ -930,7 +1070,7 @@ footer p{font-size:12.5px;color:#A9B4CC;max-width:64ch;line-height:1.6;margin:0 
     </div>
   </footer>
 
-</div>
+<button class="totop off" id="toTop" type="button" aria-label="Back to top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 14.5l6-6 6 6"/></svg></button>
 
 <script>
 (function(){
@@ -1036,8 +1176,12 @@ footer p{font-size:12.5px;color:#A9B4CC;max-width:64ch;line-height:1.6;margin:0 
     $('l_rm').textContent =INR(rProfit);
     $('l_gst').textContent=INR(gstAmt);
     [['seg_pts','l_pts'],['seg_sm','l_sm'],['seg_rm','l_rm'],['seg_gst','l_gst']].forEach(function(a){ $(a[1]).style.visibility=$(a[0]).offsetWidth>=38?'visible':'hidden'; });
-    var _st='Rx — PTR / PTS\nMRP '+INR(mrp)+'  (GST '+g+'%)\nPTR '+INR(ptr)+'  ·  PTS '+INR(pts)+'\nRetailer '+rm+'% · Stockist '+sm+'%\nNet '+INR(net)+' · GST '+INR(gstAmt)+'\n— via codenull.in/tools/rx/';
+    const _lnk='https://codenull.in/tools/rx/?m='+encodeURIComponent($('primary').value)+'&g='+encodeURIComponent($('gst').value)+'&r='+encodeURIComponent($('rm').value)+'&s='+encodeURIComponent($('sm').value)+'&md='+mode;
+    var _st='Rx — PTR / PTS\nMRP '+INR(mrp)+'  (GST '+g+'%)\nPTR '+INR(ptr)+'  ·  PTS '+INR(pts)+'\nRetailer '+rm+'% · Stockist '+sm+'%\nNet '+INR(net)+' · GST '+INR(gstAmt)+'\n— open with these numbers: '+_lnk;
     shareTxt=_st;
+    try{
+      localStorage.setItem('rxLast', JSON.stringify({m:$('primary').value,g:$('gst').value,r:$('rm').value,s:$('sm').value,md:mode}));
+    }catch(e){}
     $('waShare').href='https://wa.me/?text='+encodeURIComponent(_st);
   }
   ['primary','gst','rm','sm'].forEach(id=>$(id).addEventListener('input',()=>{ syncChips(); calc(); }));
@@ -1053,6 +1197,27 @@ footer p{font-size:12.5px;color:#A9B4CC;max-width:64ch;line-height:1.6;margin:0 
 
   syncChips(); calc(); margin();
 
+  /* Prefill: URL params (shared links) win; else restore the last session */
+  (function(){
+    function setVals(v){
+      if(v.md === 'rev'){ const rt = document.querySelector('.tab[data-mode="rev"]'); if(rt) rt.click(); }
+      if(v.m) $('primary').value = v.m;
+      if(v.g !== undefined && v.g !== null && v.g !== '') $('gst').value = v.g;
+      if(v.r) $('rm').value = v.r;
+      if(v.s) $('sm').value = v.s;
+      syncChips(); calc();
+    }
+    const q = new URLSearchParams(location.search);
+    if(q.has('m')){
+      setVals({m:q.get('m'), g:q.get('g'), r:q.get('r'), s:q.get('s'), md:q.get('md')});
+    }else{
+      try{
+        const L = JSON.parse(localStorage.getItem('rxLast') || 'null');
+        if(L && L.m) setVals(L);
+      }catch(e){}
+    }
+  })();
+
   /* View router: #registration shows the registration view (one-file page) */
   const vMain = document.getElementById('view-main');
   const vReg = document.getElementById('view-registration');
@@ -1063,12 +1228,17 @@ footer p{font-size:12.5px;color:#A9B4CC;max-width:64ch;line-height:1.6;margin:0 
     vMain.classList.toggle('on', !reg);
     vReg.classList.toggle('on', reg);
     document.title = reg ? 'Start a Pharma Stockist Business in India \u2014 Licence, MSME & TReDS | Rx by {CODE.NULL}' : baseTitle;
+    const nr = document.querySelector('.hlink[href="#registration"]');
+    if(nr) nr.classList.toggle('active', reg);
     if(lastReg !== null && reg !== lastReg) window.scrollTo(0, 0);
     lastReg = reg;
   }
   window.addEventListener('hashchange', route);
   function goHome(){
-    if(location.hash) history.pushState(null, '', location.pathname);
+    if(location.hash){
+      try{ history.pushState(null, '', location.pathname + location.search); }
+      catch(e){ location.hash = ''; }
+    }
     route();
   }
   document.querySelectorAll('.rt-calc').forEach(a => a.addEventListener('click', e => {
@@ -1080,6 +1250,15 @@ footer p{font-size:12.5px;color:#A9B4CC;max-width:64ch;line-height:1.6;margin:0 
   if(location.hash === '#margin'){
     const mt = document.querySelector('.tab[data-tab="margin"]');
     if(mt) mt.click();
+  }
+
+  /* Back to top */
+  const tt = document.getElementById('toTop');
+  if(tt){
+    const ttSync = () => tt.classList.toggle('off', window.scrollY < 600);
+    window.addEventListener('scroll', ttSync, {passive: true});
+    tt.addEventListener('click', () => window.scrollTo({top: 0, behavior: reduce ? 'auto' : 'smooth'}));
+    ttSync();
   }
 
   /* Toolkit carousel: scroll one card per click, hide arrows at the ends */
