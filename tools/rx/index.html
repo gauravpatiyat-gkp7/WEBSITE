@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- SECURITY: Content-Security-Policy — only these sources may load code/styles/fonts. The one inline script is whitelisted by its SHA-256 hash; edit that script and this hash must be recomputed. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'sha256-wSu+npGw1e/uN4UuGxUfBoShXGj0nMGu/owCQfPHLeU='; connect-src 'self'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'sha256-tG2kL/D1swQzUM6F29LvGQYDF+XfriwNiYsLRodHbBw='; connect-src 'self'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -135,46 +135,6 @@
         "@type": "Answer",
         "text": "Margin is profit measured as a share of the selling price. Markup is the same profit measured as a share of the cost, so it always looks larger. Pharma rate-lists are quoted on margin, which is what this calculator uses."
       }
-    },
-    {
-      "@type": "Question",
-      "name": "Is this PTR PTS calculator free, and is my data safe?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes, it is free to use with no sign-up and no ads. The calculator runs entirely in your browser, so the numbers you enter are not sent anywhere or stored."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can this calculator work backwards from PTS to MRP?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Switch to the PTS to MRP tab, enter the stockist's buying price, and the calculator works back up to the PTR and the MRP for your chosen GST rate and margins."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How do I start a pharma stockist or wholesale business in India?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Register the business and take GST, arrange premises meeting the state minimum (commonly 10 to 15 square metres) with cold storage, appoint a competent person, then apply for a wholesale drug licence (Form 20B and 21B) with your State Drug Control authority. A Drug Inspector inspects the premises before the licence is granted. The full steps are in our registration guide."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What do I need to export medicines from India?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Alongside a drug licence you need an Import Export Code from the DGFT, an RCMC from Pharmexcil, and usually a COPP from the CDSCO, with products sourced from a WHO-GMP certified manufacturer. Each destination country may also require its own product registration."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Are there government schemes or loans for pharma distributors?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. A distributor can register on Udyam for priority-sector loans, use the CGTMSE guarantee for collateral-free credit, or take a MUDRA loan of up to ₹20 lakh. Distributors can also supply the Jan Aushadhi (PMBJP) network of generic-medicine stores."
-      }
     }
   ]
 }
@@ -201,7 +161,10 @@ body{font-family:var(--body);color:var(--ink);background:var(--paper);line-heigh
   -webkit-font-smoothing:antialiased;overflow-x:hidden}
 a{color:inherit;text-decoration:none}
 ::selection{background:var(--cobalt);color:#fff}
-.wrap{max-width:1000px;margin:0 auto;padding:0 22px}
+.wrap{max-width:1320px;margin:0 auto;padding:0 32px}
+/* the calculator is the only element that keeps a narrow reading width */
+.tool{max-width:1020px;margin-left:auto;margin-right:auto}
+@media(max-width:700px){.wrap{padding:0 20px}}
 :focus-visible{outline:3px solid var(--cobalt);outline-offset:2px;border-radius:6px}
 
 /* ---------- top bar ---------- */
@@ -255,6 +218,7 @@ a{color:inherit;text-decoration:none}
 
 /* ---------- hero ---------- */
 .hero{padding:8px 0 16px}
+.hero .wrap{max-width:1084px}
 .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;
   color:var(--coral);margin-bottom:7px}
 h1{font-family:var(--disp);font-weight:800;letter-spacing:-.03em;line-height:1.1;
@@ -387,24 +351,44 @@ h1 em{font-style:normal;color:var(--cobalt)}
 /* worked example */
 .wex{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:start;max-width:920px}
   @media(max-width:720px){.wex{grid-template-columns:1fr;gap:22px}}
-/* roadmap */
-.tools{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:26px}
-@media(max-width:760px){.tools{grid-template-columns:1fr 1fr}}
-@media(max-width:460px){.tools{grid-template-columns:1fr}}
-.tcard{background:var(--card);border:1px solid var(--line2);border-radius:16px;padding:20px;position:relative}
-.tcard.live{border-color:var(--cobalt);box-shadow:0 10px 26px -18px rgba(39,67,230,.6)}
-.tcard .t-tag{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
-  padding:4px 9px;border-radius:var(--pill);display:inline-block;margin-bottom:12px}
-.tcard.live .t-tag{background:var(--coral);color:#fff}
-.tcard.soon .t-tag{background:var(--line2);color:var(--ink3)}
-.tcard.tred{border-color:var(--cobalt);background:var(--cobalt-soft)}
-.tcard.tred .t-tag{background:var(--cobalt);color:#fff}
-.tcard h4{font-family:var(--disp);font-size:16px;font-weight:700;margin-bottom:6px}
-.tcard p{font-size:13px;color:var(--ink2);line-height:1.5}
-a.tcard{display:block;text-decoration:none;color:inherit;transition:transform .15s ease,box-shadow .15s ease}
-a.tcard:hover{transform:translateY(-2px);box-shadow:0 14px 30px -16px rgba(39,67,230,.55)}
-a.tcard .t-open{display:inline-block;margin-top:12px;font-family:var(--mono);font-size:12px;font-weight:600;color:var(--cobalt)}
-a.tcard:hover .t-open{text-decoration:underline}
+/* roadmap — ixigo-style carousel: 4 per line, 7 in a row */
+.ixwrap{position:relative;margin-top:26px}
+.ixtrack{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;
+  scrollbar-width:none;-ms-overflow-style:none;padding:6px 2px 10px}
+.ixtrack::-webkit-scrollbar{display:none}
+.ixcard{position:relative;overflow:hidden;flex:0 0 calc((100% - 42px)/4);scroll-snap-align:start;
+  display:flex;align-items:center;gap:15px;padding:22px 20px;border-radius:26px;min-height:112px;
+  text-decoration:none;color:inherit;transition:transform .15s ease,box-shadow .15s ease}
+.ixcard::after{content:"";position:absolute;right:12px;bottom:10px;width:44px;height:26px;
+  background-image:radial-gradient(currentColor 1.2px,transparent 1.4px);background-size:9px 9px;opacity:.22;pointer-events:none}
+a.ixcard:hover{transform:translateY(-2px);box-shadow:0 16px 30px -18px rgba(21,23,28,.35)}
+.ixcard.still{cursor:default}
+.ix-ic{width:56px;height:56px;border-radius:50%;background:#fff;flex:none;
+  display:inline-flex;align-items:center;justify-content:center;box-shadow:0 5px 14px -6px rgba(21,23,28,.3)}
+.ix-ic svg{width:26px;height:26px}
+.ix-tx{display:flex;flex-direction:column;gap:3px;min-width:0}
+.ix-tx b{font-family:var(--disp);font-size:15.5px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ix-tx > span{font-size:12.5px;color:var(--ink2);line-height:1.45}
+.ix-soon{font-style:normal;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--ink3);background:#fff;border-radius:var(--pill);padding:3px 8px;flex:none}
+.ixbtn{position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:44px;height:44px;border-radius:50%;
+  background:#fff;border:1px solid var(--line2);box-shadow:0 10px 22px -8px rgba(21,23,28,.4);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);padding:0;
+  transition:opacity .18s ease,transform .15s ease}
+.ixbtn svg{width:20px;height:20px}
+.ixbtn:hover{color:var(--cobalt);transform:translateY(-50%) scale(1.06)}
+#ixPrev{left:-10px}
+#ixNext{right:-10px}
+.ixbtn.off{opacity:0;pointer-events:none}
+.ixcard.c1{background:#E3EDFC}.ixcard.c1 .ix-ic,.ixcard.c1::after{color:#164EC4}
+.ixcard.c2{background:#F7E3F5}.ixcard.c2 .ix-ic,.ixcard.c2::after{color:#A93A98}
+.ixcard.c3{background:#FDF3D7}.ixcard.c3 .ix-ic,.ixcard.c3::after{color:#A87E00}
+.ixcard.c4{background:#E9E7FB}.ixcard.c4 .ix-ic,.ixcard.c4::after{color:#5B4FC7}
+.ixcard.c5{background:#E2F4E9}.ixcard.c5 .ix-ic,.ixcard.c5::after{color:#1E8A5A}
+.ixcard.c6{background:#FFE9DC}.ixcard.c6 .ix-ic,.ixcard.c6::after{color:#E05A1D}
+.ixcard.c7{background:#EAF4F8}.ixcard.c7 .ix-ic,.ixcard.c7::after{color:#15718F}
+@media(max-width:900px){.ixcard{flex-basis:calc((100% - 14px)/2)}}
+@media(max-width:560px){.ixcard{flex-basis:86%}#ixPrev{left:-4px}#ixNext{right:-4px}}
 
 /* faq */
 .faq{margin-top:24px;max-width:760px}
@@ -539,13 +523,13 @@ footer p{font-size:12.5px;color:var(--ink3);max-width:70ch;line-height:1.55}
   </a>
   <nav class="hnav" aria-label="Site">
     <a class="hlink" href="#registration"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9.5 12.5l2 2 3.5-4.5"/></svg> Registration</a>
-    <a class="hlink" href="/tools/treds/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9 15l6-6"/><circle cx="9.3" cy="9.3" r="1" fill="currentColor" stroke="none"/><circle cx="14.7" cy="14.7" r="1" fill="currentColor" stroke="none"/></svg> TReDS</a>
+    <a class="hlink" href="https://codenull.in/tools/treds/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9 15l6-6"/><circle cx="9.3" cy="9.3" r="1" fill="currentColor" stroke="none"/><circle cx="14.7" cy="14.7" r="1" fill="currentColor" stroke="none"/></svg> TReDS</a>
     <details class="tkmenu" id="tkmenu">
       <summary><span class="tk-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg></span> Toolkit <span class="tk-caret">&#9662;</span></summary>
       <nav class="tkdrop" aria-label="Rx toolkit">
       <a href="#calc" data-goto="fwd">PTR / PTS Calculator</a>
       <a href="#margin" data-goto="margin">Margin Calculator</a>
-      <a href="/tools/treds/">TReDS</a>
+      <a href="https://codenull.in/tools/treds/">TReDS</a>
       <a href="#registration">Registration</a>
       <span class="tk-soon">Rate-list Maker <em>coming soon</em></span>
       <span class="tk-soon">GST Invoice <em>coming soon</em></span>
@@ -771,13 +755,18 @@ footer p{font-size:12.5px;color:var(--ink3);max-width:70ch;line-height:1.55}
     <div class="sec-eyebrow">The toolkit</div>
     <h3>More stockist tools, on the way</h3>
     <p class="lead">The calculator is step one. Rx is growing into a free toolkit for the everyday maths and paperwork a distributor deals with.</p>
-    <div class="tools">
-      <div class="tcard live"><span class="t-tag">Live</span><h4>PTR / PTS calculator</h4><p>MRP, GST and margins in &mdash; retailer &amp; stockist prices out, with a full breakdown.</p></div>
-      <div class="tcard live"><span class="t-tag">Live</span><h4>Margin calculator</h4><p>Read the margin and markup between any two rates in an instant.</p></div>
-      <a class="tcard tred" href="/tools/treds/"><span class="t-tag">MSME</span><h4>TReDS</h4><p>Turn an unpaid invoice into cash today &mdash; priced on your buyer&rsquo;s credit, not yours.</p><span class="t-open">Open tool &rarr;</span></a>
-      <div class="tcard soon"><span class="t-tag">Planned</span><h4>Rate-list maker</h4><p>Paste products, set margins once, export a clean party-wise rate list.</p></div>
-      <div class="tcard soon"><span class="t-tag">Planned</span><h4>GST invoice / bill</h4><p>Quick tax invoices with CGST / SGST / IGST split and batch &amp; expiry fields.</p></div>
-      <div class="tcard soon"><span class="t-tag">Planned</span><h4>Expiry tracker</h4><p>Flag near-expiry stock so you can return or push it before it becomes a loss.</p></div>
+    <div class="ixwrap">
+      <button class="ixbtn off" id="ixPrev" type="button" aria-label="Previous tools"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 6l-6 6 6 6"/></svg></button>
+      <div class="ixtrack" id="ixTrack">
+      <a class="ixcard c1" href="#calc" data-goto="fwd"><span class="ix-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8.5 7h7"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01M8.5 15h.01M12 15h.01M15.5 15h.01M8.5 18.5h.01M12 18.5h.01M15.5 18.5h.01"/></svg></span><span class="ix-tx"><b>PTR / PTS calculator</b><span>MRP, GST and margins in &mdash; retailer &amp; stockist prices out.</span></span></a>
+      <a class="ixcard c2" href="#margin" data-goto="margin"><span class="ix-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9 15l6-6"/><circle cx="9.3" cy="9.3" r="1" fill="currentColor" stroke="none"/><circle cx="14.7" cy="14.7" r="1" fill="currentColor" stroke="none"/></svg></span><span class="ix-tx"><b>Margin calculator</b><span>Read the margin and markup between any two rates in an instant.</span></span></a>
+      <a class="ixcard c3" href="https://codenull.in/tools/treds/"><span class="ix-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6.5" width="18" height="11" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6.5 9.5h.01M17.5 14.5h.01"/></svg></span><span class="ix-tx"><b>TReDS</b><span>Turn an unpaid invoice into cash today &mdash; on your buyer&rsquo;s credit.</span></span></a>
+      <a class="ixcard c4" href="#registration"><span class="ix-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9.5 12.5l2 2 3.5-4.5"/></svg></span><span class="ix-tx"><b>Registration</b><span>Licence, MSME &amp; TReDS &mdash; set up a stockist business right.</span></span></a>
+      <div class="ixcard c5 still"><span class="ix-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 6h11M8.5 12h11M8.5 18h11"/><path d="M4.5 6h.01M4.5 12h.01M4.5 18h.01"/></svg></span><span class="ix-tx"><b>Rate-list maker<em class="ix-soon">Coming soon</em></b><span>Paste products, set margins once, export a party-wise rate list.</span></span></div>
+      <div class="ixcard c6 still"><span class="ix-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-2-1.4L14 21l-2-1.4L10 21l-2-1.4L6 21z"/><path d="M9.5 8h5M9.5 12h5"/></svg></span><span class="ix-tx"><b>GST invoice / bill<em class="ix-soon">Coming soon</em></b><span>Quick tax invoices with CGST / SGST / IGST split and batch fields.</span></span></div>
+      <div class="ixcard c7 still"><span class="ix-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span><span class="ix-tx"><b>Expiry tracker<em class="ix-soon">Coming soon</em></b><span>Flag near-expiry stock so you can return or push it in time.</span></span></div>
+      </div>
+      <button class="ixbtn" id="ixNext" type="button" aria-label="Next tools"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6l6 6-6 6"/></svg></button>
     </div>
   </div>
 
@@ -827,11 +816,7 @@ footer p{font-size:12.5px;color:var(--ink3);max-width:70ch;line-height:1.55}
       <details class="faq-item"><summary>Is GST included in PTR and PTS?</summary><p>Usually no. PTR and PTS are quoted as net rates that exclude GST, and GST is added separately on the invoice. The MRP printed on the pack is the figure that already includes GST, which is why the calculation starts by stripping GST out of the MRP.</p></details>
       <details class="faq-item"><summary>What GST rate applies to medicines?</summary><p>Since the GST 2.0 reform of September 2025, the 12% and 28% slabs were removed. Most medicines are now taxed at 5%, several life-saving drugs are nil-rated, and a few items sit at 18%. Rates are revised from time to time, so set the current rate for your product in the calculator.</p></details>
       <details class="faq-item"><summary>What is the difference between margin and markup?</summary><p>Margin is profit measured as a share of the selling price. Markup is the same profit measured as a share of the cost, so it always looks larger. Pharma rate-lists are quoted on margin, which is what this calculator uses.</p></details>
-      <details class="faq-item"><summary>Is this PTR PTS calculator free, and is my data safe?</summary><p>Yes, it is free to use with no sign-up and no ads. The calculator runs entirely in your browser, so the numbers you enter are not sent anywhere or stored.</p></details>
-      <details class="faq-item"><summary>Can this calculator work backwards from PTS to MRP?</summary><p>Yes. Switch to the PTS to MRP tab, enter the stockist&#x27;s buying price, and the calculator works back up to the PTR and the MRP for your chosen GST rate and margins.</p></details>
-      <details class="faq-item"><summary>How do I start a pharma stockist or wholesale business in India?</summary><p>Register the business and take GST, arrange premises meeting the state minimum (commonly 10 to 15 square metres) with cold storage, appoint a competent person, then apply for a wholesale drug licence (Form 20B and 21B) with your State Drug Control authority. A Drug Inspector inspects the premises before the licence is granted. The full steps are in our <a href="#registration">registration guide</a>.</p></details>
-      <details class="faq-item"><summary>What do I need to export medicines from India?</summary><p>Alongside a drug licence you need an Import Export Code from the DGFT, an RCMC from Pharmexcil, and usually a COPP from the CDSCO, with products sourced from a WHO-GMP certified manufacturer. Each destination country may also require its own product registration.</p></details>
-      <details class="faq-item"><summary>Are there government schemes or loans for pharma distributors?</summary><p>Yes. A distributor can register on Udyam for priority-sector loans, use the CGTMSE guarantee for collateral-free credit, or take a MUDRA loan of up to ₹20 lakh. Distributors can also supply the Jan Aushadhi (PMBJP) network of generic-medicine stores.</p></details>
+      
     </div>
   </div>
 
@@ -918,7 +903,7 @@ footer p{font-size:12.5px;color:var(--ink3);max-width:70ch;line-height:1.55}
   <div class="section">
     <div class="sec-eyebrow">The tools</div>
     <h3>Once you&rsquo;re set up, do the maths</h3>
-    <p class="lead">Work out your buying and selling rates with the <a href="#" class="rt-calc">free PTR / PTS &amp; margin calculator</a>, and see what an unpaid invoice is worth today on the <a href="/tools/treds/">TReDS calculator</a>.</p>
+    <p class="lead">Work out your buying and selling rates with the <a href="#" class="rt-calc">free PTR / PTS &amp; margin calculator</a>, and see what an unpaid invoice is worth today on the <a href="https://codenull.in/tools/treds/">TReDS calculator</a>.</p>
   </div>
 
 </div>
@@ -1079,13 +1064,33 @@ footer p{font-size:12.5px;color:var(--ink3);max-width:70ch;line-height:1.55}
     if(mt) mt.click();
   }
 
+  /* Toolkit carousel: scroll one card per click, hide arrows at the ends */
+  const ixT = document.getElementById('ixTrack');
+  const ixP = document.getElementById('ixPrev');
+  const ixN = document.getElementById('ixNext');
+  if(ixT && ixP && ixN){
+    const ixStep = () => {
+      const c = ixT.querySelector('.ixcard');
+      return c ? c.getBoundingClientRect().width + 14 : 320;
+    };
+    ixP.addEventListener('click', () => ixT.scrollBy({left: -ixStep(), behavior: reduce ? 'auto' : 'smooth'}));
+    ixN.addEventListener('click', () => ixT.scrollBy({left: ixStep(), behavior: reduce ? 'auto' : 'smooth'}));
+    const ixSync = () => {
+      ixP.classList.toggle('off', ixT.scrollLeft <= 4);
+      ixN.classList.toggle('off', ixT.scrollLeft >= ixT.scrollWidth - ixT.clientWidth - 4);
+    };
+    ixT.addEventListener('scroll', ixSync, {passive: true});
+    window.addEventListener('resize', ixSync);
+    ixSync();
+  }
+
   /* Toolkit menu (header) */
   const tk = $('tkmenu');
   if(tk){
     document.addEventListener('click', e => { if(tk.open && !tk.contains(e.target)) tk.open = false; });
     document.addEventListener('keydown', e => { if(e.key === 'Escape') tk.open = false; });
     tk.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { tk.open = false; }));
-    tk.querySelectorAll('[data-goto]').forEach(a => {
+    document.querySelectorAll('[data-goto]').forEach(a => {
       a.addEventListener('click', e => {
         e.preventDefault();
         goHome();
