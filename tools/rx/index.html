@@ -175,7 +175,7 @@ a{color:inherit;text-decoration:none}
   display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:800;
   font-size:30px;line-height:1;box-shadow:0 8px 20px -8px rgba(255,106,44,.65);transform:rotate(-3deg)}
 .brand{gap:10px}
-.brand .logo{background:var(--coral);color:#fff;font-family:var(--disp);font-weight:800;font-size:21px;letter-spacing:-.01em;border-radius:13px;padding:8px 15px;line-height:1;transition:filter .15s}
+.brand .logo{background:var(--coral);color:#fff;font-family:var(--disp);font-weight:800;font-size:21px;letter-spacing:-.01em;border-radius:12px;padding:8px 15px;line-height:1;transition:filter .15s}
 .brand:hover .logo{filter:brightness(.93)}
 .brand .by2{font-size:12px;color:var(--ink3);font-weight:500;white-space:nowrap}
 .tag{font-family:var(--mono);font-size:12px;color:var(--cobalt);background:var(--cobalt-soft);
@@ -192,7 +192,8 @@ a{color:inherit;text-decoration:none}
 .hlink svg{width:19px;height:19px;color:var(--ink2);flex:none}
 .hlink:hover{color:var(--cobalt)}
 .hlink:hover svg{color:var(--cobalt)}
-.tk-ic{width:34px;height:34px;border-radius:50%;background:var(--cobalt-soft);display:inline-flex;align-items:center;justify-content:center;color:var(--cobalt);flex:none;transition:background .15s,color .15s}
+.tk-ic{width:36px;height:36px;border-radius:12px;background:var(--cobalt-soft);display:inline-flex;
+  align-items:center;justify-content:center;color:var(--cobalt);flex:none;transition:background .15s,color .15s}
 .tk-ic svg{width:17px;height:17px}
 .tkmenu summary:hover .tk-ic,.tkmenu[open] .tk-ic{background:var(--cobalt);color:#fff}
 @media(max-width:640px){.hlink{display:none}.hnav{gap:0}}
@@ -202,13 +203,18 @@ a{color:inherit;text-decoration:none}
   background:var(--card);border:1px solid var(--line);border-radius:var(--r-sm);
   box-shadow:var(--sh);padding:8px;display:flex;flex-direction:column}
 .tkdrop a{display:flex;align-items:center;justify-content:space-between;gap:14px;
-  padding:10px 12px;border-radius:10px;font-size:14px;font-weight:600;color:var(--ink);text-decoration:none}
+  padding:10px 12px;border-radius:12px;font-size:14px;font-weight:600;color:var(--ink);text-decoration:none}
 .tkdrop a:hover{background:var(--line2)}
 .tkdrop .tk-soon{display:flex;align-items:center;justify-content:space-between;gap:14px;
   padding:10px 12px;border-radius:10px;font-size:14px;font-weight:500;color:var(--ink3);cursor:default}
 .tkdrop .tk-soon em{font-style:normal;font-size:10.5px;font-weight:700;letter-spacing:.04em;
   text-transform:uppercase;color:var(--ink3);background:var(--line2);border-radius:var(--pill);padding:3px 9px;flex:none}
 #toolkit{scroll-margin-top:16px}
+/* section background bands — full-bleed colour, content stays aligned */
+.band{margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);
+  padding-left:calc(50vw - 50%);padding-right:calc(50vw - 50%);
+  padding-top:58px;padding-bottom:64px;background:var(--card);
+  border-top:1px solid var(--line2);border-bottom:1px solid var(--line2)}
 .tab:focus-visible,.chip:focus-visible,.sbtn:focus-visible,.ixbtn:focus-visible,.reset:focus-visible,
 .backlink:focus-visible,.hlink:focus-visible,.tkmenu summary:focus-visible,.ixcard:focus-visible{
   outline:2px solid var(--cobalt);outline-offset:2px}
@@ -224,10 +230,10 @@ a{color:inherit;text-decoration:none}
 /* ---------- hero ---------- */
 .hero{padding:8px 0 16px}
 .hero .wrap{max-width:1084px}
-.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--coral);margin-bottom:7px}
-h1{font-family:var(--disp);font-weight:800;letter-spacing:-.03em;line-height:1.1;
-  font-size:clamp(11px,3.4vw,38px);white-space:nowrap}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--coral);margin-bottom:8px}
+h1{font-family:var(--disp);font-weight:800;letter-spacing:-.03em;line-height:1.08;
+  font-size:clamp(27px,4vw,42px);text-wrap:balance}
 h1 em{font-style:normal;color:var(--cobalt)}
 .hero p.sub{margin-top:9px;font-size:14px;color:var(--ink2);max-width:52ch}
 
@@ -356,42 +362,37 @@ h1 em{font-style:normal;color:var(--cobalt)}
 /* worked example */
 .wex{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:start;max-width:920px}
   @media(max-width:720px){.wex{grid-template-columns:1fr;gap:22px}}
-/* roadmap — ixigo-style carousel: 4 per line, 7 in a row */
+/* roadmap — toolkit carousel: 4 per line, one disciplined card system */
 .ixwrap{position:relative;margin-top:26px}
 .ixtrack{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;
   scrollbar-width:none;-ms-overflow-style:none;padding:6px 2px 10px}
 .ixtrack::-webkit-scrollbar{display:none}
-.ixcard{position:relative;overflow:hidden;flex:0 0 calc((100% - 42px)/4);scroll-snap-align:start;
-  display:flex;align-items:center;gap:15px;padding:22px 20px;border-radius:26px;min-height:112px;
-  text-decoration:none;color:inherit;transition:transform .15s ease,box-shadow .15s ease}
-.ixcard::after{content:"";position:absolute;right:12px;bottom:10px;width:44px;height:26px;
-  background-image:radial-gradient(currentColor 1.2px,transparent 1.4px);background-size:9px 9px;opacity:.22;pointer-events:none}
-a.ixcard:hover{transform:translateY(-2px);box-shadow:0 16px 30px -18px rgba(21,23,28,.35)}
+.ixcard{position:relative;flex:0 0 calc((100% - 42px)/4);scroll-snap-align:start;
+  display:flex;align-items:center;gap:14px;padding:20px;border-radius:16px;min-height:104px;
+  background:var(--card);border:1px solid var(--line2);box-shadow:0 1px 0 rgba(21,23,28,.02);
+  text-decoration:none;color:inherit;transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease}
+a.ixcard:hover{transform:translateY(-2px);border-color:var(--cobalt);
+  box-shadow:0 14px 28px -18px rgba(22,78,196,.4)}
 .ixcard.still{cursor:default}
-.ix-ic{width:56px;height:56px;border-radius:50%;background:#fff;flex:none;
-  display:inline-flex;align-items:center;justify-content:center;box-shadow:0 5px 14px -6px rgba(21,23,28,.3)}
-.ix-ic svg{width:26px;height:26px}
+.ix-ic{width:46px;height:46px;border-radius:12px;background:var(--cobalt-soft);flex:none;
+  display:inline-flex;align-items:center;justify-content:center;color:var(--cobalt)}
+.ix-ic svg{width:23px;height:23px}
+.ixcard.still .ix-ic{background:var(--line2);color:var(--ink3)}
 .ix-tx{display:flex;flex-direction:column;gap:3px;min-width:0}
-.ix-tx b{font-family:var(--disp);font-size:15.5px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.ix-tx > span{font-size:12.5px;color:var(--ink2);line-height:1.45}
+.ix-tx b{font-family:var(--disp);font-size:15px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ix-tx > span{font-size:12.5px;color:var(--ink2);line-height:1.5}
 .ix-soon{font-style:normal;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.09em;
-  text-transform:uppercase;color:var(--ink3);background:#fff;border-radius:var(--pill);padding:3px 8px;flex:none}
+  text-transform:uppercase;color:var(--ink3);background:var(--paper);border:1px solid var(--line2);
+  border-radius:var(--pill);padding:2px 8px;flex:none}
 .ixbtn{position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:44px;height:44px;border-radius:50%;
   background:#fff;border:1px solid var(--line2);box-shadow:0 10px 22px -8px rgba(21,23,28,.4);
   display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink);padding:0;
-  transition:opacity .18s ease,transform .15s ease}
+  transition:opacity .18s ease,transform .15s ease,color .15s ease}
 .ixbtn svg{width:20px;height:20px}
 .ixbtn:hover{color:var(--cobalt);transform:translateY(-50%) scale(1.06)}
 #ixPrev{left:-10px}
 #ixNext{right:-10px}
 .ixbtn.off{opacity:0;pointer-events:none}
-.ixcard.c1{background:#E3EDFC}.ixcard.c1 .ix-ic,.ixcard.c1::after{color:#164EC4}
-.ixcard.c2{background:#F7E3F5}.ixcard.c2 .ix-ic,.ixcard.c2::after{color:#A93A98}
-.ixcard.c3{background:#FDF3D7}.ixcard.c3 .ix-ic,.ixcard.c3::after{color:#A87E00}
-.ixcard.c4{background:#E9E7FB}.ixcard.c4 .ix-ic,.ixcard.c4::after{color:#5B4FC7}
-.ixcard.c5{background:#E2F4E9}.ixcard.c5 .ix-ic,.ixcard.c5::after{color:#1E8A5A}
-.ixcard.c6{background:#FFE9DC}.ixcard.c6 .ix-ic,.ixcard.c6::after{color:#E05A1D}
-.ixcard.c7{background:#EAF4F8}.ixcard.c7 .ix-ic,.ixcard.c7::after{color:#15718F}
 @media(max-width:900px){.ixcard{flex-basis:calc((100% - 14px)/2)}}
 @media(max-width:560px){.ixcard{flex-basis:86%}#ixPrev{left:-4px}#ixNext{right:-4px}}
 
@@ -408,11 +409,12 @@ a.ixcard:hover{transform:translateY(-2px);box-shadow:0 16px 30px -18px rgba(21,2
 .faq-item p{font-size:14.5px;color:var(--ink2);line-height:1.62;padding:0 0 18px;margin:0}
 
 /* footer — centered column */
-footer{margin-top:70px;border-top:1px solid var(--line);padding:40px 22px 64px;text-align:center}
+footer{margin-top:70px;background:var(--cobalt-d);padding:48px 22px 64px;text-align:center}
 footer .fl{display:flex;align-items:center;justify-content:center;gap:11px;margin-bottom:14px}
+footer .fl b{color:#fff}
 footer .fl .rx{width:34px;height:34px;border-radius:10px;font-size:20px}
 footer .fl b{font-family:var(--disp);font-weight:700}
-footer p{font-size:12.5px;color:var(--ink3);max-width:64ch;line-height:1.6;margin:0 auto}
+footer p{font-size:12.5px;color:#A9B4CC;max-width:64ch;line-height:1.6;margin:0 auto}
 
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
   .sclabel{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin:22px 0 11px}
@@ -442,12 +444,12 @@ footer p{font-size:12.5px;color:var(--ink3);max-width:64ch;line-height:1.6;margi
   .steps li::before{content:counter(st);position:absolute;left:0;top:14px;width:30px;height:30px;border-radius:9px;background:var(--cobalt);color:#fff;font-family:var(--disp);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center}
   .steps b{font-family:var(--disp);font-size:15.5px;font-weight:700;color:var(--ink)}
   .steps .sd{display:block;font-size:13.5px;color:var(--ink2);margin-top:3px;line-height:1.5}
-  .sign{margin-top:34px;padding-top:28px;border-top:1px solid var(--line2);text-align:center}
-  .sign .sig-mono{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px;color:#7A828F;
+  .sign{margin-top:34px;padding-top:28px;border-top:1px solid rgba(255,255,255,.16);text-align:center}
+  .sign .sig-mono{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px;color:#93A3C6;
     max-width:none;margin:0 auto;line-height:1.6}
   .sign .sig-powered{font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:17px;
-    font-weight:700;color:#16181D;max-width:none;margin:12px auto 0}
-  .sign .sig-powered a{color:#0F9E8C;text-decoration:none}
+    font-weight:700;color:#fff;max-width:none;margin:12px auto 0}
+  .sign .sig-powered a{color:#2DD4BF;text-decoration:none}
   .sign .sig-powered a:hover{text-decoration:underline;text-underline-offset:3px}
   .panel{display:none}
   .panel.on{display:block}
@@ -762,20 +764,20 @@ footer p{font-size:12.5px;color:var(--ink3);max-width:64ch;line-height:1.6;margi
   </div>
 
   <!-- ROADMAP -->
-  <div class="section" id="toolkit">
+  <div class="section band band-toolkit" id="toolkit">
     <div class="sec-eyebrow">The toolkit</div>
     <h3>More stockist tools, on the way</h3>
     <p class="lead">The calculator is step one. Rx is growing into a free toolkit for the everyday maths and paperwork a distributor deals with.</p>
     <div class="ixwrap">
       <button class="ixbtn off" id="ixPrev" type="button" aria-label="Previous tools"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 6l-6 6 6 6"/></svg></button>
       <div class="ixtrack" id="ixTrack">
-      <a class="ixcard c1" href="#calc" data-goto="fwd"><span class="ix-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8.5 7h7"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01M8.5 15h.01M12 15h.01M15.5 15h.01M8.5 18.5h.01M12 18.5h.01M15.5 18.5h.01"/></svg></span><span class="ix-tx"><b>PTR / PTS calculator</b><span>MRP, GST and margins in &mdash; retailer &amp; stockist prices out.</span></span></a>
-      <a class="ixcard c2" href="#margin" data-goto="margin"><span class="ix-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9 15l6-6"/><circle cx="9.3" cy="9.3" r="1" fill="currentColor" stroke="none"/><circle cx="14.7" cy="14.7" r="1" fill="currentColor" stroke="none"/></svg></span><span class="ix-tx"><b>Margin calculator</b><span>Read the margin and markup between any two rates in an instant.</span></span></a>
-      <a class="ixcard c3" href="https://codenull.in/tools/treds/"><span class="ix-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6.5" width="18" height="11" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6.5 9.5h.01M17.5 14.5h.01"/></svg></span><span class="ix-tx"><b>TReDS</b><span>Turn an unpaid invoice into cash today &mdash; on your buyer&rsquo;s credit.</span></span></a>
-      <a class="ixcard c4" href="#registration"><span class="ix-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9.5 12.5l2 2 3.5-4.5"/></svg></span><span class="ix-tx"><b>Registration</b><span>Licence, MSME &amp; TReDS &mdash; set up a stockist business right.</span></span></a>
-      <div class="ixcard c5 still"><span class="ix-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 6h11M8.5 12h11M8.5 18h11"/><path d="M4.5 6h.01M4.5 12h.01M4.5 18h.01"/></svg></span><span class="ix-tx"><b>Rate-list maker<em class="ix-soon">Coming soon</em></b><span>Paste products, set margins once, export a party-wise rate list.</span></span></div>
-      <div class="ixcard c6 still"><span class="ix-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-2-1.4L14 21l-2-1.4L10 21l-2-1.4L6 21z"/><path d="M9.5 8h5M9.5 12h5"/></svg></span><span class="ix-tx"><b>GST invoice / bill<em class="ix-soon">Coming soon</em></b><span>Quick tax invoices with CGST / SGST / IGST split and batch fields.</span></span></div>
-      <div class="ixcard c7 still"><span class="ix-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span><span class="ix-tx"><b>Expiry tracker<em class="ix-soon">Coming soon</em></b><span>Flag near-expiry stock so you can return or push it in time.</span></span></div>
+      <a class="ixcard" href="#calc" data-goto="fwd"><span class="ix-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8.5 7h7"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01M8.5 15h.01M12 15h.01M15.5 15h.01M8.5 18.5h.01M12 18.5h.01M15.5 18.5h.01"/></svg></span><span class="ix-tx"><b>PTR / PTS calculator</b><span>MRP, GST and margins in &mdash; retailer &amp; stockist prices out.</span></span></a>
+      <a class="ixcard" href="#margin" data-goto="margin"><span class="ix-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9 15l6-6"/><circle cx="9.3" cy="9.3" r="1" fill="currentColor" stroke="none"/><circle cx="14.7" cy="14.7" r="1" fill="currentColor" stroke="none"/></svg></span><span class="ix-tx"><b>Margin calculator</b><span>Read the margin and markup between any two rates in an instant.</span></span></a>
+      <a class="ixcard" href="https://codenull.in/tools/treds/"><span class="ix-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6.5" width="18" height="11" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6.5 9.5h.01M17.5 14.5h.01"/></svg></span><span class="ix-tx"><b>TReDS</b><span>Turn an unpaid invoice into cash today &mdash; on your buyer&rsquo;s credit.</span></span></a>
+      <a class="ixcard" href="#registration"><span class="ix-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9.5 12.5l2 2 3.5-4.5"/></svg></span><span class="ix-tx"><b>Registration</b><span>Licence, MSME &amp; TReDS &mdash; set up a stockist business right.</span></span></a>
+      <div class="ixcard still"><span class="ix-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 6h11M8.5 12h11M8.5 18h11"/><path d="M4.5 6h.01M4.5 12h.01M4.5 18h.01"/></svg></span><span class="ix-tx"><b>Rate-list maker<em class="ix-soon">Coming soon</em></b><span>Paste products, set margins once, export a party-wise rate list.</span></span></div>
+      <div class="ixcard still"><span class="ix-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-2-1.4L14 21l-2-1.4L10 21l-2-1.4L6 21z"/><path d="M9.5 8h5M9.5 12h5"/></svg></span><span class="ix-tx"><b>GST invoice / bill<em class="ix-soon">Coming soon</em></b><span>Quick tax invoices with CGST / SGST / IGST split and batch fields.</span></span></div>
+      <div class="ixcard still"><span class="ix-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span><span class="ix-tx"><b>Expiry tracker<em class="ix-soon">Coming soon</em></b><span>Flag near-expiry stock so you can return or push it in time.</span></span></div>
       </div>
       <button class="ixbtn" id="ixNext" type="button" aria-label="Next tools"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 6l6 6-6 6"/></svg></button>
     </div>
@@ -818,7 +820,7 @@ footer p{font-size:12.5px;color:var(--ink3);max-width:64ch;line-height:1.6;margi
   </div>
 
   <!-- FAQ -->
-  <div class="section faq-sec">
+  <div class="section faq-sec band band-faq">
     <div class="sec-eyebrow">FAQ</div>
     <h3>Common questions</h3>
     <div class="faq">
@@ -920,7 +922,7 @@ footer p{font-size:12.5px;color:var(--ink3);max-width:64ch;line-height:1.6;margi
 </div>
 </div>
 <footer>
-    <div class="fl"><span class="rx">&#8478;</span><b>Rx</b> <span style="color:var(--ink3);font-family:var(--mono);font-size:12px">by {CODE.NULL}</span></div>
+    <div class="fl"><span class="rx">&#8478;</span><b>Rx</b> <span style="color:#9FB0D2;font-family:var(--mono);font-size:12px">by {CODE.NULL}</span></div>
     <p>A free calculator for reference only. Results are estimates &mdash; actual PTR / PTS depend on your company&rsquo;s scheme, GST slab and trade terms. Not tax or financial advice.</p>
     <div class="sign">
       <p class="sig-mono">// built from scratch &mdash; without writing a single line of code</p>
