@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- SECURITY: CSP — one inline script whitelisted by hash. connect-src is https: because RDAP bootstrap redirects to each registry's own server. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'sha256-6EpOYpxIbKLjy914ep0mzhrOg0GprJtuxTs9ZvE16FA='; connect-src https:; form-action 'self'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#0B1F38">
+
+<title>Domain Expiry — when does this domain expire? | {CODE.NULL}</title>
+<meta name="description" content="Free domain expiry checker: paste any URL to see when its registration lapses, pulled live from the official registry over RDAP. A lapsed domain is the quiet way a live site disappears." />
+<meta name="author" content="CA Gaurav K Patiyat" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="canonical" href="https://codenull.in/tools/domain-expiry/" />
+
+<meta property="og:site_name" content="{CODE.NULL}" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Domain Expiry — when does this domain expire?" />
+<meta property="og:description" content="Paste any URL to see when its registration lapses, live from the official registry over RDAP." />
+<meta property="og:url" content="https://codenull.in/tools/domain-expiry/" />
+<meta property="og:image" content="https://codenull.in/og-cover.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Domain Expiry — when does this domain expire?" />
+<meta name="twitter:description" content="A one-field check for a domain's registration expiry, live from the registry." />
+<meta name="twitter:image" content="https://codenull.in/og-cover.jpg" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Domain Expiry — Registration Checker",
+      "url": "https://codenull.in/tools/domain-expiry/",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "description": "Checks when a domain's registration expires, queried live from the authoritative registry via RDAP.",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" },
+      "author": { "@type": "Person", "name": "CA Gaurav K Patiyat", "url": "https://codenull.in/" },
+      "publisher": { "@type": "Person", "name": "CA Gaurav K Patiyat", "url": "https://codenull.in/" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://codenull.in/" },
+        { "@type": "ListItem", "position": 2, "name": "Tools & builds", "item": "https://codenull.in/#codenull" },
+        { "@type": "ListItem", "position": 3, "name": "Domain Expiry", "item": "https://codenull.in/tools/domain-expiry/" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How does the domain expiry check work?",
+          "acceptedAnswer": { "@type": "Answer", "text": "It queries RDAP, the registry protocol that replaced WHOIS, and reads the official expiration event published by the domain's registry. The lookup runs entirely in your browser." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does an expiry date mean the website will go down?",
+          "acceptedAnswer": { "@type": "Answer", "text": "This is registration expiry, not hosting or SSL. But if the registration lapses and isn't renewed, the domain stops resolving and the site goes offline until it is renewed or, after the grace period, it can be registered by someone else." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ink:#0B1F38; --navy:#0F2A47; --teal:#0F9E8C; --teal-bright:#2DD4BF;
+    --paper:#FFFFFF; --mist:#F2F6F9; --line:#E2E8F0; --muted:#5B6B7F; --text:#1E2A38;
+    --maxw:640px;
+    --display:'Space Grotesk',system-ui,sans-serif;
+    --body:'IBM Plex Sans',system-ui,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--body);color:var(--text);background:var(--paper);line-height:1.65;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  .eyebrow{font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);font-weight:500}
+  .eyebrow::before{content:"// ";opacity:.55}
+
+  nav.cnv{position:sticky;top:0;z-index:60;background:var(--ink);border-bottom:1px solid rgba(255,255,255,.1);box-shadow:0 14px 40px -20px rgba(5,15,28,.7)}
+  nav.cnv .wrap{max-width:1080px;display:flex;align-items:center;justify-content:space-between;height:60px}
+  .monogram{font-family:var(--display);font-weight:700;font-size:1.05rem;letter-spacing:-.01em;color:#fff;display:flex;align-items:center;gap:9px}
+  .monogram .dot{width:9px;height:9px;border-radius:2px;background:var(--teal-bright);box-shadow:0 0 0 3px rgba(45,212,191,.18)}
+  .backlink{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;color:rgba(255,255,255,.75);display:inline-flex;align-items:center;gap:6px;transition:color .18s}
+  .backlink:hover{color:#fff}
+  .backlink .ar{color:var(--teal-bright)}
+
+  /* hero = the page; the search bar is the centrepiece */
+  header.hero{position:relative;overflow:hidden;padding:76px 0 84px;background:var(--mist);border-bottom:1px solid var(--line);text-align:center}
+  header.hero .wrap{max-width:760px;position:relative;z-index:1}
+  /* faint teal glow behind the search bar */
+  header.hero::after{content:"";position:absolute;left:50%;top:64%;width:min(680px,86vw);height:280px;transform:translate(-50%,-50%);background:radial-gradient(ellipse at center,rgba(45,212,191,.16),rgba(45,212,191,0) 70%);pointer-events:none}
+  header.hero .eyebrow::before{content:"// ";opacity:.55}
+  h1{font-family:var(--display);font-weight:700;letter-spacing:-.02em;font-size:clamp(2.1rem,5vw,3.1rem);line-height:1.05;color:var(--ink);margin:10px auto 0;max-width:16ch}
+  h1 .accent{color:var(--teal)}
+  .dek{font-size:1.05rem;color:var(--muted);max-width:52ch;margin:16px auto 0}
+
+  /* BIG centred search bar */
+  .searchbar{display:flex;align-items:center;gap:8px;max-width:600px;margin:34px auto 0;background:#fff;border:1px solid var(--line);border-radius:16px;padding:9px 9px 9px 8px;box-shadow:0 24px 60px -30px rgba(11,31,56,.55);transition:border-color .18s,box-shadow .18s}
+  .searchbar:focus-within{border-color:var(--teal);box-shadow:0 0 0 4px rgba(45,212,191,.2),0 24px 60px -30px rgba(11,31,56,.55)}
+  #urlInput{flex:1;min-width:0;font-family:var(--body);font-size:1.2rem;background:transparent;border:none;border-radius:10px;padding:16px 8px 16px 16px;color:var(--ink)}
+  #urlInput:focus{outline:none}
+  #urlInput::placeholder{color:#9AA9BC}
+  #submitBtn{font-family:var(--body);font-weight:600;font-size:1.02rem;padding:16px 28px;border:none;border-radius:11px;background:var(--ink);color:#fff;cursor:pointer;white-space:nowrap;transition:background .18s,transform .06s}
+  #submitBtn:hover{background:var(--teal)}
+  #submitBtn:active{transform:translateY(1px)}
+  #submitBtn:disabled{opacity:.55;cursor:default}
+  .privacy{font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-top:16px;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+  .privacy .pulse{width:7px;height:7px;border-radius:50%;background:var(--teal);flex-shrink:0}
+
+  main{padding:0 0 8px}
+  .stage{max-width:600px;margin:0 auto}
+
+  .loading{display:none;margin-top:26px;font-family:var(--mono);font-size:.84rem;color:var(--muted);text-align:center}
+  .loading.show{display:block}
+  .loading::before{content:"› ";color:var(--teal)}
+
+  .error{display:none;margin-top:26px;font-size:.92rem;color:#9B2C2C;background:#FBEAEA;border:1px solid #F3C7C7;border-left:3px solid #C53030;border-radius:10px;padding:14px 16px}
+  .error.show{display:block}
+
+  /* result ledger (dark) */
+  .result{display:none;position:relative;margin-top:22px;background:var(--navy);border-radius:16px;padding:26px;color:#fff;overflow:hidden;box-shadow:0 30px 60px -34px rgba(11,31,56,.7)}
+  .result.show{display:block}
+  .result::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:var(--teal-bright)}
+  .result .rk{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-bright);font-weight:500;margin-bottom:14px}
+  .domain{font-family:var(--mono);font-size:.9rem;color:#B7C6D8;word-break:break-all;margin-bottom:14px}
+  .status-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .status-badge{display:inline-block;padding:4px 11px;border-radius:100px;font-family:var(--mono);font-size:.66rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase}
+  .status-badge.ok{background:rgba(45,212,191,.14);color:#2DD4BF}
+  .status-badge.warn{background:rgba(245,185,113,.16);color:#F7C88E}
+  .status-badge.danger{background:rgba(255,120,110,.16);color:#FF9E93}
+  .headline{font-family:var(--display);font-weight:700;font-size:clamp(1.5rem,3.6vw,2rem);letter-spacing:-.01em;color:#fff;margin-top:10px}
+  .details{margin-top:16px;padding-top:6px;border-top:1px solid rgba(255,255,255,.09);display:block}
+  .details dt{font-size:.84rem;color:#9DB2C9;float:left;clear:left;padding:9px 0}
+  .details dd{font-family:var(--mono);font-size:.86rem;color:#fff;text-align:right;margin:0;padding:9px 0;border-top:1px solid rgba(255,255,255,.06)}
+  .details dt:first-of-type,.details dd:first-of-type{border-top:none}
+  .details::after{content:"";display:table;clear:both}
+
+  /* reminder */
+  .remind{margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.09)}
+  .remind-toggle{width:100%;display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--body);font-weight:600;font-size:.92rem;color:var(--ink);background:var(--teal-bright);border:none;border-radius:11px;padding:13px 16px;cursor:pointer;transition:background .18s,transform .06s}
+  .remind-toggle:hover{background:#5AE6D6}
+  .remind-toggle:active{transform:translateY(1px)}
+  .remind-toggle .bell{color:var(--ink)}
+  .remind-form{margin-top:14px;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+  .remind-form label{display:block;font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:#9DB2C9;margin-bottom:8px}
+  #remindEmail{width:100%;font-family:var(--body);font-size:1rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:12px 14px;color:#fff;transition:border-color .18s}
+  #remindEmail::placeholder{color:#7C90A8}
+  #remindEmail:focus{outline:none;border-color:var(--teal-bright)}
+  .lead{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+  .lead-chip{font-family:var(--mono);font-size:.72rem;color:#B7C6D8;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.16);border-radius:100px;padding:8px 14px;cursor:pointer;transition:all .16s}
+  .lead-chip:hover{border-color:rgba(255,255,255,.4);color:#fff}
+  .lead-chip.active{background:rgba(45,212,191,.16);border-color:var(--teal-bright);color:var(--teal-bright)}
+  .remind-set{width:100%;margin-top:14px;font-family:var(--body);font-weight:600;font-size:.95rem;color:#fff;background:transparent;border:1px solid var(--teal-bright);border-radius:10px;padding:12px 16px;cursor:pointer;transition:all .18s}
+  .remind-set:hover{background:rgba(45,212,191,.12)}
+  .remind-err{margin-top:12px;font-family:var(--mono);font-size:.76rem;color:#FF9E93}
+  .remind-ok{margin-top:14px;font-size:.9rem;color:#DCEBE8;line-height:1.6}
+  .remind-ok .okline{color:var(--teal-bright);font-weight:600;font-family:var(--body);margin-bottom:8px;display:block}
+  .remind-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+  .remind-actions a{display:inline-flex;align-items:center;gap:7px;font-family:var(--body);font-weight:600;font-size:.86rem;padding:10px 15px;border-radius:9px;text-decoration:none;transition:all .18s}
+  .ra-primary{background:#fff;color:var(--ink)}
+  .ra-primary:hover{background:var(--teal-bright)}
+  .ra-ghost{border:1px solid rgba(255,255,255,.24);color:#fff}
+  .ra-ghost:hover{border-color:#fff}
+  .remind-tiny{margin-top:12px;font-family:var(--mono);font-size:.66rem;color:#8CA0B6;line-height:1.6}
+
+  .foot-note{margin-top:16px;font-family:var(--mono);font-size:.7rem;color:var(--muted);text-align:center}
+
+  /* legend band */
+  .band{margin-top:46px;padding-top:38px;border-top:1px solid var(--line)}
+  .band h2{font-family:var(--display);font-weight:600;font-size:1.3rem;color:var(--ink);letter-spacing:-.01em;margin:8px 0 18px}
+  .tiers{display:flex;flex-direction:column;gap:10px}
+  .tier{display:flex;align-items:flex-start;gap:14px;border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--mist)}
+  .tb{flex-shrink:0;margin-top:1px;font-family:var(--mono);font-size:.62rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:100px;width:118px;text-align:center}
+  .tb.ok{background:rgba(15,158,140,.12);color:#0C7A6B}
+  .tb.warn{background:#FBF0DC;color:#8A5A12}
+  .tb.danger{background:#FBEAEA;color:#B02A2A}
+  .tier p{font-size:.9rem;color:var(--text)}
+  .tier p b{color:var(--ink);font-weight:600}
+  .notes{margin-top:22px;font-size:.9rem;color:var(--muted)}
+  .notes li{margin:0 0 9px 20px}
+  .disclaimer{margin-top:20px;font-family:var(--mono);font-size:.74rem;line-height:1.7;color:var(--muted);background:var(--mist);border:1px solid var(--line);border-left:3px solid var(--teal);border-radius:8px;padding:14px 16px}
+  .cta{margin-top:36px;display:flex;flex-wrap:wrap;gap:12px}
+  .btn{font-family:var(--body);font-weight:600;font-size:.92rem;padding:12px 20px;border-radius:10px;border:1px solid var(--line);transition:all .18s;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+  .btn-solid{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .btn-solid:hover{background:var(--teal);border-color:var(--teal)}
+  .btn-ghost:hover{border-color:var(--ink);background:var(--mist)}
+
+  footer{margin-top:54px;background:var(--ink);color:#fff;padding:34px 0}
+  footer .wrap{text-align:center}
+  .f-mark{font-family:var(--display);font-weight:700;display:inline-flex;align-items:center;gap:8px;font-size:1.05rem}
+  .f-mark .dot{width:8px;height:8px;border-radius:2px;background:var(--teal-bright)}
+  footer .mono{font-family:var(--mono);font-size:.74rem;color:#9DB2C9;margin-top:10px}
+  footer .cp{font-size:.82rem;color:#B7C6D8;margin-top:6px}
+
+  @media (max-width:560px){
+    header.hero{padding:56px 0 60px}
+    .searchbar{flex-direction:column;gap:8px;padding:10px}
+    #urlInput{width:100%;padding:14px;font-size:1.08rem;text-align:center}
+    #submitBtn{width:100%;padding:15px}
+    .tier{flex-direction:column;gap:8px}
+    .tb{width:auto;align-self:flex-start}
+    .details dt,.details dd{float:none;text-align:left;border-top:none;padding:2px 0}
+    .details dd{color:#fff;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.06)}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<nav class="cnv">
+  <div class="wrap">
+    <a class="monogram" href="https://codenull.in/"><span class="dot"></span><span>{CODE.NULL}</span></a>
+    <a class="backlink" href="https://codenull.in/#codenull"><span class="ar">&#8592;</span> Tools &amp; builds</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Domain Expiry &middot; Registration check</span>
+    <h1>When does this domain <span class="accent">expire</span>?</h1>
+    <p class="dek">Paste any URL or domain and see exactly when its registration lapses.</p>
+
+    <form id="form" class="searchbar">
+      <input type="text" id="urlInput" placeholder="codenull.in" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="URL or domain">
+      <button type="submit" id="submitBtn">Check domain</button>
+    </form>
+    <div class="privacy"><span class="pulse"></span>Runs in your browser, straight to the registry. Nothing you type is stored.</div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="stage" aria-label="Domain lookup result">
+      <div class="loading" id="loading">Looking up registration data&hellip;</div>
+      <div class="error" id="error"></div>
+
+      <div class="result" id="result">
+        <div class="rk">Registration</div>
+        <div class="domain" id="resultDomain"></div>
+        <div class="status-row">
+          <span class="status-badge" id="statusBadge"></span>
+        </div>
+        <div class="headline" id="headline"></div>
+        <dl class="details" id="details"></dl>
+
+        <div class="remind" id="remind" hidden>
+          <button type="button" class="remind-toggle" id="remindToggle">
+            <svg class="bell" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            Remind me before it expires
+          </button>
+          <div class="remind-form" id="remindForm" hidden>
+            <label for="remindEmail">Where should the reminder go?</label>
+            <input type="email" id="remindEmail" placeholder="you@email.com" autocomplete="email" spellcheck="false">
+            <div class="lead" role="group" aria-label="How far in advance">
+              <button type="button" class="lead-chip active" data-days="30">30 days before</button>
+              <button type="button" class="lead-chip" data-days="14">14 days</button>
+              <button type="button" class="lead-chip" data-days="7">7 days</button>
+            </div>
+            <button type="button" class="remind-set" id="remindSet">Set reminder</button>
+            <div class="remind-err" id="remindErr" hidden></div>
+            <div class="remind-ok" id="remindOk" hidden></div>
+          </div>
+        </div>
+      </div>
+
+      <p class="foot-note">Registration data via RDAP &middot; not all domains / TLDs are covered.</p>
+    </div>
+
+    <div class="band">
+      <span class="eyebrow">What the badges mean</span>
+      <h2>Four states, read at a glance.</h2>
+      <div class="tiers">
+        <div class="tier"><span class="tb ok">Healthy</span><p>More than <b>90 days</b> of registration left. Nothing to do right now.</p></div>
+        <div class="tier"><span class="tb warn">Watch</span><p><b>31&ndash;90 days</b> left. A good moment to confirm auto-renew is on and the card on file hasn&rsquo;t expired.</p></div>
+        <div class="tier"><span class="tb danger">Expiring soon</span><p><b>30 days or fewer</b> &mdash; or today. Renew now; some registries start winding the domain down the moment it lapses.</p></div>
+        <div class="tier"><span class="tb danger">Expired</span><p>Past the date. The site can drop offline, and after the grace period the name can be re-registered by anyone.</p></div>
+      </div>
+      <ul class="notes">
+        <li>This checks <b>domain registration</b> expiry &mdash; not your hosting, DNS or SSL certificate, which lapse on their own timelines.</li>
+        <li>RDAP is the modern replacement for WHOIS. Coverage is broad but not universal; some country-code TLDs don&rsquo;t publish an expiry date.</li>
+        <li>The date shown is whatever the registry has published, which can trail a very recent renewal by a day or two.</li>
+      </ul>
+      <div class="disclaimer">
+        An informational check, not a guarantee. Always confirm renewal status in your own registrar account before relying on it &mdash; a domain quietly lapsing is one of the easiest, and most avoidable, ways to lose a live site. &mdash; CA Gaurav K Patiyat
+      </div>
+      <div class="cta">
+        <a class="btn btn-solid" href="https://codenull.in/#contact">Need a hand with a site? &rarr;</a>
+        <a class="btn btn-ghost" href="https://codenull.in/#codenull">More tools &amp; builds</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span class="f-mark"><span class="dot"></span>{CODE.NULL}</span>
+    <p class="mono">// built from scratch &mdash; without writing a single line of code</p>
+    <p class="cp">&copy; <span id="yr"></span> CA Gaurav K Patiyat</p>
+  </div>
+</footer>
+
+<script>
+const form = document.getElementById('form');
+const input = document.getElementById('urlInput');
+const btn = document.getElementById('submitBtn');
+const loading = document.getElementById('loading');
+const errorBox = document.getElementById('error');
+const result = document.getElementById('result');
+const resultDomain = document.getElementById('resultDomain');
+const statusBadge = document.getElementById('statusBadge');
+const headline = document.getElementById('headline');
+const details = document.getElementById('details');
+const remind = document.getElementById('remind');
+const remindToggle = document.getElementById('remindToggle');
+const remindForm = document.getElementById('remindForm');
+const remindEmail = document.getElementById('remindEmail');
+const remindSet = document.getElementById('remindSet');
+const remindErr = document.getElementById('remindErr');
+const remindOk = document.getElementById('remindOk');
+let lastExpiry = null;   // ISO date string of expiry
+let lastDomain = null;   // domain name shown
+let leadDays = 30;       // reminder lead time
+
+function extractDomain(raw) {
+  let s = raw.trim();
+  if (!s) return null;
+  if (!/^[a-zA-Z]+:\/\//.test(s)) s = 'https://' + s;
+  let host;
+  try {
+    const u = new URL(s);
+    host = u.hostname.toLowerCase();
+  } catch (e) {
+    return null;
+  }
+  if (host.startsWith('www.')) host = host.slice(4);
+  host = host.replace(/\.+$/, ''); // strip trailing dot(s)
+
+  // Reject IP addresses and malformed hosts - RDAP domain lookup needs a real domain name.
+  const isIPv4 = /^\d{1,3}(\.\d{1,3}){3}$/.test(host);
+  const validDomain = /^(xn--)?[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(\.(xn--)?[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)+$/.test(host);
+
+  if (isIPv4 || !validDomain || !host.includes('.')) return null;
+  return host;
+}
+
+function daysBetween(dateStr) {
+  const target = new Date(dateStr);
+  const now = new Date();
+  const targetUTC = Date.UTC(target.getUTCFullYear(), target.getUTCMonth(), target.getUTCDate());
+  const nowUTC = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  return Math.round((targetUTC - nowUTC) / 86400000);
+}
+
+function findRegistrar(entities) {
+  if (!Array.isArray(entities)) return null;
+  for (const e of entities) {
+    if (Array.isArray(e.roles) && e.roles.includes('registrar')) {
+      const vcard = e.vcardArray;
+      if (vcard && Array.isArray(vcard[1])) {
+        const fnField = vcard[1].find(f => f[0] === 'fn');
+        if (fnField && fnField[3]) return fnField[3];
+      }
+      if (e.handle) return e.handle;
+    }
+    if (Array.isArray(e.entities)) {
+      const nested = findRegistrar(e.entities);
+      if (nested) return nested;
+    }
+  }
+  return null;
+}
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+function reset() {
+  errorBox.classList.remove('show');
+  result.classList.remove('show');
+  errorBox.textContent = '';
+  if (remind) remind.hidden = true;
+}
+
+function showError(msg) {
+  reset();
+  errorBox.textContent = msg;
+  errorBox.classList.add('show');
+}
+
+async function checkDomain(domain) {
+  reset();
+  loading.classList.add('show');
+  btn.disabled = true;
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000);
+
+  try {
+    const res = await fetch('https://rdap.org/domain/' + encodeURIComponent(domain), {
+      headers: { 'Accept': 'application/rdap+json' },
+      signal: controller.signal
+    });
+
+    if (res.status === 404) {
+      throw new Error('No registration record found for "' + domain + '". It may be unregistered, or use a TLD not covered by RDAP.');
+    }
+    if (!res.ok) {
+      throw new Error('Lookup failed (status ' + res.status + '). The registry may be temporarily unavailable — try again shortly.');
+    }
+
+    const data = await res.json();
+
+    const events = Array.isArray(data.events) ? data.events : [];
+    const norm = (e) => (e.eventAction || '').toLowerCase();
+    const expirationEvent = events.find(e => norm(e) === 'expiration' || norm(e) === 'expiration date');
+    const registrationEvent = events.find(e => norm(e) === 'registration');
+    const updatedEvent = events.find(e => norm(e) === 'last changed' || norm(e) === 'last update of rdap database');
+
+    if (!expirationEvent || !expirationEvent.eventDate || isNaN(new Date(expirationEvent.eventDate))) {
+      throw new Error('This domain has a registration record, but the registry has not published a valid expiration date via RDAP.');
+    }
+
+    const registrar = findRegistrar(data.entities);
+    const days = daysBetween(expirationEvent.eventDate);
+    const shownName = data.ldhName ? data.ldhName.toLowerCase() : domain;
+
+    lastExpiry = expirationEvent.eventDate;
+    lastDomain = shownName;
+
+    resultDomain.textContent = shownName;
+
+    let badgeClass, badgeText, headlineText;
+    if (days < 0) {
+      badgeClass = 'danger';
+      badgeText = 'EXPIRED';
+      headlineText = 'Expired ' + Math.abs(days) + ' day' + (Math.abs(days) === 1 ? '' : 's') + ' ago';
+    } else if (days === 0) {
+      badgeClass = 'danger';
+      badgeText = 'EXPIRING SOON';
+      headlineText = 'Expires today';
+    } else if (days <= 30) {
+      badgeClass = 'danger';
+      badgeText = 'EXPIRING SOON';
+      headlineText = 'Expires in ' + days + ' day' + (days === 1 ? '' : 's');
+    } else if (days <= 90) {
+      badgeClass = 'warn';
+      badgeText = 'WATCH';
+      headlineText = 'Expires in ' + days + ' days';
+    } else {
+      badgeClass = 'ok';
+      badgeText = 'HEALTHY';
+      headlineText = 'Expires in ' + days + ' days';
+    }
+
+    statusBadge.className = 'status-badge ' + badgeClass;
+    statusBadge.textContent = badgeText;
+    headline.textContent = headlineText;
+
+    details.innerHTML = '';
+    const rows = [];
+    rows.push(['Expiration date', formatDate(expirationEvent.eventDate)]);
+    if (registrationEvent) rows.push(['Registered on', formatDate(registrationEvent.eventDate)]);
+    if (registrar) rows.push(['Registrar', registrar]);
+    if (updatedEvent) rows.push(['Registry data updated', formatDate(updatedEvent.eventDate)]);
+    rows.push(['Checked', new Date().toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })]);
+
+    rows.forEach(([k, v]) => {
+      const dt = document.createElement('dt');
+      dt.textContent = k;
+      const dd = document.createElement('dd');
+      dd.textContent = v;
+      details.appendChild(dt);
+      details.appendChild(dd);
+    });
+
+    result.classList.add('show');
+    resetReminder();
+    remind.hidden = false;
+  } catch (err) {
+    if (err.name === 'AbortError') {
+      showError('The lookup timed out. The registry may be slow to respond right now — try again.');
+    } else {
+      showError(err.message || 'Something went wrong looking up this domain.');
+    }
+  } finally {
+    clearTimeout(timeout);
+    loading.classList.remove('show');
+    btn.disabled = false;
+  }
+}
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const domain = extractDomain(input.value);
+  if (!domain) {
+    showError('Enter a valid URL or domain, like example.com.');
+    return;
+  }
+  checkDomain(domain);
+});
+
+/* ---- Reminder (calendar-based, no backend) ---- */
+function pad2(n){ return String(n).padStart(2,'0'); }
+function ymd(d){ return '' + d.getUTCFullYear() + pad2(d.getUTCMonth()+1) + pad2(d.getUTCDate()); }
+function isEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+function icsEsc(s){ return String(s).replace(/[\\;,]/g, m => '\\' + m).replace(/\n/g, '\\n'); }
+
+function resetReminder(){
+  remindForm.hidden = true;
+  remindToggle.setAttribute('aria-expanded', 'false');
+  remindEmail.value = '';
+  remindErr.hidden = true; remindErr.textContent = '';
+  remindOk.hidden = true; remindOk.textContent = '';
+  leadDays = 30;
+  document.querySelectorAll('.lead-chip').forEach(c => c.classList.toggle('active', c.dataset.days === '30'));
+}
+
+remindToggle.addEventListener('click', () => {
+  const open = !remindForm.hidden;
+  remindForm.hidden = open;
+  remindToggle.setAttribute('aria-expanded', String(!open));
+  if (!open) remindEmail.focus();
+});
+
+document.querySelectorAll('.lead-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    leadDays = parseInt(chip.dataset.days, 10) || 30;
+    document.querySelectorAll('.lead-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+  });
+});
+
+remindSet.addEventListener('click', () => {
+  remindErr.hidden = true;
+  const email = remindEmail.value.trim();
+  if (!isEmail(email)) {
+    remindErr.textContent = 'Enter a valid email so the reminder can reach you.';
+    remindErr.hidden = false;
+    return;
+  }
+  if (!lastExpiry || !lastDomain) return;
+
+  const exp = new Date(lastExpiry);
+  let remindDate = new Date(Date.UTC(exp.getUTCFullYear(), exp.getUTCMonth(), exp.getUTCDate()));
+  remindDate.setUTCDate(remindDate.getUTCDate() - leadDays);
+  const now = new Date();
+  const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+  if (remindDate < today) remindDate = today; // domain expiring sooner than the lead time
+
+  const start = ymd(remindDate);
+  const end = ymd(new Date(remindDate.getTime() + 86400000));
+  const expNice = formatDate(lastExpiry);
+  const title = 'Renew ' + lastDomain + ' — domain expiring';
+  const desc = lastDomain + ' registration expires on ' + expNice + '. Renew it before then. Reminder set via codenull.in Domain Expiry.';
+
+  const gcal = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
+    + '&text=' + encodeURIComponent(title)
+    + '&dates=' + start + '/' + end
+    + '&details=' + encodeURIComponent(desc)
+    + '&add=' + encodeURIComponent(email);
+
+  const ics = [
+    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//codenull.in//Domain Expiry//EN', 'CALSCALE:GREGORIAN',
+    'BEGIN:VEVENT', 'UID:de-' + start + '-' + lastDomain + '@codenull.in', 'DTSTAMP:' + start + 'T000000Z',
+    'DTSTART;VALUE=DATE:' + start, 'DTEND;VALUE=DATE:' + end,
+    'SUMMARY:' + icsEsc(title), 'DESCRIPTION:' + icsEsc(desc),
+    'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + icsEsc(title), 'TRIGGER:PT0S', 'END:VALARM',
+    'END:VEVENT', 'END:VCALENDAR'
+  ].join('\r\n');
+  const icsUrl = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }));
+
+  // build success view with DOM nodes (no innerHTML for user/registry data)
+  remindOk.textContent = '';
+  const line = document.createElement('span');
+  line.className = 'okline';
+  line.textContent = 'Reminder ready for ' + email;
+  const sub = document.createElement('div');
+  sub.textContent = 'You\u2019ll be alerted about ' + leadDays + ' days before ' + lastDomain + ' expires on ' + expNice + '.';
+  const actions = document.createElement('div');
+  actions.className = 'remind-actions';
+  const a1 = document.createElement('a');
+  a1.className = 'ra-primary'; a1.href = gcal; a1.target = '_blank'; a1.rel = 'noopener noreferrer';
+  a1.textContent = 'Add to Google Calendar';
+  const a2 = document.createElement('a');
+  a2.className = 'ra-ghost'; a2.href = icsUrl; a2.download = lastDomain + '-renewal-reminder.ics';
+  a2.textContent = 'Download .ics';
+  actions.appendChild(a1); actions.appendChild(a2);
+  const tiny = document.createElement('div');
+  tiny.className = 'remind-tiny';
+  tiny.textContent = 'Saves the event to your calendar with you as a guest. Google Calendar emails guests their reminders, so the alert reaches your inbox before expiry.';
+  remindOk.appendChild(line); remindOk.appendChild(sub); remindOk.appendChild(actions); remindOk.appendChild(tiny);
+  remindOk.hidden = false;
+});
+
+document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
