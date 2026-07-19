@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <!-- SECURITY: CSP — one inline script whitelisted by hash. connect-src is https: because RDAP bootstrap redirects to each registry's own server. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'sha256-6EpOYpxIbKLjy914ep0mzhrOg0GprJtuxTs9ZvE16FA='; connect-src https:; form-action 'self'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'sha256-Tg8f5BglL0Mfj7k7EeuqyZ099cNFyJiYK9ujy50RPGI='; connect-src https:; form-action 'self'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 
 <link rel="icon" href="/favicon.ico" sizes="any">
@@ -156,35 +156,6 @@
   .details dt:first-of-type,.details dd:first-of-type{border-top:none}
   .details::after{content:"";display:table;clear:both}
 
-  /* reminder */
-  .remind{margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.09)}
-  .remind-toggle{width:100%;display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--body);font-weight:600;font-size:.92rem;color:var(--ink);background:var(--teal-bright);border:none;border-radius:11px;padding:13px 16px;cursor:pointer;transition:background .18s,transform .06s}
-  .remind-toggle:hover{background:#5AE6D6}
-  .remind-toggle:active{transform:translateY(1px)}
-  .remind-toggle .bell{color:var(--ink)}
-  .remind-form{margin-top:14px;animation:fade .25s ease}
-  @keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
-  .remind-form label{display:block;font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:#9DB2C9;margin-bottom:8px}
-  #remindEmail{width:100%;font-family:var(--body);font-size:1rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:12px 14px;color:#fff;transition:border-color .18s}
-  #remindEmail::placeholder{color:#7C90A8}
-  #remindEmail:focus{outline:none;border-color:var(--teal-bright)}
-  .lead{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-  .lead-chip{font-family:var(--mono);font-size:.72rem;color:#B7C6D8;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.16);border-radius:100px;padding:8px 14px;cursor:pointer;transition:all .16s}
-  .lead-chip:hover{border-color:rgba(255,255,255,.4);color:#fff}
-  .lead-chip.active{background:rgba(45,212,191,.16);border-color:var(--teal-bright);color:var(--teal-bright)}
-  .remind-set{width:100%;margin-top:14px;font-family:var(--body);font-weight:600;font-size:.95rem;color:#fff;background:transparent;border:1px solid var(--teal-bright);border-radius:10px;padding:12px 16px;cursor:pointer;transition:all .18s}
-  .remind-set:hover{background:rgba(45,212,191,.12)}
-  .remind-err{margin-top:12px;font-family:var(--mono);font-size:.76rem;color:#FF9E93}
-  .remind-ok{margin-top:14px;font-size:.9rem;color:#DCEBE8;line-height:1.6}
-  .remind-ok .okline{color:var(--teal-bright);font-weight:600;font-family:var(--body);margin-bottom:8px;display:block}
-  .remind-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
-  .remind-actions a{display:inline-flex;align-items:center;gap:7px;font-family:var(--body);font-weight:600;font-size:.86rem;padding:10px 15px;border-radius:9px;text-decoration:none;transition:all .18s}
-  .ra-primary{background:#fff;color:var(--ink)}
-  .ra-primary:hover{background:var(--teal-bright)}
-  .ra-ghost{border:1px solid rgba(255,255,255,.24);color:#fff}
-  .ra-ghost:hover{border-color:#fff}
-  .remind-tiny{margin-top:12px;font-family:var(--mono);font-size:.66rem;color:#8CA0B6;line-height:1.6}
-
   .foot-note{margin-top:16px;font-family:var(--mono);font-size:.7rem;color:var(--muted);text-align:center}
 
   /* legend band */
@@ -206,6 +177,13 @@
   .btn-solid{background:var(--ink);color:#fff;border-color:var(--ink)}
   .btn-solid:hover{background:var(--teal);border-color:var(--teal)}
   .btn-ghost:hover{border-color:var(--ink);background:var(--mist)}
+
+  .next-up{margin-top:40px;padding-top:32px;border-top:1px solid var(--line)}
+  .next-up .eyebrow{display:block;margin-bottom:14px}
+  .soon-btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--body);font-weight:600;font-size:.95rem;padding:13px 20px;border-radius:11px;border:1px dashed var(--line);background:var(--mist);color:var(--muted);cursor:not-allowed}
+  .soon-btn svg{color:var(--muted)}
+  .soon-btn .soon-tag{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);background:#fff;border:1px solid var(--line);border-radius:100px;padding:3px 9px;font-weight:500}
+  .next-note{margin-top:14px;font-size:.92rem;color:var(--muted);max-width:52ch}
 
   footer{margin-top:54px;background:var(--ink);color:#fff;padding:34px 0}
   footer .wrap{text-align:center}
@@ -238,7 +216,7 @@
 
 <header class="hero">
   <div class="wrap">
-    <span class="eyebrow">Domain Expiry &middot; Registration check</span>
+    <span class="eyebrow">Website</span>
     <h1>When does this domain <span class="accent">expire</span>?</h1>
     <p class="dek">Paste any URL or domain and see exactly when its registration lapses.</p>
 
@@ -264,25 +242,6 @@
         </div>
         <div class="headline" id="headline"></div>
         <dl class="details" id="details"></dl>
-
-        <div class="remind" id="remind" hidden>
-          <button type="button" class="remind-toggle" id="remindToggle">
-            <svg class="bell" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-            Remind me before it expires
-          </button>
-          <div class="remind-form" id="remindForm" hidden>
-            <label for="remindEmail">Where should the reminder go?</label>
-            <input type="email" id="remindEmail" placeholder="you@email.com" autocomplete="email" spellcheck="false">
-            <div class="lead" role="group" aria-label="How far in advance">
-              <button type="button" class="lead-chip active" data-days="30">30 days before</button>
-              <button type="button" class="lead-chip" data-days="14">14 days</button>
-              <button type="button" class="lead-chip" data-days="7">7 days</button>
-            </div>
-            <button type="button" class="remind-set" id="remindSet">Set reminder</button>
-            <div class="remind-err" id="remindErr" hidden></div>
-            <div class="remind-ok" id="remindOk" hidden></div>
-          </div>
-        </div>
       </div>
 
       <p class="foot-note">Registration data via RDAP &middot; not all domains / TLDs are covered.</p>
@@ -309,6 +268,16 @@
         <a class="btn btn-solid" href="https://codenull.in/#contact">Need a hand with a site? &rarr;</a>
         <a class="btn btn-ghost" href="https://codenull.in/#codenull">More tools &amp; builds</a>
       </div>
+
+      <div class="next-up">
+        <span class="eyebrow">Coming next</span>
+        <button type="button" class="soon-btn" disabled aria-disabled="true">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          Website Audit
+          <span class="soon-tag">Coming soon</span>
+        </button>
+        <p class="next-note">A one-click check for a site&rsquo;s performance, SEO and security &mdash; the three layers from the blog, brought together in one place.</p>
+      </div>
     </div>
   </div>
 </main>
@@ -332,16 +301,6 @@ const resultDomain = document.getElementById('resultDomain');
 const statusBadge = document.getElementById('statusBadge');
 const headline = document.getElementById('headline');
 const details = document.getElementById('details');
-const remind = document.getElementById('remind');
-const remindToggle = document.getElementById('remindToggle');
-const remindForm = document.getElementById('remindForm');
-const remindEmail = document.getElementById('remindEmail');
-const remindSet = document.getElementById('remindSet');
-const remindErr = document.getElementById('remindErr');
-const remindOk = document.getElementById('remindOk');
-let lastExpiry = null;   // ISO date string of expiry
-let lastDomain = null;   // domain name shown
-let leadDays = 30;       // reminder lead time
 
 function extractDomain(raw) {
   let s = raw.trim();
@@ -401,7 +360,6 @@ function reset() {
   errorBox.classList.remove('show');
   result.classList.remove('show');
   errorBox.textContent = '';
-  if (remind) remind.hidden = true;
 }
 
 function showError(msg) {
@@ -446,9 +404,6 @@ async function checkDomain(domain) {
     const registrar = findRegistrar(data.entities);
     const days = daysBetween(expirationEvent.eventDate);
     const shownName = data.ldhName ? data.ldhName.toLowerCase() : domain;
-
-    lastExpiry = expirationEvent.eventDate;
-    lastDomain = shownName;
 
     resultDomain.textContent = shownName;
 
@@ -497,8 +452,6 @@ async function checkDomain(domain) {
     });
 
     result.classList.add('show');
-    resetReminder();
-    remind.hidden = false;
   } catch (err) {
     if (err.name === 'AbortError') {
       showError('The lookup timed out. The registry may be slow to respond right now — try again.');
@@ -520,99 +473,6 @@ form.addEventListener('submit', (e) => {
     return;
   }
   checkDomain(domain);
-});
-
-/* ---- Reminder (calendar-based, no backend) ---- */
-function pad2(n){ return String(n).padStart(2,'0'); }
-function ymd(d){ return '' + d.getUTCFullYear() + pad2(d.getUTCMonth()+1) + pad2(d.getUTCDate()); }
-function isEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
-function icsEsc(s){ return String(s).replace(/[\\;,]/g, m => '\\' + m).replace(/\n/g, '\\n'); }
-
-function resetReminder(){
-  remindForm.hidden = true;
-  remindToggle.setAttribute('aria-expanded', 'false');
-  remindEmail.value = '';
-  remindErr.hidden = true; remindErr.textContent = '';
-  remindOk.hidden = true; remindOk.textContent = '';
-  leadDays = 30;
-  document.querySelectorAll('.lead-chip').forEach(c => c.classList.toggle('active', c.dataset.days === '30'));
-}
-
-remindToggle.addEventListener('click', () => {
-  const open = !remindForm.hidden;
-  remindForm.hidden = open;
-  remindToggle.setAttribute('aria-expanded', String(!open));
-  if (!open) remindEmail.focus();
-});
-
-document.querySelectorAll('.lead-chip').forEach(chip => {
-  chip.addEventListener('click', () => {
-    leadDays = parseInt(chip.dataset.days, 10) || 30;
-    document.querySelectorAll('.lead-chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-  });
-});
-
-remindSet.addEventListener('click', () => {
-  remindErr.hidden = true;
-  const email = remindEmail.value.trim();
-  if (!isEmail(email)) {
-    remindErr.textContent = 'Enter a valid email so the reminder can reach you.';
-    remindErr.hidden = false;
-    return;
-  }
-  if (!lastExpiry || !lastDomain) return;
-
-  const exp = new Date(lastExpiry);
-  let remindDate = new Date(Date.UTC(exp.getUTCFullYear(), exp.getUTCMonth(), exp.getUTCDate()));
-  remindDate.setUTCDate(remindDate.getUTCDate() - leadDays);
-  const now = new Date();
-  const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-  if (remindDate < today) remindDate = today; // domain expiring sooner than the lead time
-
-  const start = ymd(remindDate);
-  const end = ymd(new Date(remindDate.getTime() + 86400000));
-  const expNice = formatDate(lastExpiry);
-  const title = 'Renew ' + lastDomain + ' — domain expiring';
-  const desc = lastDomain + ' registration expires on ' + expNice + '. Renew it before then. Reminder set via codenull.in Domain Expiry.';
-
-  const gcal = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
-    + '&text=' + encodeURIComponent(title)
-    + '&dates=' + start + '/' + end
-    + '&details=' + encodeURIComponent(desc)
-    + '&add=' + encodeURIComponent(email);
-
-  const ics = [
-    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//codenull.in//Domain Expiry//EN', 'CALSCALE:GREGORIAN',
-    'BEGIN:VEVENT', 'UID:de-' + start + '-' + lastDomain + '@codenull.in', 'DTSTAMP:' + start + 'T000000Z',
-    'DTSTART;VALUE=DATE:' + start, 'DTEND;VALUE=DATE:' + end,
-    'SUMMARY:' + icsEsc(title), 'DESCRIPTION:' + icsEsc(desc),
-    'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + icsEsc(title), 'TRIGGER:PT0S', 'END:VALARM',
-    'END:VEVENT', 'END:VCALENDAR'
-  ].join('\r\n');
-  const icsUrl = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }));
-
-  // build success view with DOM nodes (no innerHTML for user/registry data)
-  remindOk.textContent = '';
-  const line = document.createElement('span');
-  line.className = 'okline';
-  line.textContent = 'Reminder ready for ' + email;
-  const sub = document.createElement('div');
-  sub.textContent = 'You\u2019ll be alerted about ' + leadDays + ' days before ' + lastDomain + ' expires on ' + expNice + '.';
-  const actions = document.createElement('div');
-  actions.className = 'remind-actions';
-  const a1 = document.createElement('a');
-  a1.className = 'ra-primary'; a1.href = gcal; a1.target = '_blank'; a1.rel = 'noopener noreferrer';
-  a1.textContent = 'Add to Google Calendar';
-  const a2 = document.createElement('a');
-  a2.className = 'ra-ghost'; a2.href = icsUrl; a2.download = lastDomain + '-renewal-reminder.ics';
-  a2.textContent = 'Download .ics';
-  actions.appendChild(a1); actions.appendChild(a2);
-  const tiny = document.createElement('div');
-  tiny.className = 'remind-tiny';
-  tiny.textContent = 'Saves the event to your calendar with you as a guest. Google Calendar emails guests their reminders, so the alert reaches your inbox before expiry.';
-  remindOk.appendChild(line); remindOk.appendChild(sub); remindOk.appendChild(actions); remindOk.appendChild(tiny);
-  remindOk.hidden = false;
 });
 
 document.getElementById('yr').textContent = new Date().getFullYear();
